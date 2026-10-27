@@ -1,11 +1,7 @@
-# trip-template
+# 大分・由布院・福岡 旅遊紀錄（2026/2/25–3/2）
 
-旅遊懶人包範本。每次規劃新旅行：
+別府溫泉、由布院、日田的進擊的巨人，最後在福岡吃三天。6 天 5 夜的行程、地圖、景點、餐廳與交通紀錄。
 
-1. 按 **Use this template → Create a new repository**（設 Public，免費帳號的 Pages 需要公開 repo）。
-2. 到 https://claude.ai/connect-github 確認 Claude GitHub App 可以存取新 repo。
-3. 在 https://claude.ai/code 選新 repo 開對話，輸入：
-   `/trip-guide 我要規劃 2027/4/1–4/5 京都 5 天，4 個大人，搭鐵路。請直接 commit 並推到 main 分支。`
-4. 第一次推上去後：Settings → Pages → Deploy from a branch → `main` / `(root)` → Save。
+網站：https://jerry940080.github.io/Oita_Fukoka_2026/
 
-skill 本體在 `.claude/skills/trip-guide/`，來源是 jerry940080/IzuAtami-trip 的熱海・伊豆・靜岡行程。
+從 [trip-template](https://github.com/jerry940080/trip-template) 開出來的；做法在 `.claude/skills/trip-guide/`。
