@@ -1490,7 +1490,7 @@ const P={ // [lat,lng]（日本的點都是依地址估的，誤差約 100–300
  taipei:[25.0478,121.5170], tpe:[25.0797,121.2342], oit:[33.4794,131.7372], fuk:[33.5853,130.4510],
  beppuSt:[33.2793,131.5004], kitahama:[33.2816,131.5049], tsuruta:[33.2806,131.5045], shotengai:[33.2797,131.5017], anaba:[33.2786,131.5031], naruse:[33.2777,131.5003],
  yufuinSt:[33.2655,131.3555], kawakami:[33.2640,131.3688], kinrinko:[33.2668,131.3698], tabimusubi:[33.2652,131.3568],
- hitaSt:[33.3220,130.9409], oyamadam:[33.2152,130.9255], aotmuseum:[33.2399,130.9228], aotnew:[33.2972,130.9619],
+ hitaSt:[33.3220,130.9409], oyamadam:[33.2447,130.9578], aotmuseum:[33.2485,130.9718], aotnew:[33.2984,130.9436],
  hakata:[33.5897,130.4207], tenjinminami:[33.5880,130.4019], haruyoshi:[33.5873,130.4048], nakasu:[33.5918,130.4058], tenjin:[33.5905,130.3985],
  motomura:[33.5900,130.3963], ichifuji:[33.5893,130.3958], ohori:[33.5860,130.3765], maizuru:[33.5845,130.3835], torida:[33.5930,130.4083],
  shinshin:[33.5917,130.3950], donki:[33.5935,130.4060], ichiran:[33.5930,130.4068], canal:[33.5895,130.4110], yodobashi:[33.5888,130.4222],
@@ -1622,7 +1622,17 @@ const CARDS={
 };
 
 /* local photos (base64) */
-const IMG={};
+const IMG={ichiran:'img/ichiran-0-a604205f.webp',
+ nakasu:['img/nakasu-0-a7efdcb3.webp','img/nakasu-1-eac2f48b.webp'],
+ aotnew:'img/aotnew-0-cde54110.webp',
+ oyamadam:['img/oyamadam-0-0dda0094.webp','img/oyamadam-1-cda9ad62.webp'],
+ aotmuseum:['img/aotmuseum-0-16b23293.webp','img/aotmuseum-1-85718f9a.webp'],
+ tabimusubi:'img/tabimusubi-0-c9771759.webp',
+ kinrinko:['img/kinrinko-0-b3a7a962.webp','img/kinrinko-1-fb97d0e9.webp'],
+ kawakami:['img/kawakami-0-f7b0084a.webp','img/kawakami-1-365f8f78.webp'],
+ shotengai:'img/shotengai-0-16d19f5e.webp',
+ tsuruta:'img/tsuruta-0-e54bcb59.webp',
+ };
 
 const DAYS=[
  {n:1,date:'2/25',wd:'三',title:'台北 → 大分 → 別府',sub:'中午飛大分，搭機場巴士到別府，晚上吃海鮮',stay:'新鶴田飯店',
@@ -2554,12 +2564,12 @@ const STAYS=[
  {key:'tsuruta',rg:'beppu',st:'beppuSt',kind:'飯店',addr:'大分縣別府市北濱一帶',stn:'JR 別府站走路約 8 分',mode:'walk',
   bf:'含（7:00–8:30）',park:'不需要（沒開車）',chk:'入住 15:00・退房 10:00',
   hero:0,sub:'別府北濱・含早餐・6 樓溫泉',tags:['JR 別府站 8 分','含早餐','6F 溫泉浴場'],
-  secs:[['溫泉','6 樓溫泉浴場',[],'早上 5:00–9:00、傍晚 15:00–24:00 開放。'],['早餐','飯店早餐',[],'7:00–8:30。']],
+  secs:[['附近','別府塔・北濱',[0],'飯店走到北濱一帶就能看到別府塔，晚上點燈。'],['溫泉','6 樓溫泉浴場',[],'早上 5:00–9:00、傍晚 15:00–24:00 開放。'],['早餐','飯店早餐',[],'7:00–8:30。']],
   must:['第二天退房後行李可以寄放在飯店，逛完商店街、吃完午餐再回來拿']},
  {key:'kawakami',rg:'yufuin',st:'yufuinSt',kind:'整間住宿',addr:'大分縣由布市湯布院町川上',stn:'由布院站走路約 25 分',mode:'walk',
   bf:'不含（有廚房，自己煮）',park:'不需要（沒開車）',chk:'入住 15:00・退房 10:00',
   hero:0,sub:'金鱗湖這一側・sakura 房型・可以自己煮',tags:['sakura 房型','空間超大','有廚房','由布院站 25 分'],
-  secs:[['廚房','廚房',[],'空間超大，傍晚在超市買好食材，晚餐和隔天早餐都在這裡煮。']],
+  secs:[['廚房','廚房',[1],'空間超大，傍晚在超市買好食材，晚餐和隔天早餐都在這裡煮。']],
   must:['記得帶食材來煮','離車站走路約 25 分，搭龜之井巴士在「岳本・金鱗湖入口」下車比較近']},
  {key:'haruyoshi',rg:'fukuoka',st:'tenjinminami',kind:'公寓',addr:'福岡市中央區春吉',stn:'地下鐵七隈線天神南站走路約 5 分',mode:'walk',
   bf:'不含（有廚房，自己煮）',park:'不需要（沒開車）',chk:'入住 16:00・退房 10:00',

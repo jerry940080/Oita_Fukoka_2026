@@ -7,7 +7,7 @@
 import sys, hashlib, io, os, re
 from PIL import Image
 
-ROOT='/home/user/IzuAtami-trip'
+ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 腳本放在 <repo>/tools/，往上一層就是 repo
 HTML=ROOT+'/index.html'
 key, files = sys.argv[1], sys.argv[2:]
 assert files, '沒有給圖檔'

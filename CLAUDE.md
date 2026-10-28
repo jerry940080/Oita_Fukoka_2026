@@ -56,9 +56,21 @@
 - `trip.json`：`cover` 先空著（首頁用顏色＋「九州」色塊），照片補上後放 `cover.jpg`。
 - 驗證：`check.js` 全過；scratchpad `kyu/err.js`（電腦、手機零錯誤）、`kyu/shot.js`（截圖）。重建流程是 scratchpad `kyu/build.sh`（從 IzuAtami 複製 → 底圖 → data.py → edit2–6.py），之後直接改 `index.html` 就好，不用再跑。
 
+### 2026-10-28 照片（一）：從 Google 雲端硬碟加入 15 張
+- 使用者把挑好的照片（HEIC，已排除有人臉的）放在雲端硬碟 `旅遊／japan／去過／別府-由布院-日田-福岡／照片影片`，
+  用 Google Drive 連接器抓下來，依 EXIF 拍攝時間＋GPS 對到行程、看過內容後分配，使用者確認後套用。
+  處理完雲端硬碟的暫存檔已移到垃圾桶（使用者不想重複佔空間，原檔在 Google 相簿）。
+- 分配：tsuruta（別府塔夜景，住宿「附近」段）、shotengai（100 週年人孔蓋）、kawakami（由布院街景、自己煮壽喜燒＝「廚房」段）、
+  kinrinko（湖中鳥居、由布院街景）、tabimusubi（早午餐）、aotmuseum（日田站前里維像、超大型巨人）、oyamadam（水壩、租車駕駛座）、
+  aotnew（原稿）、nakasu（屋台街、屋台拉麵）、ichiran（大樓夜景）。
+- **日田三個點座標依照片 GPS 改正**（原本估的偏了 4–5 km）：oyamadam 33.2447,130.9578、aotmuseum 33.2485,130.9718、aotnew 33.2984,130.9436。
+- 封面 `cover.jpg`（640×400，金鱗湖鳥居橫向裁切），`trip.json` 的 `cover` 填上。
+- `tools/addphotos.py` 的 `ROOT` 改成依腳本位置找 repo（原本寫死 IzuAtami-trip 的路徑）。HEIC 要先用 pillow-heif 轉成 JPEG 並套 EXIF 方向再餵給它。
+- 驗證：`check.js` 全過（台北、桃園落海警告是既有的）；Playwright 桌機、手機零錯誤。
+
 ## 待辦
 
-1. **照片**：使用者會陸續傳。用 `python3 tools/addphotos.py <卡片 key> <圖檔…>`（從 IzuAtami-trip 複製的新版，照片存成 `img/` 獨立檔；skill 裡的 `scripts/addphotos.py` 是舊版，會把照片塞進 HTML，不要用）。
+1. **照片**：已加 15 張（見 2026-10-28）。沒照片的卡還有 anaba、naruse、motomura、ichifuji、torida、shinshin、ohori、maizuru、aruaru、donki、tenjin、haruyoshi；影片之後再處理（放 YouTube 連結）。補照片時用 `python3 tools/addphotos.py <卡片 key> <圖檔…>`（從 IzuAtami-trip 複製的新版，照片存成 `img/` 獨立檔；skill 裡的 `scripts/addphotos.py` 是舊版，會把照片塞進 HTML，不要用）。
    住宿照片放 `IMG.tsuruta／kawakami／haruyoshi`，再把 `STAYS[].secs` 的照片索引補上。封面挑一張存 `cover.jpg`（640px）並填 `trip.json` 的 `cover`。
 2. 使用者若記得實際去過的店、和 Excel 計畫不同的地方，改 `STOPS`、`RESTO`（`in`／`c`）。
-3. GitHub Pages：Settings → Pages → Deploy from a branch → `main` / `(root)`。
+3. GitHub Pages 已開（2026-10-28）。
