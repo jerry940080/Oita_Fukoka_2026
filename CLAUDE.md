@@ -7,14 +7,17 @@
 **已經去過的旅行**做成的回憶錄網站：單一 `index.html`，GitHub Pages 從 `main` 分支根目錄發布
 （`https://jerry940080.github.io/Oita_Fukoka_2026/`）。首頁 `https://jerry940080.github.io/` 會讀根目錄的 `trip.json` 把這趟列進總覽。
 
-- 程式是從 `jerry940080/IzuAtami-trip`（2027 熱海・伊豆・靜岡）**當時最新版**複製來的，不是 skill 裡的舊參考版；
-  所以電腦版左側目錄、手機 App 外殼、地圖「地區固定視角」、住宿分段版面都和熱海網站一樣。
-  做法、資料格式、踩雷筆記看 `.claude/skills/trip-guide/` 和 IzuAtami-trip 的 CLAUDE.md。
+- **版面是「方案 B 相冊」（2026-10-30 重做）**：白底黑字、DM Serif Display 大號日期、照片滿版、文字壓在照片下緣。
+  電腦與手機**同一套 DOM**，只用 CSS 切版；手機是單一長卷軸＋右上選單，**不再是底部分頁 App 殼**。
+  資料區（`P／CARDS／STOPS／DAYS／STAYS／RESTO`）、行程工具（`foldGos／routeInfo／dayMapCfg／autoLegs`）與地圖引擎（`buildMap／animateMap`）
+  沿用熱海範本；渲染程式全部重寫在最後一段 `/* ================= RENDER（方案 B 相冊） */`。
+  舊版（App 殼、記帳、天氣、待辦等）看 git 歷史 f65af95 之前的 `index.html`。
 - 資料來源：使用者給的行程 Excel（分頁：行程、住宿、行李、景點、餐廳、交通、行李箱寄送）。原檔沒放進 repo。
 - **回憶錄模式**（使用者選的）：出發前才用得到的功能都拿掉——待辦／訂票（`BOOK=[]`、`BOOK_DT={}`）、天氣（`WX_LOC／WX_DAY` 清空）、
   記帳 trip-tools（手機底部「記帳」分頁、電腦 `#acct`、餐廳頁「家人推薦」、住宿每人每晚都拿掉）、雨備開關（`RAIN_STOPS={}`）、
   靜岡／熱海總覽（`areaHTML／izuHTML` 回傳空字串）。程式碼大多留著，只是資料清空或不顯示。
-- 手機底部分頁：首頁／行程／地圖／資訊（住宿、景點、交通、餐廳）。電腦目錄：首頁、6 天、交通、餐廳、吃了什麼、住宿。
+- 頁面順序：hero（全幅照片）→ 六天格 → 每一天（左：大號日期、標題、回顧、路線圖；右：照片格＋「那天的順序」）→ 住宿 → 吃了什麼 → 交通 → 下次會不一樣的地方 → 頁尾。
+  右上選單（`#menu`）可跳到任一天與各區塊。點照片格、順序列裡有卡片的站、餐廳列都開同一個彈窗（`openCard`）。
 
 ## 行程
 
@@ -29,6 +32,10 @@
 
 ## 資料怎麼放（和熱海網站同一套）
 
+- **回憶錄文字 `MEMO`**（RENDER 段最前面）：`days[n]` 那天的回顧（空字串就不顯示）、`cards[key]` 一句實際心得（照片格說明、順序列、彈窗都會帶出）、`next[]` 下次會不一樣的地方。目前全空，等使用者寫。
+- **照片格**：每天依 `STOPS` 順序，取有照片的卡片（`card` 或 `at` 對到 `CARDS`），第一張寬版；前一晚住宿的照片不算這天的。沒照片的站只出現在「那天的順序」。
+  `DAY_KAN` 是那天完全沒照片時六天格上的大字。
+
 - 地點 `P／NAMES／GQ`、景點卡 `CARDS`（25 張，含 8 張餐廳卡）、行程 `STOPS`（唯一來源）、`DAYS`（標題、住宿、卡片順序）。
 - 住宿 `STAY_RG`（別府／由布院／福岡三區，都已 `pick`）＋ `STAYS`。
 - 餐廳 `RESTO`：Excel 餐廳分頁全部列進來，`in`＝排進行程的、`c`＝當時的候選。**候選沒有座標**（沒查證位置），名單上顯示「地圖上沒有位置」。
@@ -36,7 +43,7 @@
 - 交通地圖 `TXREG／TXLEGS／TXSEG／TXDAY`；交通頁 `#tickets` 是手寫 HTML（交通明細表、日田公車替代方案、交通網站、每日交通 `.ldays`）。
 - 地圖地區（固定視角）`MAP_REG`：台北・桃園、大分機場、別府、由布院、日田、福岡、小倉。
 - 底圖：`LAND` 用 `make_geo.py --bbox 128.8,32.3,133.2,34.7 --src japan --tol 0.0006`（dataofjapan）；`LINES` 用 Natural Earth 鐵道（沒有路線名，`RAIL_OK` 一律放行，地鐵畫直線）。
-- localStorage 前綴 `kyu-`；`sw.js` 快取 `kyu-v1`。
+- localStorage 前綴 `kyu-`；`sw.js` 快取 `kyu-v2`（2026-10-30 版面重做時加一）。
 
 ## 重要事實與未查證
 
@@ -68,8 +75,16 @@
 - `tools/addphotos.py` 的 `ROOT` 改成依腳本位置找 repo（原本寫死 IzuAtami-trip 的路徑）。HEIC 要先用 pillow-heif 轉成 JPEG 並套 EXIF 方向再餵給它。
 - 驗證：`check.js` 全過（台北、桃園落海警告是既有的）；Playwright 桌機、手機零錯誤。
 
+### 2026-10-30 版面重做：方案 B 相冊
+- 使用者想把行前懶人包改成回憶錄，先給了 Claude Design 用的交付包（scratchpad `kyu/design-brief.zip`），後來直接在 session 裡用 Artifact「Design」畫布做了 A 手帳／B 相冊／C 路線三個方案（https://claude.ai/artifact/JioD39WbBn74L5T1PZqAF5），使用者選 **B**，手機要「單一長卷軸＋右上選單」。
+- 用 scratchpad `b/build.py` 把新 head／CSS／body／RENDER 和舊檔的底圖、資料、地圖引擎、交通表格拼成新的 `index.html`（0.51 MB，舊版 0.82 MB）。之後**直接改 `index.html`**，不用再跑 build。
+- 拿掉：手機 App 殼、底部分頁、記帳、天氣、待辦、雨備、地圖縮放與標記縮圖、`layoutLabels`（地圖標籤重疊暫不處理）、維基百科示意圖（沒照片就不放圖）。
+- `check.js` 是舊版面的檢查工具，**對新結構會報錯（`go is not defined`）**；改用 Playwright 開電腦 1280 與手機 390 看 pageerror／console error 為零，並截圖看版面。
+- 已知：Day 4、Day 6 沒有照片，六天格用 `DAY_KAN` 大字；住宿 Chome Haruyoshi 沒照片顯示「還沒有照片」。
+
 ## 待辦
 
+0. **回憶錄文字**：使用者要寫 `MEMO.days`（每天 100–200 字）、`MEMO.cards`（一句心得）、`MEMO.next`。
 1. **照片**：已加 15 張（見 2026-10-28）。沒照片的卡還有 anaba、naruse、motomura、ichifuji、torida、shinshin、ohori、maizuru、aruaru、donki、tenjin、haruyoshi；影片之後再處理（放 YouTube 連結）。補照片時用 `python3 tools/addphotos.py <卡片 key> <圖檔…>`（從 IzuAtami-trip 複製的新版，照片存成 `img/` 獨立檔；skill 裡的 `scripts/addphotos.py` 是舊版，會把照片塞進 HTML，不要用）。
    住宿照片放 `IMG.tsuruta／kawakami／haruyoshi`，再把 `STAYS[].secs` 的照片索引補上。封面挑一張存 `cover.jpg`（640px）並填 `trip.json` 的 `cover`。
 2. 使用者若記得實際去過的店、和 Excel 計畫不同的地方，改 `STOPS`、`RESTO`（`in`／`c`）。
