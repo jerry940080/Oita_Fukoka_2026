@@ -7,7 +7,8 @@
 **已經去過的旅行**做成的回憶錄網站：單一 `index.html`，GitHub Pages 從 `main` 分支根目錄發布
 （`https://jerry940080.github.io/Oita_Fukoka_2026/`）。首頁 `https://jerry940080.github.io/` 會讀根目錄的 `trip.json` 把這趟列進總覽。
 
-- **版面是「方案 F 相冊書」（2026-11-16 第二次重做，延續 B 的白底大字視覺）**：**一天一頁、一站一跨頁**。
+- **視覺是「方案 H 剪貼簿」（2026-11-16 第三次換皮，依使用者給的 ChatGPT travel-memoir-kit 的規格）**：米白舊紙 `#F1E9D8`、墨黑、磚紅 `#9A4938`、橄欖綠；明體標題（Noto Serif TC）、monospace 編號與日期（IBM Plex Mono）、手寫字（Klee One）做照片註記與便利貼；照片都在白框裡、歪斜、貼膠帶，郵戳、筆記本橫線。CSS 第一行有說明，`:root` 的 token 在最前面。
+- **結構是「方案 F 相冊書」（2026-11-16 第二次重做）**：**一天一頁、一站一跨頁**。
   首頁＝封面＋六張日期卡；點一天進檢視器（`#viewer`，固定全螢幕）：電腦左照片右白色文字頁、底部底片條；手機整張照片、文字壓在下方、上方進度條、左右滑。
   交通段是獨立的一張「過場」：小地圖放大、`animateMap` 畫出那一段路線（只畫起訖兩點）；站點那一張右下（手機左上）有這天的小地圖，點了放大，目前的站紅圈。
   住宿、吃了什麼、交通、私人相簿、下次會不一樣的地方是 `#pages` 裡的獨立頁。電腦與手機同一套 DOM，只用 CSS 切版。
@@ -103,6 +104,13 @@
 - 過場地圖：`dayMapSvg(d, leg)` 只畫起訖兩點、`bboxOf` 框那一段；站點小地圖 `dayMapSvg(d)` 整天路線，`markSel` 把目前的站描紅。地圖 SVG 字串快取在 `MAPC`。
 - 驗證：Playwright 六天的張序列印出來看過（Day 3 共 24 張：cover、15 站、7 段、end）；電腦 1280／手機 390 封面、站、過場、結尾、首頁、其他頁截圖，零錯誤。
 
+### 2026-11-16 視覺第三次換皮：方案 H 剪貼簿（travel-memoir-kit）
+- 使用者給了 ChatGPT 產的 `travel-memoir-kit.zip`（PROMPT.md 規格＋一個 16 KB 的單頁原型＋8 個 SVG）。評估後決定**保留 F 結構、只換視覺**（kit 的原型沒有地圖、登入與資料）。在 Design 畫布加第三輪 G 雜誌刊物／H 剪貼簿，使用者選 **H**。
+- scratchpad `h/patch.py`：`<style>` 整段換成 `h/style.css`；封面改成「那些在九州的日子。」＋兩張歪斜貼上的照片＋郵戳＋便利貼；六天入口是歪斜小卡；檢視器照片放白框（`.frame`，膠帶是 `::before/::after`），下緣手寫註記 `.pcap`＝卡片心得或一句話；心得是黃色便利貼；「下一站」黑底紅影按鈕；小地圖像貼上去的紙。手機版改成直向：照片框在上、筆記在下、底部翻頁列 `.vbot`（`#vNextInfo` 顯示下一站）。
+- 新增 **旅途收藏** 頁（`#/items`，`ITEMS` 陣列：id／title／date／note／img，掃描檔放 `img/items/`，目前三筆都還沒圖）與 **列印** 頁（`#/print`，`renderPrint()` 把六天攤成冊子，`@media print` 只印這一頁；選單「列印 / PDF」）。
+- kit 的 `paper.svg` 紙紋改成 data URI 直接寫在 `body` 背景；其他 SVG（郵戳、票券有 SAMPLE 字樣）沒用。
+- 驗證：Playwright 電腦 1280／手機 390 首頁、封面、站、過場、收藏、列印、住宿截圖，零錯誤。
+
 ### 2026-11-16 私人照片：登入 trip-tools 的成員才看得到
 使用者不想讓有家人朋友的照片出現在公開網站。評估過三條路（加密、Cloudflare Access、連結），因為 `trip-tools` 已有 Google 登入與成員制，決定**照片存 Firestore、沿用 trip-tools 的登入**（不開 Storage、不升 Blaze）。
 - **資料**：`trips/Oita_Fukoka_2026/photos/{auto}`＝`{card, order, data(data URL WebP), w, h, name, by, at}`，由 trip-tools 的「照片」分頁上傳（主辦人），規則成員可讀。`cards.json`（本 repo 根目錄，`{key: 名稱}`）給 trip-tools 的下拉清單用，**新增卡片要同步更新**。
@@ -116,6 +124,7 @@
 ## 待辦
 
 0. **回憶錄文字**：已填（2026-11-16，含第二輪補充：牛かつ有吃、鳥田心得、Shin-Shin 沒去、唐吉訶德別府店與中洲店）。
+1. **旅途收藏**：使用者掃描車票、收據、明信片後放 `img/items/`，填進 `ITEMS[].img`（保留原比例，點了放大）。
 1. **照片**：已加 15 張（見 2026-10-28）。沒照片的卡還有 anaba、naruse、motomura、ichifuji、torida、shinshin、ohori、maizuru、aruaru、donki、tenjin、haruyoshi；影片之後再處理（放 YouTube 連結）。補照片時用 `python3 tools/addphotos.py <卡片 key> <圖檔…>`（從 IzuAtami-trip 複製的新版，照片存成 `img/` 獨立檔；skill 裡的 `scripts/addphotos.py` 是舊版，會把照片塞進 HTML，不要用）。
    住宿照片放 `IMG.tsuruta／kawakami／haruyoshi`，再把 `STAYS[].secs` 的照片索引補上。封面挑一張存 `cover.jpg`（640px）並填 `trip.json` 的 `cover`。
 2. 使用者若記得實際去過的店、和 Excel 計畫不同的地方，改 `STOPS`、`RESTO`（`in`／`c`）。
