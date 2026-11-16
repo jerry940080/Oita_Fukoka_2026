@@ -381,7 +381,7 @@ const P={ // [lat,lng]（日本的點都是依地址估的，誤差約 100–300
  motomura:[33.5900,130.3963], ichifuji:[33.5893,130.3958], ohori:[33.5860,130.3765], maizuru:[33.5845,130.3835], torida:[33.5930,130.4083],
  shinshin:[33.5917,130.3950], donki:[33.5935,130.4060], ichiran:[33.5930,130.4068], canal:[33.5895,130.4110], yodobashi:[33.5888,130.4222],
  kokura:[33.8865,130.8825], aruaru:[33.8885,130.8810],
- ichiriki:[33.2792,131.5012], issou:[33.5932,130.4075], ichiranTenjin:[33.5899,130.3975], bic:[33.5906,130.3990] // 2026-11-16 依實際行程補的（座標依地址估）
+ ichiriki:[33.2792,131.5012], issou:[33.5932,130.4075], ichiranTenjin:[33.5899,130.3975], bic:[33.5906,130.3990], donkiBeppu:[33.2822,131.5075] // 2026-11-16 依實際行程補的（座標依地址估）
 };
 const MODE={ // trk＝畫成鐵軌（色線上疊白色間隔）；ic＝線段中間的小圖示（自動路線才畫）
  rail:{c:'#2b4c7e',w:3,label:'JR・特急',trk:1,ic:'🚆'},
@@ -405,7 +405,7 @@ const NAMES={
  motomura:['牛かつもと村','spot'], ichifuji:['もつ鍋 一藤','spot'], ohori:['大濠公園','spot'], maizuru:['舞鶴公園','spot'], torida:['水炊き 鳥田','spot'],
  shinshin:['Shin-Shin','spot'], donki:['唐吉訶德 中洲店','spot'], ichiran:['一蘭 本社総本店','spot'], canal:['博多運河城（候選）','spot'], yodobashi:['Yodobashi 博多（候選）','spot'],
  kokura:['小倉站','station'], aruaru:['あるあるCity','spot'],
- ichiriki:['焼肉 一力','spot'], issou:['博多一双 中洲店','spot'], ichiranTenjin:['一蘭 天神西通り店','spot'], bic:['Bic Camera 天神','spot']
+ ichiriki:['焼肉 一力','spot'], issou:['博多一双 中洲店','spot'], ichiranTenjin:['一蘭 天神西通り店','spot'], bic:['Bic Camera 天神','spot'], donkiBeppu:['唐吉訶德 別府店','spot']
 };
 /* Google 地圖查詢字串：有名稱的用日文正式名（會帶出該地點的資訊卡），
    沒列的自動退回用經緯度落針 */
@@ -418,7 +418,7 @@ const GQ={
  motomura:'牛かつもと村 福岡天神西通り店', ichifuji:'もつ鍋 一藤 天神西通り店', ohori:'大濠公園', maizuru:'舞鶴公園 福岡', torida:'水炊き 鳥田 博多本店',
  shinshin:'ShinShin 天神本店', donki:'ドン・キホーテ 中洲店', ichiran:'一蘭 本社総本店', canal:'キャナルシティ博多', yodobashi:'ヨドバシカメラ マルチメディア博多',
  kokura:'小倉駅', aruaru:'あるあるCity 小倉',
- ichiriki:'一力 焼肉 別府', issou:'博多一双 中洲店', ichiranTenjin:'一蘭 天神西通り店', bic:'ビックカメラ 天神1号館'
+ ichiriki:'一力 焼肉 別府', issou:'博多一双 中洲店', ichiranTenjin:'一蘭 天神西通り店', bic:'ビックカメラ 天神1号館', donkiBeppu:'ドン・キホーテ 別府店'
 };
 function gUrl(k){
   const base='https://www.google.com/maps/search/?api=1&query=';
@@ -479,7 +479,9 @@ const CARDS={
   text:'下午從博多搭新幹線到小倉，約 15 分。あるあるCity 就在小倉站北口旁，整棟都是動漫、模型、二手周邊，也有 Bookoff 可以挖寶。',
   chips:['小倉站北口旁','博多搭新幹線約 15 分'],
   info:[['交通','博多 ⇄ 小倉 山陽新幹線自由席約 15 分，來回 ¥4,320；用藍色售票機買當天自由席']]},
- donki:{name:'唐吉訶德 中洲店',jp:'ドン・キホーテ 中洲店',kind:'購物',short:'晚上買零食、藥妝、伴手禮',wiki:['ドン・キホーテ (企業)'],
+ donkiBeppu:{name:'唐吉訶德 別府店',jp:'ドン・キホーテ 別府店',kind:'購物',short:'第一晚吃完燒肉去逛的',wiki:['ドン・キホーテ (企業)'],
+  text:'別府第一晚，吃完一力的燒肉順路去唐吉訶德逛逛。',chips:['吃完晚餐順路']},
+ donki:{name:'唐吉訶德 中洲店',jp:'ドン・キホーテ 中洲店',kind:'購物',short:'最後一晚吃完一蘭去逛的',wiki:['ドン・キホーテ (企業)'],
   text:'晚餐後去唐吉訶德買零食、藥妝和伴手禮，出發前有先找好優惠券。離住處走路就到。',chips:['營業到很晚','記得用優惠券']},
  canal:{name:'博多運河城',jp:'キャナルシティ博多',kind:'購物',short:'有運河和噴水秀的大型購物中心（候選）',wiki:['キャナルシティ博多'],
   text:'Excel 景點表裡列的候選：超大型購物中心，10:00–21:00，建議逛 B1F。在櫛田神社前站附近。',chips:['10:00–21:00','建議逛 B1F','櫛田神社前站']},
@@ -506,7 +508,7 @@ const CARDS={
  tabimusubi:{name:'Tabimusubi',jp:'Tabimusubi',kind:'美食',short:'由布院站旁的烤飯糰與炸物',wiki:['おにぎり'],
   text:'搭ゆふいんの森前在車站旁買烤飯糰和炸物，<b>多買一些外帶</b>在車上吃。Google 4.5、Tabelog 3.2，每人約 ¥1,000–2,000。',
   chips:['週五 08:00–17:00','由布院站旁','Google 4.5・Tabelog 3.2']},
- motomura:{name:'牛かつもと村 天神西通り店（沒吃到）',jp:'牛かつもと村 福岡天神西通り店',kind:'美食',short:'原訂的午餐，排隊太久放棄',wiki:['牛カツ'],
+ motomura:{name:'牛かつもと村 天神西通り店',jp:'牛かつもと村 福岡天神西通り店',kind:'美食',short:'自己在小石板上煎的炸牛排；排隊很久，先逛 Bic Camera 再回來吃',wiki:['牛カツ'],
   text:'福岡第二天的午餐。外酥內生的炸牛排，用桌上的小石板自己煎到喜歡的熟度。Google 4.8、Tabelog 3.04，每人約 ¥2,000–3,000，住處走路約 15 分。',
   chips:['11:00–22:00','Google 4.8・Tabelog 3.04','約 ¥2,000–3,000']},
  ichifuji:{name:'もつ鍋 一藤 天神西通り店',jp:'もつ鍋 一藤 天神西通り店',kind:'美食',short:'博多牛腸鍋',wiki:['もつ鍋'],
@@ -515,7 +517,7 @@ const CARDS={
  torida:{name:'水炊き 鳥田 博多本店',jp:'水炊名店 鳥田 博多本店',kind:'美食',short:'博多雞肉水炊鍋',wiki:['水炊き'],
   text:'第三天午餐吃博多另一個名物：雞湯熬得白濁的水炊鍋，最後加飯煮雜炊。Google 4.3、Tabelog 3.65。吃完到博多站搭新幹線去小倉。',
   chips:['11:30–23:00','Google 4.3・Tabelog 3.65']},
- shinshin:{name:'Shin-Shin',jp:'博多らーめん ShinShin',kind:'美食',short:'博多豚骨拉麵',wiki:['博多ラーメン'],
+ shinshin:{name:'Shin-Shin（原訂，沒去）',jp:'博多らーめん ShinShin',kind:'美食',short:'原訂從小倉回來的晚餐，實際簡單吃一吃就回住處',wiki:['博多ラーメン'],
   text:'從小倉回到福岡後的晚餐，細麵的博多豚骨拉麵。',chips:['博多豚骨拉麵']},
  ichiran:{name:'一蘭 本社総本店',jp:'一蘭 本社総本店',kind:'美食',short:'一蘭的總本店，24 小時營業',wiki:['一蘭'],
   text:'最後一晚的宵夜：一蘭在中洲的總本店，24 小時營業，住處走路約 10 分。Google 4.2、Tabelog 3.46。',
@@ -538,15 +540,15 @@ const IMG={ichiran:'img/ichiran-0-a604205f.webp',
 
 const DAYS=[
  {n:1,date:'2/25',wd:'三',title:'台北 → 大分 → 別府',sub:'中午飛大分，搭機場巴士到別府，晚上吃燒肉',stay:'新鶴田飯店',
-  map:{pts:['oit','tsuruta','ichiriki'],legs:[],labels:{oit:'r',tsuruta:'t',ichiriki:'b'},minSpan:.3},cards:['tsuruta','ichiriki','anaba']},
+  map:{pts:['oit','tsuruta','ichiriki','donkiBeppu'],legs:[],labels:{oit:'r',tsuruta:'t',ichiriki:'b',donkiBeppu:'r'},minSpan:.3},cards:['tsuruta','ichiriki','donkiBeppu','anaba']},
  {n:2,date:'2/26',wd:'四',title:'別府 → 由布院',sub:'早上逛別府商店街、吃鰻魚飯，下午搭龜之井巴士上由布院，晚上自己煮',stay:'由布院 Kawakami',
   map:{pts:['tsuruta','shotengai','naruse','kawakami'],legs:[],labels:{},minSpan:.1},cards:['tsuruta','shotengai','naruse','kawakami']},
  {n:3,date:'2/27',wd:'五',title:'由布院 → 日田 → 博多',sub:'清晨金鱗湖，搭ゆふいんの森到日田，租車看進擊的巨人，晚上到博多，宵夜博多一双',stay:'Chome Haruyoshi',
   map:{pts:['kinrinko','tabimusubi','hitaSt','oyamadam','aotmuseum','aotnew','hakata','haruyoshi','nakasu','issou'],legs:[],labels:{},minSpan:.3},cards:['kinrinko','tabimusubi','yufumori','oyamadam','aotmuseum','aotnew','haruyoshi','nakasu','issou']},
- {n:4,date:'2/28',wd:'六',title:'福岡：Bic Camera 與天神',sub:'牛かつ排隊太久改逛 Bic Camera，下午休息，晚上牛腸鍋，宵夜天神的一蘭',stay:'Chome Haruyoshi（續住）',
-  map:{pts:['haruyoshi','bic','ichifuji','ichiranTenjin'],legs:[],labels:{},minSpan:.02},cards:['bic','ichifuji','ichiranTenjin','motomura','tenjin','canal','yodobashi']},
- {n:5,date:'3/1',wd:'日',title:'福岡 → 小倉',sub:'先去 Bic Camera 把鍋子買了，午餐水炊鍋，下午搭新幹線去小倉，晚上拉麵、唐吉訶德、一蘭本店',stay:'Chome Haruyoshi（續住）',
-  map:{pts:['bic','torida','hakata','kokura','aruaru','shinshin','donki','ichiran'],legs:[],labels:{},minSpan:.3},cards:['bic','torida','aruaru','shinshin','donki','ichiran','ohori','maizuru']},
+ {n:4,date:'2/28',wd:'六',title:'福岡：Bic Camera 與天神',sub:'牛かつ要等很久，先逛 Bic Camera 再回來吃，下午休息，晚上牛腸鍋，宵夜天神的一蘭',stay:'Chome Haruyoshi（續住）',
+  map:{pts:['haruyoshi','motomura','bic','ichifuji','ichiranTenjin'],legs:[],labels:{},minSpan:.02},cards:['bic','motomura','ichifuji','ichiranTenjin','tenjin','canal','yodobashi']},
+ {n:5,date:'3/1',wd:'日',title:'福岡 → 小倉',sub:'先去 Bic Camera 把鍋子買了，午餐水炊鍋，下午搭新幹線去小倉，晚上一蘭本店、唐吉訶德',stay:'Chome Haruyoshi（續住）',
+  map:{pts:['bic','torida','hakata','kokura','aruaru','ichiran','donki'],legs:[],labels:{},minSpan:.3},cards:['bic','torida','aruaru','ichiran','donki','shinshin','ohori','maizuru']},
  {n:6,date:'3/2',wd:'一',title:'福岡 → 台北',sub:'超商早餐，行李放博多站附近，逛二次元店家和地下街，午餐燒肉定食，再去機場',stay:'回家',
   map:{pts:['haruyoshi','hakata','fuk'],legs:[],labels:{},minSpan:.05},cards:[]}
 ];
@@ -561,7 +563,8 @@ const STOPS={
  {t:'12:00',i:'✈',n:'桃園 12:00 → 大分 15:00',k:'交通',d:'台灣時間 12:00 起飛、日本時間 15:00 降落（日本快 1 小時），飛行約 2 小時；飛機上沒有餐點',dur:'約 2 小時'},
  {t:'15:00',i:'🛬',n:'大分機場降落、領行李',k:'交通',at:'oit',nz:1,d:'入境、領行李，到機場巴士售票櫃台或售票機買車票',go:[{at:'16:25',i:'🚌',t:'搭機場巴士到別府北濱（約 45 分）',gd:'大分機場 16:25 → 別府北濱 17:15　大分交通機場巴士約 45 分・¥1,600，自由座；在機場內巴士售票櫃台或自動售票機買票，可刷信用卡'}]},
  {t:'17:20',i:'🛏',n:'新鶴田飯店 check-in',k:'住宿',card:'tsuruta',d:'北濱巴士站走幾分鐘就到；6 樓溫泉 15:00–24:00 可以泡'},
- {t:'18:00',i:'🥩',n:'晚餐：焼肉 一力',k:'美食',card:'ichiriki',d:'原本訂的是味のあなば，實際改吃燒肉；別府站走路約 5 分',dur:'約 2 小時'}
+ {t:'18:00',i:'🥩',n:'晚餐：焼肉 一力',k:'美食',card:'ichiriki',d:'原本訂的是味のあなば，實際改吃燒肉；別府站走路約 5 分',dur:'約 2 小時'},
+ {t:'20:00',i:'🛍',n:'唐吉訶德 別府店',k:'購物',card:'donkiBeppu',d:'吃完飯順路逛'}
 ],
 2:[
  {t:'08:00',i:'🍳',n:'飯店早餐',k:'美食',card:'tsuruta',d:'早餐 7:00–8:30；早上 5:00–9:00 也能先泡 6 樓溫泉'},
@@ -591,20 +594,22 @@ const STOPS={
 ],
 4:[
  {t:'08:00',i:'😴',n:'睡飽休息',k:'住宿',at:'haruyoshi'},
- {t:'11:00',i:'🥩',n:'牛かつもと村：排隊太久，放棄',k:'美食',card:'motomura',d:'原訂的午餐，要等非常久'},
+ {t:'11:00',i:'🥩',n:'牛かつもと村：要等非常久，先去逛街',k:'美食',at:'motomura',d:'排隊人太多，先去 Bic Camera 繞再回來'},
  {t:'11:30',i:'🛍',n:'Bic Camera 天神逛逛、看鍋子',k:'購物',card:'bic',d:'有兩棟可以逛'},
- {t:'13:00',i:'🛏',n:'回住處休息',k:'住宿',at:'haruyoshi',d:'下午都在休息'},
+ {t:'13:00',i:'🥩',n:'午餐：牛かつもと村',k:'美食',card:'motomura',d:'天神西通り店，自己在小石板上煎的炸牛排'},
+ {t:'14:00',i:'🛏',n:'回住處休息',k:'住宿',at:'haruyoshi',d:'下午都在休息'},
  {t:'18:00',i:'🍲',n:'晚餐：もつ鍋 一藤',k:'美食',card:'ichifuji',d:'天神西通り店，博多牛腸鍋；味道一般，但環境很適合聊天'},
  {t:'20:30',i:'🍜',n:'宵夜：一蘭 天神西通り店',k:'美食',card:'ichiranTenjin',d:'這趟吃到最好吃的東西，還遇到一群台灣人'}
 ],
 5:[
  {t:'09:00',i:'👩‍🍳',n:'大廚時間：早餐自己煮',k:'美食'},
  {t:'10:00',i:'🛍',n:'Bic Camera 買鍋子，先放回住處',k:'購物',card:'bic',d:'原訂的大濠公園、舞鶴公園就沒去'},
- {t:'13:45',i:'🍲',n:'午餐：水炊き 鳥田 博多本店',k:'美食',card:'torida',go:[{at:'15:00',i:'🚄',t:'搭新幹線到小倉（約 15 分）',gd:'博多 → 小倉　山陽新幹線自由席約 15 分，來回 ¥4,320；用藍色售票機買當天自由席'}]},
+ {t:'13:45',i:'🍲',n:'午餐：水炊き 鳥田 博多本店',k:'美食',card:'torida',d:'這個價位吃到這樣合理正常，沒有到驚艷或物超所值',go:[{at:'15:00',i:'🚄',t:'搭新幹線到小倉（約 15 分）',gd:'博多 → 小倉　山陽新幹線自由席約 15 分，來回 ¥4,320；用藍色售票機買當天自由席'}]},
  {t:'15:15',i:'🎎',n:'小倉 あるあるCity、Bookoff',k:'購物',card:'aruaru',d:'東西比想像中單一，多是景品和小周邊，沒看到想找的 PVC 和公仔',go:[{at:'18:15',i:'🚄',t:'搭新幹線回博多（約 15 分）',gd:'小倉 → 博多　山陽新幹線自由席約 15 分'}]},
- {t:'19:00',i:'🍜',n:'晚餐：Shin-Shin 拉麵',k:'美食',card:'shinshin'},
- {t:'20:00',i:'🛍',n:'唐吉訶德',k:'購物',card:'donki',d:'記得用優惠券'},
- {t:'22:00',i:'🍜',n:'宵夜：一蘭 本社総本店',k:'美食',card:'ichiran',d:'24 小時營業；吃起來跟台北信義區的沒差別，蠻失望'}
+ {t:'19:00',i:'🍽',n:'晚餐簡單吃一吃',k:'美食',d:'原訂的 Shin-Shin 沒去'},
+ {t:'20:00',i:'🛏',n:'把買的東西放回住處',k:'住宿',at:'haruyoshi'},
+ {t:'22:00',i:'🍜',n:'宵夜：一蘭 本社総本店',k:'美食',card:'ichiran',d:'24 小時營業；吃起來跟台北信義區的沒差別，蠻失望'},
+ {t:'23:45',i:'🛍',n:'唐吉訶德 中洲店',k:'購物',card:'donki',d:'吃完一蘭順路逛'}
 ],
 6:[
  {t:'08:00',i:'🥪',n:'超商簡單買早餐',k:'美食',d:'草莓三明治 ¥500，有點貴但很好吃'},
@@ -712,16 +717,17 @@ const RESTO={v:1,date:'2026/10/27',list:[
  ['unakita',3,'午餐','別府・由布院','うな北 湯布院店','鰻魚飯','09:30–17:00・住處走 10 分・Google 4.9（新開）・¥3,000–4,000','c','','うな北 湯布院店'],
  ['nakasu',3,'晚餐','福岡','中洲屋台','屋台','原本要吃屋台，走過去看了看，改去一双','c','nakasu',''],
  ['issou',3,'宵夜','福岡','博多一双 中洲店','濃厚豚骨拉麵','豬骨味很重，湯鮮甜，麵和肉一般','in','issou',''],
- ['motomura',4,'午餐','福岡','牛かつもと村 天神西通り店','炸牛排','排隊太久，放棄・Google 4.8／Tabelog 3.04','c','motomura',''],
+ ['motomura',4,'午餐','福岡','牛かつもと村 天神西通り店','炸牛排','排隊很久，先逛 Bic Camera 再回來吃・Google 4.8／Tabelog 3.04','in','motomura',''],
  ['katsugyu',4,'午餐','福岡','牛カツ京都勝牛 天神西通り店','炸牛排','11:00–23:00・住處走 15 分・Google 4.6／Tabelog 3.07','c','','牛カツ京都勝牛 天神西通り店'],
  ['hanamokoshi',4,'午餐','福岡','麺道はなもこし','雞湯／魚介拉麵','11:45–13:30／19:00–20:30・週日休・藥院大通站走 5 分・Google 4.0／Tabelog 3.9','c','','麺道はなもこし'],
  ['tateru',4,'午餐','福岡','博多鶏soba 建 TATERU','雞湯拉麵','11:00–15:00／17:00–02:00・中洲川端站・Google 4.6／Tabelog 3.43','c','','博多鶏soba 建 TATERU'],
  ['kanetora',4,'午餐','福岡','麵屋兼虎 天神本店','沾麵','10:00–22:00・天神南站・Google 4.3／Tabelog 3.49','c','','麺屋兼虎 天神本店'],
  ['ichifuji',4,'晚餐','福岡','もつ鍋 一藤 天神西通り店','牛腸鍋','味道一般，但環境很適合聊天・Google 4.8／Tabelog 3.57','in','ichifuji',''],
  ['ichiranTenjin',4,'宵夜','福岡','一蘭 天神西通り店','拉麵','這趟吃到最好吃的東西，還遇到一群台灣人','in','ichiranTenjin',''],
- ['torida',5,'午餐','福岡','水炊き 鳥田 博多本店','水炊鍋','11:30–23:00・Google 4.3／Tabelog 3.65','in','torida',''],
+ ['torida',5,'午餐','福岡','水炊き 鳥田 博多本店','水炊鍋','這個價位吃到這樣合理正常，沒有到驚艷・Google 4.3／Tabelog 3.65','in','torida',''],
  ['inakaan',5,'晚餐','小倉','鰻料理 田舎庵 小倉本店','鰻魚料理','11:00–20:00・Google 4.3／Tabelog 3.68','c','','田舎庵 小倉本店'],
- ['shinshin',5,'晚餐','福岡','Shin-Shin','博多豚骨拉麵','從小倉回福岡後','in','shinshin',''],
+ ['shinshin',5,'晚餐','福岡','Shin-Shin','博多豚骨拉麵','原訂，沒去','c','shinshin',''],
+ ['dinner5',5,'晚餐','福岡','簡單吃一吃','—','從小倉回來後簡單吃，把東西放回住處再去一蘭','in','',''],
  ['ichiran',5,'宵夜','福岡','一蘭 本社総本店','拉麵','跟台北信義區的沒差別，蠻失望・24 小時','in','ichiran',''],
  ['conbini',6,'早餐','福岡','超商','草莓三明治','¥500 有點貴但很好吃','in','',''],
  ['chika',6,'午餐','福岡','博多站地下街 燒肉定食','燒肉定食','普通，沒什麼特別','in','','']
@@ -930,17 +936,19 @@ function animateMap(svg){
 /* ================= 回憶錄文字（之後由使用者補；空的就不顯示） ================= */
 const MEMO={ // 2026-11-16 依使用者口述填的
  days:{ // 那天的回顧，可以用換行
-  1:'晚餐原本訂的是海鮮的味のあなば，到了別府改吃燒肉一力。',
+  1:'晚餐原本訂的是海鮮的味のあなば，到了別府改吃燒肉一力。吃完順路逛了唐吉訶德。',
   2:'由布院的住處很棒：空間很大、價格便宜，還有室外溫泉。洗完澡泡一下、睡前再泡腳，很舒服。',
   3:'到博多已經很晚，先回住處休息，再出門走過中洲屋台，宵夜吃了博多一双。店裡豬骨味真的很重，湯其實很鮮甜，但麵和肉都很一般。',
-  4:'牛かつもと村要等非常久，改去 Bic Camera 繞，天神有兩棟可以逛，先看了鍋子。下午都在休息。晚上的もつ鍋一藤味道一般，但環境很適合聊天。宵夜去天神的一蘭，吃起來很爽，是這趟吃到最好吃的東西，還剛好遇到一群台灣人也來吃。',
-  5:'先去 Bic Camera 把鍋子買了放回住處，大濠公園和舞鶴公園就沒去。小倉あるあるCity 逛起來比想像中單一，基本沒看到想找的 PVC 和公仔，大多是景品和小型周邊。晚上去一蘭本店，吃起來跟台北信義區的沒什麼差別，蠻失望的。',
+  4:'牛かつもと村要等非常久，先去 Bic Camera 繞，天神有兩棟可以逛，先看了鍋子，再回來吃牛かつ。下午都在休息。晚上的もつ鍋一藤味道一般，但環境很適合聊天。宵夜去天神的一蘭，吃起來很爽，是這趟吃到最好吃的東西，還剛好遇到一群台灣人也來吃。',
+  5:'先去 Bic Camera 把鍋子買了放回住處，大濠公園和舞鶴公園就沒去。午餐的水炊き鳥田還算不錯，這個價位吃到這樣是合理正常的，但沒有到驚艷或物超所值。小倉あるあるCity 逛起來比想像中單一，基本沒看到想找的 PVC 和公仔，大多是景品和小型周邊。回福岡後晚餐簡單吃一吃，把買的東西放回住處，再去一蘭本店，吃起來跟台北信義區的沒什麼差別，蠻失望的。最後去唐吉訶德逛逛。',
   6:'早餐在超商簡單買，草莓三明治 500 日圓有點貴但很好吃。把行李放到車站附近後去逛二次元店家，大多沒有想看的東西，可能真的只有大阪和東京才有。也去了車站地下街看伴手禮、買了一些，其實應該到機場再買，機場能試吃的品項很多。午餐在地下街吃燒肉定食，普通。'
  },
  cards:{ // 卡片 key → 一句實際心得（照片格說明、順序列、彈窗都會帶出）
   kawakami:'空間很大、價格便宜，還有室外溫泉',
   issou:'豬骨味很重，湯鮮甜，麵和肉一般',
-  motomura:'排隊太久，放棄',
+  motomura:'排隊很久，先逛 Bic Camera 再回來吃',
+  torida:'這個價位吃到這樣合理正常，沒有到驚艷',
+  shinshin:'原訂，沒去',
   bic:'兩棟可以逛，鍋子在這裡買的',
   ichifuji:'味道一般，但環境很適合聊天',
   ichiranTenjin:'這趟吃到最好吃的，還遇到一群台灣人',
