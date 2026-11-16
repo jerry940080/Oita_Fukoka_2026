@@ -44,7 +44,7 @@
 - 交通地圖 `TXREG／TXLEGS／TXSEG／TXDAY`；交通頁 `#tickets` 是手寫 HTML（交通明細表、日田公車替代方案、交通網站、每日交通 `.ldays`）。
 - 地圖地區（固定視角）`MAP_REG`：台北・桃園、大分機場、別府、由布院、日田、福岡、小倉。
 - 底圖：`LAND` 用 `make_geo.py --bbox 128.8,32.3,133.2,34.7 --src japan --tol 0.0006`（dataofjapan）；`LINES` 用 Natural Earth 鐵道（沒有路線名，`RAIL_OK` 一律放行，地鐵畫直線）。
-- localStorage 前綴 `kyu-`；`sw.js` 快取 `kyu-v2`（2026-10-30 版面重做時加一）。
+- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v3`（2026-11-16 私人照片時加一）。
 
 ## 重要事實與未查證
 
@@ -90,6 +90,16 @@
 - 屋台拉麵那張照片（`img/nakasu-1-*.webp`）依 GPS 其實是一双中洲店，改到 `IMG.issou`。
 - `MEMO.days／cards／next` 依口述填好；日期格式 bug（3/1 顯示成 003.1）修正。
 - 第二輪補充：牛かつもと村其實有吃（先逛 Bic Camera 再回來）、鳥田「合理正常沒驚艷」、Shin-Shin 沒去（改 `c`）、唐吉訶德是 Day 1 別府店（新卡 `donkiBeppu`）與 Day 5 吃完一蘭的中洲店、Day 5 晚餐簡單吃後先把東西放回住處。
+
+### 2026-11-16 私人照片：登入 trip-tools 的成員才看得到
+使用者不想讓有家人朋友的照片出現在公開網站。評估過三條路（加密、Cloudflare Access、連結），因為 `trip-tools` 已有 Google 登入與成員制，決定**照片存 Firestore、沿用 trip-tools 的登入**（不開 Storage、不升 Blaze）。
+- **資料**：`trips/Oita_Fukoka_2026/photos/{auto}`＝`{card, order, data(data URL WebP), w, h, name, by, at}`，由 trip-tools 的「照片」分頁上傳（主辦人），規則成員可讀。`cards.json`（本 repo 根目錄，`{key: 名稱}`）給 trip-tools 的下拉清單用，**新增卡片要同步更新**。
+- **本站**：右上「私人」按鈕（`#privBtn`）。第一次按才動態 `import` Firebase SDK 10.12.2（gstatic；公開訪客不載），`signInWithPopup` Google 登入；登入成功記 `localStorage kyu-priv=1`，之後開頁自動載入。
+  `onSnapshot(photos)` → `setPriv()` 依 `card` 分組進 `PRIV`，`imgsOf(k)`＝公開 `img/` 接私人；`renderAll()` 重畫六天格、每一天、住宿、相簿。私人的照片在照片格、住宿、彈窗都有 🔒。`card` 空的集中在最後的「私人相簿」區塊（`#album`，點開用 `openCard('__album', i)`）。
+  規則擋下（不是成員）→ 按鈕顯示「🔒 不是成員」並提示要邀請連結；按鈕點開小選單（`#pmenu`）：到 trip-tools 管理、登出。
+- `sw.js` `kyu-v3`：gstatic 的 `/firebasejs/` 也 cacheFirst，登入過的人離線也能載 SDK（Firestore 自己有 IndexedDB 離線快取）。
+- 開發環境連不到 gstatic／Firebase：網址加 `?privmock=1` 用四張既有照片假扮私人照片看版面（兩張到 tsuruta、兩張到相簿）。Playwright 公開／mock 桌機／mock 手機零錯誤，截圖看過。
+- **使用者已在 Firebase 上傳 2 張到「新鶴田飯店」**（2026-11-16），真正的登入流程由使用者上線測。Firebase 授權網域與 trip-tools 同一個 `jerry940080.github.io`，不用再加。
 
 ## 待辦
 

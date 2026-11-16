@@ -43,6 +43,20 @@ h1,h2,h3,h4{margin:0;font-weight:900;line-height:1.2}
 .top.solid{background:rgba(255,255,255,.92);color:var(--ink);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
 .top .mbtn{width:44px;height:44px;border:0;border-radius:999px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;cursor:pointer}
 .top.solid .mbtn{background:var(--paper)}
+.top .tr{display:flex;gap:8px;align-items:center}
+.top .pbtn{height:44px;border:0;border-radius:999px;background:rgba(255,255,255,.14);color:inherit;display:flex;align-items:center;gap:6px;padding:0 14px;font-size:13px;cursor:pointer}
+.top.solid .pbtn{background:var(--paper)}
+.top .pbtn.on{background:var(--accent);color:#fff}
+.top .pbtn.on .ava{width:22px;height:22px;border-radius:999px;background:#fff;color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.pmenu{position:fixed;top:calc(64px + env(safe-area-inset-top));right:24px;z-index:45;background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:0 12px 32px rgba(0,0,0,.15);min-width:240px;display:flex;flex-direction:column;padding:6px}
+.pmenu[hidden]{display:none}
+.pm-who{font-size:13px;color:var(--mute);padding:10px 12px;border-bottom:1px solid var(--line)}
+.pm-a{display:block;text-align:left;padding:12px;border:0;background:none;font-size:15px;color:var(--ink);text-decoration:none;cursor:pointer;min-height:44px}
+.pm-a:hover{background:var(--paper)}
+.ph .lock,.mph .lock{position:absolute;top:12px;left:12px;font-size:12px;background:rgba(20,20,20,.6);color:#fff;padding:2px 8px;border-radius:999px;display:flex;align-items:center;gap:4px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom));z-index:70;background:var(--dark);color:#fff;padding:12px 18px;font-size:14px;border-radius:999px;max-width:calc(100% - 32px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast[hidden]{display:none}
+.album .pg .ph{height:260px}
 .menu{position:fixed;inset:0;z-index:50;background:var(--dark);color:#fff;overflow:auto;padding:calc(24px + env(safe-area-inset-top)) 24px 48px;display:flex;flex-direction:column;gap:28px}
 .menu[hidden]{display:none}
 .menu .mh{display:flex;justify-content:space-between;align-items:center}
@@ -287,8 +301,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
 <body>
 <header class="top" id="top">
   <a class="brand" href="#top">2026 / 02.25 — 03.02</a>
-  <button type="button" class="mbtn" id="menuBtn" aria-label="目錄" aria-expanded="false" aria-controls="menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <div class="tr"><button type="button" class="pbtn" id="privBtn" title="登入後看有家人朋友的私人照片"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>私人</span></button>
+  <button type="button" class="mbtn" id="menuBtn" aria-label="目錄" aria-expanded="false" aria-controls="menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
 </header>
+<div class="pmenu" id="pmenu" hidden><div class="pm-who" id="pmWho"></div><a class="pm-a" id="pmTools" href="/trip-tools/?openExternalBrowser=1#/t/Oita_Fukoka_2026/photo" target="_blank" rel="noopener">到記帳工具管理私人照片 ↗</a><button type="button" class="pm-a" id="pmOut">登出</button></div>
 <nav class="menu" id="menu" hidden aria-label="目錄">
   <div class="mh"><b>大分・由布院・福岡</b><button type="button" class="mx" id="menuX" aria-label="關閉目錄">×</button></div>
   <div><div class="ml">六天</div><ol class="md" id="menuDays"></ol></div>
@@ -354,6 +370,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
     
 </div></section>
 
+<section class="blk album" id="album" hidden><div class="wrap"><div class="bh"><h2>私人相簿</h2><small>登入的成員才看得到</small></div><div class="pg" id="albumG"></div></div></section>
+
 <section class="blk next" id="next"><div class="wrap"><div class="bh"><h2>下次會不一樣的地方</h2><small>回來以後的想法</small></div><div id="nexts"></div></div></section>
 
 <footer><div class="wrap">
@@ -361,6 +379,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
   <span>路線圖為示意，座標依地址估算（約 100–300 m）；海岸線 dataofjapan／Natural Earth。</span>
 </div></footer>
 
+<div class="toast" id="toast" hidden></div>
 <div class="modal" id="modal" hidden><div class="bg"></div><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="mTitle"><button type="button" class="mx" id="mX" aria-label="關閉">×</button><div class="mph" id="mPh"></div><div class="mbd"><div class="kind" id="mKind"></div><h3 id="mTitle"></h3><div class="jp" id="mJp"></div><div class="memo1" id="mMemo" hidden></div><div class="txt" id="mText"></div><div class="chips" id="mChips"></div><dl id="mInfo" hidden></dl><div class="act" id="mAct"></div><div id="mVideo"></div></div></div></div>
 
 <script>
@@ -968,7 +987,13 @@ const MEMO={ // 2026-11-16 依使用者口述填的
 const DAY_KAN={1:'別府',2:'由布',3:'日田',4:'天神',5:'小倉',6:'歸'}; // 那天沒有照片時，六天格上的大字
 
 /* ================= RENDER（方案 B 相冊） ================= */
-const imgsOf=k=>Array.isArray(IMG[k])?IMG[k]:IMG[k]?[IMG[k]]:[];
+/* 私人照片（2026-11-16）：登入 trip-tools 的成員後，從 Firestore trips/Oita_Fukoka_2026/photos 讀，依 card 併進卡片；card 空的放最後的「私人相簿」。
+   PRIV={card:[{data,id},…]}，imgsOf 把公開（img/）和私人接在一起，isPriv 判斷第幾張起是私人（照片格、彈窗畫 🔒）。 */
+let PRIV={};
+const pubOf=k=>Array.isArray(IMG[k])?IMG[k]:IMG[k]?[IMG[k]]:[];
+const imgsOf=k=>pubOf(k).concat((PRIV[k]||[]).map(p=>p.data));
+const isPriv=(k,i)=>i>=pubOf(k).length;
+const nPriv=k=>(PRIV[k]||[]).length;
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const stopKey=s=>s.card&&CARDS[s.card]?s.card:(s.at&&CARDS[s.at]?s.at:'');
 const dayPhotos=d=>{const seen=new Set(),o=[];(d.stops||[]).forEach(s=>{const k=stopKey(s);if(k&&!seen.has(k)&&imgsOf(k).length){seen.add(k);o.push([k,s]);}});
@@ -989,6 +1014,7 @@ document.getElementById('menuX').addEventListener('click',()=>menuOpen(false));
 menu.addEventListener('click',e=>{if(e.target.closest('a'))menuOpen(false);});
 
 // 六天格
+function renderAll(){
 document.getElementById('tiles').innerHTML=DAYS.map(d=>{const p=dayPhotos(d)[0];
   return `<a class="tile" href="#d${d.n}">${p?`<img src="${imgsOf(p[0])[0]}" alt="" loading="lazy">`:`<span class="kan">${DAY_KAN[d.n]||''}</span>`}<span class="n">${d.n}</span><span class="t">${d.date}　${esc(d.title)}</span></a>`;}).join('');
 if(MOB)document.getElementById('tilesHint').hidden=false;
@@ -1000,7 +1026,7 @@ function dayHTML(d){
   const photos=dayPhotos(d),n=photos.length;
   const pg=photos.map(([k,s],i)=>{const c=CARDS[k],L=imgsOf(k),wide=i===0||(n%2===0&&i===n-1&&n>2);
     const sub=MEMO.cards[k]||c.short||'';
-    return `<button type="button" class="ph${wide?' wide':''}" data-card="${k}" aria-label="${esc(c.name)}，看介紹"><img src="${L[0]}" alt="" loading="lazy">${L.length>1?`<span class="cnt">${L.length} 張</span>`:''}<span class="cap"><b>${esc(c.name)}${s?`<small>${esc(s.t)}</small>`:''}</b>${sub?`<span>${esc(sub)}</span>`:''}</span></button>`;}).join('');
+    return `<button type="button" class="ph${wide?' wide':''}" data-card="${k}" aria-label="${esc(c.name)}，看介紹"><img src="${L[0]}" alt="" loading="lazy">${L.length>1?`<span class="cnt">${L.length} 張</span>`:''}${nPriv(k)?`<span class="lock">🔒 ${nPriv(k)}</span>`:''}<span class="cap"><b>${esc(c.name)}${s?`<small>${esc(s.t)}</small>`:''}</b>${sub?`<span>${esc(sub)}</span>`:''}</span></button>`;}).join('');
   const F=foldGos(d.stops||[]);
   const tl=(d.stops||[]).map((s,si)=>{const k=stopKey(s),opt=!isMainStop(s),notes=(F.notes[si]||[]);
     const row=`<li class="${k?'has ':''}${opt?'opt':''}"${k?` data-card="${k}" tabindex="0" role="button"`:''}><span class="t">${esc(s.t)}</span><span class="i">${s.i||'📍'}</span><span><div class="b">${esc(s.n)}</div>${notes.length||s.d?`<div class="d">${notes.map(esc).join('<br>')}${notes.length&&s.d?'<br>':''}${s.d||''}</div>`:''}${k&&MEMO.cards[k]?`<div class="memo1">${esc(MEMO.cards[k])}</div>`:''}</span></li>`;
@@ -1030,7 +1056,7 @@ document.querySelectorAll('.day .map svg').forEach(svg=>{const io=new Intersecti
 
 // 住宿
 document.getElementById('stays').innerHTML=STAYS.map((S,i)=>{const c=CARDS[S.key]||{},L=imgsOf(S.key),R=STAY_RG.find(r=>r.id===S.rg)||{},nights=(R.stays||[]).reduce((a,x)=>a+x[1],0);
-  const sp=L.length?L.map((u,j)=>`<button type="button" class="ph${j===0?' wide':''}" data-card="${S.key}" aria-label="${esc(c.name||S.key)}，看介紹"><img src="${u}" alt="" loading="lazy"></button>`).join('')+(L.length===1?'':''):`<div class="none">還沒有照片</div>`;
+  const sp=L.length?L.map((u,j)=>`<button type="button" class="ph${j===0?' wide':''}" data-card="${S.key}" aria-label="${esc(c.name||S.key)}，看介紹"><img src="${u}" alt="" loading="lazy">${isPriv(S.key,j)?'<span class="lock">🔒</span>':''}</button>`).join('')+(L.length===1?'':''):`<div class="none">還沒有照片</div>`;
   const secs=(S.secs||[]).map(g=>`<dt>${esc(g[0])}</dt><dd>${esc(g[3])}</dd>`).join('')+(S.must||[]).map(m=>`<dt>要記得</dt><dd>${esc(m)}</dd>`).join('');
   return `<article class="st" id="st-${S.key}"><div class="sx"><div class="lab">STAY 0${i+1}　${esc(R.area||'')}　${nights} 晚</div><h3>${esc(NAMES[S.key][0])}</h3><div class="sub">${esc(S.kind)}・${esc(S.sub||'')}</div><div class="sub">${esc(S.stn)}・${esc(S.chk)}・早餐：${esc(S.bf)}</div><div class="tags">${(S.tags||[]).map(t=>`<span>${esc(t)}</span>`).join('')}</div><dl>${secs}</dl></div><div class="sp">${sp}</div></article>`;}).join('');
 
@@ -1042,15 +1068,20 @@ document.getElementById('stays').innerHTML=STAYS.map((S,i)=>{const c=CARDS[S.key
 
 // 下次
 document.getElementById('nexts').innerHTML=MEMO.next.length?`<ul>${MEMO.next.map((x,i)=>`<li><i>${i+1}</i><span>${esc(x)}</span></li>`).join('')}</ul>`:`<p class="empty">還沒寫。想到什麼就補進 index.html 的 MEMO.next。</p>`;
+// 私人相簿（不屬於哪張卡片的私人照片）
+const alb=PRIV['']||[];document.getElementById('album').hidden=!alb.length;
+document.getElementById('albumG').innerHTML=alb.map((p,i)=>`<button type="button" class="ph" data-album="${i}" aria-label="私人照片 ${i+1}"><img src="${p.data}" alt="" loading="lazy"><span class="lock">🔒</span></button>`).join('');
+}
+renderAll();
 
 /* ================= 卡片彈窗 ================= */
 const modal=document.getElementById('modal');let lastFocus=null;
 function ytId(u){if(!u)return'';const m=String(u).match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/);return m?m[1]:(/^[\w-]{11}$/.test(u)?u:'');}
 function ytStart(u){const m=String(u).match(/[?&#](?:t|start)=(\d+)(?:s)?(?:&|$)|[?&#]t=(?:(\d+)m)?(\d+)s/);if(!m)return 0;if(m[1])return +m[1];return (+(m[2]||0))*60+(+(m[3]||0));}
-function openCard(id){const c=CARDS[id];if(!c)return;lastFocus=document.activeElement;
-  const L=imgsOf(id),ph=document.getElementById('mPh');
-  ph.innerHTML=L.length?`<div class="track">${L.map(u=>`<div class="sl"><img src="${u}" alt="${esc(c.name)}" loading="lazy"></div>`).join('')}</div>`+(L.length>1?`<button type="button" class="nav prev" aria-label="上一張">‹</button><button type="button" class="nav next" aria-label="下一張">›</button><div class="dots">${L.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''):'';
-  ph.dataset.i=0;ph.dataset.n=L.length;
+function openCard(id,start){const c=id==='__album'?{name:'私人相簿',kind:'私人照片',text:'只有這趟的成員登入後看得到。'}:CARDS[id];if(!c)return;lastFocus=document.activeElement;
+  const L=id==='__album'?(PRIV['']||[]).map(p=>p.data):imgsOf(id),ph=document.getElementById('mPh');
+  ph.innerHTML=L.length?`<div class="track">${L.map((u,i)=>`<div class="sl"><img src="${u}" alt="${esc(c.name)}" loading="lazy">${id==='__album'||isPriv(id,i)?'<span class="lock">🔒 私人</span>':''}</div>`).join('')}</div>`+(L.length>1?`<button type="button" class="nav prev" aria-label="上一張">‹</button><button type="button" class="nav next" aria-label="下一張">›</button><div class="dots">${L.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''):'';
+  ph.dataset.i=0;ph.dataset.n=L.length;if(start)slide(start);
   document.getElementById('mKind').textContent=c.kind||'';
   const mt=document.getElementById('mTitle');mt.textContent='';
   if(c.url){const a=document.createElement('a');a.href=c.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=c.name;mt.appendChild(a);}else mt.textContent=c.name;
@@ -1070,6 +1101,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('#mPh .nav')){slide(e.target.closest('.nav').classList.contains('next')?1:-1);return;}
   if(e.target.closest('#mX')||e.target.classList.contains('bg')){closeModal();return;}
   const mk=e.target.closest('.mk-a[data-k]');if(mk){e.preventDefault();openCard(mk.dataset.k);return;}
+  const al=e.target.closest('[data-album]');if(al){openCard('__album',+al.dataset.album);return;}
   const el=e.target.closest('[data-card]');if(el){openCard(el.dataset.card);}
 });
 document.addEventListener('keydown',e=>{
@@ -1080,6 +1112,43 @@ document.addEventListener('keydown',e=>{
 let tx0=null;
 document.addEventListener('touchstart',e=>{if(e.target.closest('#mPh'))tx0=e.touches[0].clientX;},{passive:true});
 document.addEventListener('touchend',e=>{if(tx0===null)return;const dx=e.changedTouches[0].clientX-tx0;tx0=null;if(Math.abs(dx)>40)slide(dx<0?1:-1);},{passive:true});
+
+/* ================= 私人照片：登入（trip-tools 的 Firebase）與讀取 =================
+   第一次按「私人」才載 Firebase SDK（公開訪客不用載）；登入成功後記 localStorage kyu-priv=1，之後每次打開就自動載入。
+   不是這趟成員（規則擋下）→ 提示去要邀請連結。網址加 ?privmock=1 用假資料看版面（開發環境連不到 Firebase）。 */
+const TRIP='Oita_Fukoka_2026',FB_V='10.12.2',FB_CFG={apiKey:'AIzaSyBL1D01Tdjqd1_gjJtXFaJdEo0GsLgz-7M',authDomain:'trip-tools-21847.firebaseapp.com',projectId:'trip-tools-21847',storageBucket:'trip-tools-21847.firebasestorage.app',messagingSenderId:'877309827746',appId:'1:877309827746:web:6995a142e468b3a53a55fb'};
+const privBtn=document.getElementById('privBtn'),pmenu=document.getElementById('pmenu');
+let FB=null,ME=null,PRIV_ST='off';   // off／loading／out（沒登入）／in（成員）／deny（不是成員）／err
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2600);}
+function setPriv(rows){const g={};rows.slice().sort((a,b)=>(a.order||0)-(b.order||0)||(a.at||0)-(b.at||0)).forEach(r=>{(g[r.card||'']=g[r.card||'']||[]).push(r);});PRIV=g;renderAll();const n=rows.length;if(n)toast(`已載入 ${n} 張私人照片`);}
+function privUI(){const b=privBtn;b.classList.toggle('on',PRIV_ST==='in');
+  b.innerHTML=PRIV_ST==='in'?`<span class="ava">${esc((ME&&ME.name||'我').slice(0,1))}</span><span>私人</span>`:PRIV_ST==='loading'?'<span>連線中…</span>':PRIV_ST==='deny'?'<span>🔒 不是成員</span>':`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>私人</span>`;}
+async function loadFb(){if(FB)return FB;
+  if(/[?&]privmock=1/.test(location.search)){const rows=[{id:'m1',card:'tsuruta',order:1,data:'img/tsuruta-0-e54bcb59.webp'},{id:'m2',card:'tsuruta',order:2,data:'img/shotengai-0-16d19f5e.webp'},{id:'m3',card:'',order:1,data:'img/kinrinko-0-b3a7a962.webp'},{id:'m4',card:'',order:2,data:'img/nakasu-0-a7efdcb3.webp'}];
+    return FB={mock:1,onAuth(cb){setTimeout(()=>cb({uid:'u',name:'測試'}),0);},signIn(){},signOut(){location.search='';},watch(cb){setTimeout(()=>cb(rows),100);return()=>{};}};}
+  const base='https://www.gstatic.com/firebasejs/'+FB_V+'/';
+  const [A,U,F]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
+  const app=A.initializeApp(FB_CFG),auth=U.getAuth(app);let db;
+  try{db=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})});}catch(e){db=F.initializeFirestore(app,{});}
+  return FB={onAuth:cb=>U.onAuthStateChanged(auth,u=>cb(u?{uid:u.uid,name:u.displayName||u.email||'我'}:null)),
+    signIn:()=>U.signInWithPopup(auth,new U.GoogleAuthProvider()),signOut:()=>U.signOut(auth),
+    watch:(cb,err)=>F.onSnapshot(F.collection(db,'trips',TRIP,'photos'),s=>cb(s.docs.map(d=>({id:d.id,...d.data()}))),err)};}
+let unsubPh=null;
+async function privStart(){if(PRIV_ST==='loading')return;PRIV_ST='loading';privUI();
+  try{const fb=await loadFb();
+    fb.onAuth(u=>{ME=u;if(unsubPh){unsubPh();unsubPh=null;}
+      if(!u){PRIV_ST='out';PRIV={};renderAll();privUI();return;}
+      try{localStorage.setItem('kyu-priv','1');}catch(e){}
+      unsubPh=fb.watch(rows=>{PRIV_ST='in';privUI();setPriv(rows);},e=>{PRIV_ST='deny';privUI();PRIV={};renderAll();toast('你的帳號不是這趟的成員，請向主辦人要邀請連結');});});
+  }catch(e){PRIV_ST='err';privBtn.innerHTML='<span>連不上</span>';toast('連不上登入伺服器，請確認網路');console.error(e);}}
+privBtn.addEventListener('click',async()=>{
+  if(PRIV_ST==='in'||PRIV_ST==='deny'){pmenu.hidden=!pmenu.hidden;document.getElementById('pmWho').textContent=(ME?ME.name+'　':'')+(PRIV_ST==='in'?'已登入，私人照片顯示中':'已登入，但不是這趟的成員');return;}
+  if(!FB){await privStart();if(PRIV_ST==='err')return;}
+  if(PRIV_ST==='out'||PRIV_ST==='loading'){try{await FB.signIn();}catch(e){if(e&&e.code==='auth/popup-closed-by-user')return;toast(e&&e.code==='auth/popup-blocked'?'登入視窗被擋住了，請允許彈出視窗':e&&e.code==='auth/unauthorized-domain'?'這個網域還沒加進 Firebase 授權網域':'登入失敗：'+(e&&e.code||e));}}
+});
+document.getElementById('pmOut').addEventListener('click',async()=>{pmenu.hidden=true;try{localStorage.removeItem('kyu-priv');}catch(e){}if(FB)await FB.signOut();PRIV_ST='out';PRIV={};renderAll();privUI();toast('已登出');});
+document.addEventListener('click',e=>{if(!pmenu.hidden&&!e.target.closest('#pmenu,#privBtn'))pmenu.hidden=true;});
+try{if(localStorage.getItem('kyu-priv')==='1'||/[?&]privmock=1/.test(location.search))privStart();}catch(e){}
 
 /* 離線版：登記 service worker（sw.js），GitHub Pages 上才會啟用；把本站照片送去預存 */
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{const urls=[...new Set(Object.values(IMG).flat())];if(r.active)r.active.postMessage({type:'warm',urls});}).catch(()=>{});});}
