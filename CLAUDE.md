@@ -117,6 +117,8 @@
 - **本站**（F 版面下仍適用）：右上「私人」按鈕（`#privBtn`）。第一次按才動態 `import` Firebase SDK 10.12.2（gstatic；公開訪客不載），`signInWithPopup` Google 登入；登入成功記 `localStorage kyu-priv=1`，之後開頁自動載入。
   `onSnapshot(photos)` → `setPriv()` 依 `card` 分組進 `PRIV`，`imgsOf(k)`＝公開 `img/` 接私人；`renderAll()` 重畫首頁日期卡、其他頁、目前這一天的張。私人的照片在檢視器、住宿、彈窗都有 🔒。`card` 空的集中在「私人相簿」頁（`#/album`，點開用 `openCard('__album', i)`）。
   規則擋下（不是成員）→ 按鈕顯示「🔒 不是成員」並提示要邀請連結；按鈕點開小選單（`#pmenu`）：到 trip-tools 管理、登出。
+- **備註、哪一天、時間（2026-11-16 第二版）**：trip-tools 上傳時可填 `note`／`day`／`t`。`setPriv` 把 `card` 空但 `day` 有的放 `PRIVD[day]`；`daySlides` 把它們做成 `snap` 張（有 `t` 就插在第一個時間比它晚的站前面，沒有就放最後），標題＝備註第一行、`.pcap`＝備註。
+  站的照片翻到私人那張時，`.pcap` 換成那張的備註（`capOf(k,i)`，存在 `#vPh` 的 `data-caps`）；相簿頁的照片也顯示備註；列印頁有隨手拍。`?privmock=1` 多了 m5–m7 三張示範（有備註、有時間、有換行）。
 - `sw.js` `kyu-v3`：gstatic 的 `/firebasejs/` 也 cacheFirst，登入過的人離線也能載 SDK（Firestore 自己有 IndexedDB 離線快取）。
 - 開發環境連不到 gstatic／Firebase：網址加 `?privmock=1` 用四張既有照片假扮私人照片看版面（兩張到 tsuruta、兩張到相簿）。Playwright 公開／mock 桌機／mock 手機零錯誤，截圖看過。
 - **使用者已在 Firebase 上傳 2 張到「新鶴田飯店」**（2026-11-16），真正的登入流程由使用者上線測。Firebase 授權網域與 trip-tools 同一個 `jerry940080.github.io`，不用再加。

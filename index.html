@@ -140,6 +140,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
 .ph:nth-child(even){transform:rotate(1.5deg)}
 .ph img{width:100%;height:100%;object-fit:cover}
 .ph .cnt{position:absolute;bottom:8px;right:10px;font:10px var(--mono);color:var(--mute)}
+.ph .pcap{position:absolute;left:10px;right:10px;bottom:6px;font:14px/1.3 var(--hand);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ph:focus-visible{outline:3px solid var(--red);outline-offset:4px}
 /* 住宿 */
 .st{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:32px;row-gap:16px;padding:32px 0;border-bottom:1px dashed var(--line)}
@@ -1136,11 +1137,12 @@ const DAY_KAN={1:'別府',2:'由布',3:'日田',4:'天神',5:'小倉',6:'歸'}; 
 /* ================= RENDER（方案 B 相冊） ================= */
 /* 私人照片（2026-11-16）：登入 trip-tools 的成員後，從 Firestore trips/Oita_Fukoka_2026/photos 讀，依 card 併進卡片；card 空的放最後的「私人相簿」。
    PRIV={card:[{data,id},…]}，imgsOf 把公開（img/）和私人接在一起，isPriv 判斷第幾張起是私人（照片格、彈窗畫 🔒）。 */
-let PRIV={};
+let PRIV={},PRIVD={}; // PRIVD[day]＝沒對到卡片、但指定了哪一天的私人照片（檢視器裡變成「隨手拍」張）
 const pubOf=k=>Array.isArray(IMG[k])?IMG[k]:IMG[k]?[IMG[k]]:[];
 const imgsOf=k=>pubOf(k).concat((PRIV[k]||[]).map(p=>p.data));
 const isPriv=(k,i)=>i>=pubOf(k).length;
 const nPriv=k=>(PRIV[k]||[]).length;
+const capOf=(k,i)=>{const n=i-pubOf(k).length;return n>=0&&PRIV[k]&&PRIV[k][n]?(PRIV[k][n].note||''):'';}; // 第 i 張的備註（只有私人照片有）
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const stopKey=s=>s.card&&CARDS[s.card]?s.card:(s.at&&CARDS[s.at]?s.at:'');
 const dayPhotos=d=>{const seen=new Set(),o=[];(d.stops||[]).forEach(s=>{const k=stopKey(s);if(k&&!seen.has(k)&&imgsOf(k).length){seen.add(k);o.push([k,s]);}});
@@ -1178,13 +1180,14 @@ function daySlides(d){
     if(L&&L!==cur){let guard=0;while(cur!==L&&guard++<6){const li=legs.findIndex((l,k)=>!used.has(k)&&l.a===cur&&(l.b===L||legs.some((m,j)=>j!==k&&!used.has(j)&&m.a===l.b)));if(li<0)break;used.add(li);const l=legs[li];out.push({type:'leg',leg:l,g:l.g||{},from:l.a,to:l.b});cur=l.b;}cur=L;}
     out.push({type:'stop',s,si,key:stopKey(s),loc:L});});
   legs.forEach((l,li)=>{if(!used.has(li)&&l.b===lodgingAt(d.n+1)){used.add(li);out.push({type:'leg',leg:l,g:l.g||{},from:l.a,to:l.b});}});
+  (PRIVD[d.n]||[]).forEach(p=>{const sn={type:'snap',p,t:p.t||''};let at=out.length;if(sn.t){const i=out.findIndex(x=>x.type==='stop'&&x.s.t>sn.t);if(i>=0)at=i;}out.splice(at,0,sn);});
   out.push({type:'end'});return out;}
-const stopCount=sl=>sl.filter(x=>x.type==='stop').length;
-const stopNo=(sl,i)=>sl.slice(0,i+1).filter(x=>x.type==='stop').length;
+const stopCount=sl=>sl.filter(x=>x.type==='stop'||x.type==='snap').length;
+const stopNo=(sl,i)=>sl.slice(0,i+1).filter(x=>x.type==='stop'||x.type==='snap').length;
 const legPhoto=l=>'';
-function slidePhotos(sl){return sl.type==='stop'&&sl.key?imgsOf(sl.key):[];}
-function slideTitle(sl){if(sl.type==='stop'){const c=CARDS[sl.key];return c?c.name:sl.s.n;}if(sl.type==='leg')return sl.g.t||(MODE[sl.leg.mode]||{}).label||'移動';return '';}
-function slideTime(sl){return sl.type==='stop'?sl.s.t:sl.type==='leg'?(sl.g.at||''):'';}
+function slidePhotos(sl){return sl.type==='snap'?[sl.p.data]:sl.type==='stop'&&sl.key?imgsOf(sl.key):[];}
+function slideTitle(sl){if(sl.type==='snap')return (sl.p.note||'隨手拍').split(/\n/)[0].slice(0,24);if(sl.type==='stop'){const c=CARDS[sl.key];return c?c.name:sl.s.n;}if(sl.type==='leg')return sl.g.t||(MODE[sl.leg.mode]||{}).label||'移動';return '';}
+function slideTime(sl){return sl.type==='stop'?sl.s.t:sl.type==='leg'?(sl.g.at||''):sl.type==='snap'?sl.t:'';}
 
 /* ---------- 地圖 ---------- */
 const MAPC={};
@@ -1227,10 +1230,14 @@ function renderSlide(){const d=DAYS[VD-1],sl=VS[VI],ph=document.getElementById('
     ph.innerHTML=`<div class="frame"><div class="legmap">${dayMapSvg(d,sl.leg)}</div><span class="legtag">移動 · ${esc(M.label||'')}</span><div class="pcap">${esc(NAMES[sl.from][0])} → ${esc(NAMES[sl.to][0])}</div></div>`;
     requestAnimationFrame(()=>{const s=ph.querySelector('svg');if(s){animateMap(s);}});
     tx.innerHTML=`<div class="vhead"><span class="time">${esc(g.at||'')}</span><span class="dt">移動・${esc(M.label||'')}</span></div><h1>${esc(g.t||M.label||'移動')}</h1><div class="meta">${esc(NAMES[sl.from][0])} → ${esc(NAMES[sl.to][0])}</div>${g.gd?`<p class="txt">${esc(g.gd)}</p>`:''}<div class="vbtm">${nextHTML}</div>`;
+  }else if(sl.type==='snap'){const p=sl.p,no=stopNo(VS,VI),tot=stopCount(VS);
+    ph.innerHTML=`<div class="frame"><div class="track"><div class="sl"><img src="${p.data}" alt="隨手拍"><span class="lock">🔒 私人</span></div></div><div class="pcap">${esc(p.note||'')}</div></div>`;ph.dataset.i=0;ph.dataset.n=1;
+    tx.innerHTML=`<div class="vhead"><span class="time">${esc(sl.t||'')}</span><span class="dt">第 ${no} 站 / ${tot}・隨手拍</span></div><h1>${esc(p.note?p.note.split(/\n/)[0]:'隨手拍')}</h1><div class="meta">私人照片・沒有對到哪一站</div>${p.note&&p.note.includes('\n')?`<p class="txt">${esc(p.note.split(/\n/).slice(1).join('\n'))}</p>`:''}<div class="vbtm">${nextHTML}</div>`;
+    map.innerHTML=dayMapSvg(d);
   }else{const s=sl.s,c=CARDS[sl.key]||null,L=slidePhotos(sl),no=stopNo(VS,VI),tot=stopCount(VS),memo=sl.key?MEMO.cards[sl.key]:'';
-    const cap=memo||(c&&c.short)||s.d||'';
+    const cap=memo||(c&&c.short)||s.d||'',caps=L.map((u,i)=>sl.key?capOf(sl.key,i):'');ph.dataset.caps=JSON.stringify(caps);ph.dataset.cap=cap;
     ph.innerHTML=`<div class="frame">${L.length?`<div class="track">${L.map((u,i)=>`<div class="sl"><img src="${u}" alt="${esc(slideTitle(sl))}" loading="${i?'lazy':'eager'}">${sl.key&&isPriv(sl.key,i)?'<span class="lock">🔒 私人</span>':''}</div>`).join('')}</div>`
-      :`<div class="kan"><span>${esc(kanOf(s))}</span><small>${s.i||''}　還沒有照片</small></div>`}<div class="pcap">${esc(cap)}</div>${L.length>1?`<span class="pcnt">1 / ${L.length}</span>`:''}</div>${L.length>1?`<button type="button" class="pnav prev" aria-label="上一張">‹</button><button type="button" class="pnav next" aria-label="下一張">›</button>`:''}`;
+      :`<div class="kan"><span>${esc(kanOf(s))}</span><small>${s.i||''}　還沒有照片</small></div>`}<div class="pcap">${esc(caps[0]||cap)}</div>${L.length>1?`<span class="pcnt">1 / ${L.length}</span>`:''}</div>${L.length>1?`<button type="button" class="pnav prev" aria-label="上一張">‹</button><button type="button" class="pnav next" aria-label="下一張">›</button>`:''}`;
     ph.dataset.i=0;ph.dataset.n=L.length;
     const vids=c?[].concat(c.video||[]).map(v=>typeof v==='string'?{u:v}:v).filter(v=>ytId(v.u)):[];
     tx.innerHTML=`<div class="vhead"><span class="time">${esc(s.t)}</span><span class="dt">第 ${no} 站 / ${tot}</span></div><h1>${esc(slideTitle(sl))}</h1>${c?`<div class="meta">${esc(c.kind||'')}${c.jp&&c.jp!==c.name?'・'+esc(c.jp):''}</div>`:''}${c&&c.text?`<p class="txt">${c.text}</p>`:s.d?`<p class="txt">${esc(s.d)}</p>`:''}${memo?`<p class="memo1">${esc(memo)}</p>`:''}${c&&c.chips?`<div class="chips">${c.chips.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}${vids.length?`<button type="button" class="vbtn" data-vid="${esc(vids[0].u)}">▶ 影片${vids[0].l?'　'+esc(vids[0].l):''}</button><div class="yt" id="vYt" hidden></div>`:''}${sl.key&&gUrl(sl.key)?`<a class="vlnk" href="${gUrl(sl.key)}" target="_blank" rel="noopener noreferrer">Google 地圖 ↗</a>`:''}<div class="vbtm">${nextHTML}</div>`;
@@ -1241,7 +1248,7 @@ function renderSlide(){const d=DAYS[VD-1],sl=VS[VI],ph=document.getElementById('
   history.replaceState(null,'',location.pathname+location.search+'#/day/'+VD+'/'+VI);
 }
 function vgo(d){const i=VI+d;if(i<0||i>=VS.length)return;VI=i;renderSlide();}
-function pslide(d){const ph=document.getElementById('vPh'),n=+ph.dataset.n;if(n<2)return;const i=((+ph.dataset.i)+d+n)%n;ph.dataset.i=i;ph.querySelector('.track').style.transform=`translateX(-${i*100}%)`;ph.querySelector('.pcnt').textContent=(i+1)+' / '+n;}
+function pslide(d){const ph=document.getElementById('vPh'),n=+ph.dataset.n;if(n<2)return;const i=((+ph.dataset.i)+d+n)%n;ph.dataset.i=i;ph.querySelector('.track').style.transform=`translateX(-${i*100}%)`;ph.querySelector('.pcnt').textContent=(i+1)+' / '+n;try{const caps=JSON.parse(ph.dataset.caps||'[]'),pc=ph.querySelector('.pcap');if(pc)pc.textContent=caps[i]||ph.dataset.cap||'';}catch(e){}}
 document.getElementById('vPrev').addEventListener('click',()=>vgo(-1));
 document.getElementById('vNext').addEventListener('click',()=>vgo(1));
 VIEW.viewer.addEventListener('click',e=>{
@@ -1260,7 +1267,7 @@ document.addEventListener('keydown',e=>{if(VIEW.viewer.hidden||!modal.hidden||!m
 function renderHome(){
   document.getElementById('hcards').innerHTML=DAYS.map(d=>{const ps=dayPhotos(d),n=ps.reduce((a,[k])=>a+imgsOf(k).length,0),cv=ps[0]?imgsOf(ps[0][0])[0]:'',st=(d.stops||[]).filter(isMainStop).length,pv=nPrivDay(d);
     return `<a class="hc" href="#/day/${d.n}">${cv?`<img src="${cv}" alt="" loading="lazy">`:`<span class="kan">${DAY_KAN[d.n]||''}</span>`}<span class="n">${d.n}</span><span class="t"><b>${esc(d.title)}</b><small>${d.date} ${d.wd}・${esc(d.sub)}</small></span><span class="c">${st} 站・${n?n+' 張照片':'還沒有照片'}${pv?`・🔒 ${pv}`:''} ›</span></a>`;}).join('');}
-const nPrivDay=d=>{const seen=new Set();let n=0;(d.stops||[]).forEach(s=>{const k=stopKey(s);if(k&&!seen.has(k)){seen.add(k);n+=nPriv(k);}});return n;};
+const nPrivDay=d=>{const seen=new Set();let n=(PRIVD[d.n]||[]).length;(d.stops||[]).forEach(s=>{const k=stopKey(s);if(k&&!seen.has(k)){seen.add(k);n+=nPriv(k);}});return n;};
 
 /* ---------- 其他頁（住宿、吃了什麼、交通、相簿、下次） ---------- */
 /* 旅途收藏：車票、收據、明信片。掃描檔放 img/items/，用 tools/addphotos.py 以 key 'item-<id>' 加進 IMG 也可以，或直接寫路徑 */
@@ -1272,7 +1279,7 @@ const ITEMS=[ // {id, title, date, note, img}；img 空字串＝還沒掃描
 function renderItems(){document.getElementById('itemsG').innerHTML=ITEMS.length?ITEMS.map((it,i)=>`<button type="button" class="item" data-item="${i}">${it.img?`<img src="${it.img}" alt="${esc(it.title)}" loading="lazy">`:'<div class="none">掃描待放</div>'}<h3>${esc(it.title)}</h3><small>${esc(it.date)}</small>${it.note?`<p>${esc(it.note)}</p>`:''}</button>`).join(''):'<p class="empty">還沒有收藏。把車票、收據、明信片掃描後丟給我。</p>';}
 function renderPrint(){document.getElementById('printBody').innerHTML=DAYS.map(d=>{const sl=daySlides(d);
   return `<section class="pday"><h2><span>DAY ${d.n} · 2026.${d.date.split('/').map(x=>x.padStart(2,'0')).join('.')}（${d.wd}）</span>${esc(d.title)}</h2>${MEMO.days[d.n]?`<p class="pmemo">${esc(MEMO.days[d.n])}</p>`:''}
-  ${sl.map(x=>{if(x.type==='leg')return `<div class="pleg">→ ${esc(x.g.at||'')}　${esc(x.g.t||'')}${x.g.gd?'　'+esc(x.g.gd):''}</div>`;if(x.type!=='stop')return '';const c=CARDS[x.key],L=slidePhotos(x),m=x.key?MEMO.cards[x.key]:'';
+  ${sl.map(x=>{if(x.type==='snap')return `<div class="pstop"><div class="t">${esc(x.t||'')}</div><div><b>隨手拍</b>${x.p.note?`<div class="m1">${esc(x.p.note)}</div>`:''}</div><img src="${x.p.data}" alt="" loading="lazy"></div>`;if(x.type==='leg')return `<div class="pleg">→ ${esc(x.g.at||'')}　${esc(x.g.t||'')}${x.g.gd?'　'+esc(x.g.gd):''}</div>`;if(x.type!=='stop')return '';const c=CARDS[x.key],L=slidePhotos(x),m=x.key?MEMO.cards[x.key]:'';
     return `<div class="pstop"><div class="t">${esc(x.s.t)}</div><div><b>${esc(slideTitle(x))}</b>${c&&c.text?`<p>${c.text}</p>`:x.s.d?`<p>${esc(x.s.d)}</p>`:''}${m?`<div class="m1">${esc(m)}</div>`:''}</div>${L.length?`<img src="${L[0]}" alt="" loading="lazy">`:'<span></span>'}</div>`;}).join('')}</section>`;}).join('');}
 function renderPages(){renderItems();renderPrint();
 document.getElementById('stays').innerHTML=STAYS.map((S,i)=>{const c=CARDS[S.key]||{},L=imgsOf(S.key),R=STAY_RG.find(r=>r.id===S.rg)||{},nights=(R.stays||[]).reduce((a,x)=>a+x[1],0);
@@ -1285,7 +1292,7 @@ document.getElementById('stays').innerHTML=STAYS.map((S,i)=>{const c=CARDS[S.key
     return `<div class="fd"><div class="fx"><div class="n">${d.n}</div><div class="t">${d.date}　${esc(d.title)}</div></div><ul>${ins.map(row).join('')}${cs.length?`<li style="display:block;border:0;padding:0"><details><summary>當時的候選 ${cs.length} 家</summary><ul style="list-style:none;margin:0;padding:0">${cs.map(row).join('')}</ul></details></li>`:''}</ul></div>`;}).join('');})();
 document.getElementById('nexts').innerHTML=MEMO.next.length?`<ul>${MEMO.next.map((x,i)=>`<li><i>${i+1}</i><span>${esc(x)}</span></li>`).join('')}</ul>`:`<p class="empty">還沒寫。想到什麼就補進 index.html 的 MEMO.next。</p>`;
 const alb=PRIV['']||[];document.getElementById('album').classList.toggle('none',!alb.length);
-document.getElementById('albumG').innerHTML=alb.length?alb.map((p,i)=>`<button type="button" class="ph" data-album="${i}" aria-label="私人照片 ${i+1}"><img src="${p.data}" alt="" loading="lazy"><span class="lock">🔒</span></button>`).join(''):'<p class="empty">登入後，沒有指定卡片的私人照片會集中在這裡。</p>';
+document.getElementById('albumG').innerHTML=alb.length?alb.map((p,i)=>`<button type="button" class="ph" data-album="${i}" aria-label="私人照片 ${i+1}"><img src="${p.data}" alt="" loading="lazy"><span class="lock">🔒</span>${p.note?`<span class="pcap">${esc(p.note)}</span>`:''}</button>`).join(''):'<p class="empty">登入後，沒有指定卡片的私人照片會集中在這裡。</p>';
 }
 function renderAll(){renderHome();renderPages();if(VD){VS=daySlides(DAYS[VD-1]);document.getElementById('vFs').innerHTML=VS.map((sl,k)=>fsItem(sl,k)).join('');if(!VIEW.viewer.hidden)renderSlide();}}
 
@@ -1351,11 +1358,11 @@ const TRIP='Oita_Fukoka_2026',FB_V='10.12.2',FB_CFG={apiKey:'AIzaSyBL1D01Tdjqd1_
 const privBtn=document.getElementById('privBtn'),pmenu=document.getElementById('pmenu');
 let FB=null,ME=null,PRIV_ST='off';   // off／loading／out（沒登入）／in（成員）／deny（不是成員）／err
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2600);}
-function setPriv(rows){const g={};rows.slice().sort((a,b)=>(a.order||0)-(b.order||0)||(a.at||0)-(b.at||0)).forEach(r=>{(g[r.card||'']=g[r.card||'']||[]).push(r);});PRIV=g;renderAll();const n=rows.length;if(n)toast(`已載入 ${n} 張私人照片`);}
+function setPriv(rows){const g={},gd={};rows.slice().sort((a,b)=>(a.order||0)-(b.order||0)||(a.at||0)-(b.at||0)).forEach(r=>{if(!r.card&&r.day)(gd[r.day]=gd[r.day]||[]).push(r);else (g[r.card||'']=g[r.card||'']||[]).push(r);});PRIV=g;PRIVD=gd;renderAll();const n=rows.length;if(n)toast(`已載入 ${n} 張私人照片`);}
 function privUI(){const b=privBtn;b.classList.toggle('on',PRIV_ST==='in');
   b.innerHTML=PRIV_ST==='in'?`<span class="ava">${esc((ME&&ME.name||'我').slice(0,1))}</span><span>私人</span>`:PRIV_ST==='loading'?'<span>連線中…</span>':PRIV_ST==='deny'?'<span>🔒 不是成員</span>':`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>私人</span>`;}
 async function loadFb(){if(FB)return FB;
-  if(/[?&]privmock=1/.test(location.search)){const rows=[{id:'m1',card:'tsuruta',order:1,data:'img/tsuruta-0-e54bcb59.webp'},{id:'m2',card:'tsuruta',order:2,data:'img/shotengai-0-16d19f5e.webp'},{id:'m3',card:'',order:1,data:'img/kinrinko-0-b3a7a962.webp'},{id:'m4',card:'',order:2,data:'img/nakasu-0-a7efdcb3.webp'}];
+  if(/[?&]privmock=1/.test(location.search)){const rows=[{id:'m1',card:'tsuruta',order:1,data:'img/tsuruta-0-e54bcb59.webp'},{id:'m2',card:'tsuruta',order:2,data:'img/shotengai-0-16d19f5e.webp'},{id:'m3',card:'',order:1,data:'img/kinrinko-0-b3a7a962.webp',note:'相簿裡的一張'},{id:'m4',card:'',order:2,data:'img/nakasu-0-a7efdcb3.webp'},{id:'m5',card:'',day:3,t:'16:40',order:1,data:'img/tabimusubi-0-c9771759.webp',note:'車上吃的烤飯糰\n臨時拍的'},{id:'m6',card:'',day:3,order:2,data:'img/oyamadam-1-cda9ad62.webp',note:'租車的儀表板'},{id:'m7',card:'kinrinko',order:1,data:'img/kinrinko-1-fb97d0e9.webp',note:'湖邊的老房子（私人，有備註）'}];
     return FB={mock:1,onAuth(cb){setTimeout(()=>cb({uid:'u',name:'測試'}),0);},signIn(){},signOut(){location.search='';},watch(cb){setTimeout(()=>cb(rows),100);return()=>{};}};}
   const base='https://www.gstatic.com/firebasejs/'+FB_V+'/';
   const [A,U,F]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
