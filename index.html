@@ -868,6 +868,49 @@ html.pv .vw{padding-top:14px!important}
   .vpg .pr{flex:none;gap:10px}
   .vpg .pr .pol.vbig.short{height:46vh}
 }
+
+/* ================= 2026-11-20 依 ChatGPT 第二次評估做的修正 ================= */
+/* ② 主圖＋縮圖列混影片：影片那一格、縮圖上的 ▶ */
+.vph .sl.sv{display:flex}
+.vph .sl .vidbox{flex:1 1 auto;width:100%;height:100%}
+.pthumbs button.tv,.vph .pgrid button.tv{position:relative}
+.pthumbs button.tv i,.vph .pgrid button.tv i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-size:13px;text-shadow:0 1px 4px #000;pointer-events:none}
+.pthumbs{flex:none}
+.vph .frame{max-width:100%}
+/* 播放鈕統一成磚紅圓形 */
+.vph .vplay,.vpg .vplay,.vpg .bgv .vplay{width:56px;height:56px;border-radius:50%;border:2px solid #FBF6E9;background:rgba(154,73,56,.94);color:#FBF6E9;font-size:20px;box-shadow:0 2px 8px #0004;padding-left:4px}
+.pol .pl,.vpg .strip .pl,.ph.vid .play{width:44px;height:44px;border:2px solid #FBF6E9;box-shadow:0 2px 8px #0004}
+.vph .vidbox img,.vpg .vidbox img{opacity:.95}
+/* 內文字重 */
+.vtx .txt,.vpg .txt{font-weight:400}
+/* Ⓓ Ⓔ 的文字聚成一塊 */
+.vpg .row .rt2{display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-width:0}
+.vpg .mhd,.vpg .hsc{display:none}
+/* 相片牆排不出來時的保底：兩欄 */
+.vpg .jw.fb{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:auto;align-content:start}
+.vpg .jw.fb .pol{position:relative;aspect-ratio:4/3;width:auto;height:auto}
+@media (min-width:641px){
+  .vph .pnav.prev{left:70px}.vph .pnav.next{left:auto;right:132px} /* 照片箭頭收進相紙裡，不跟翻頁箭頭擠在一起（之前只有右邊那顆生效） */
+  .vw.flip .vph .pnav.prev{left:132px}.vw.flip .vph .pnav.next{right:70px}
+  .vpg .row{gap:28px;justify-content:flex-start}
+  .vpg .row .tt{width:auto;max-width:320px}
+  .vpg .row .rt2{max-width:440px}
+}
+@media (min-width:1001px){
+  .vw:not([data-canvas]){grid-template-columns:1.3fr 1fr}
+  .vw.flip:not([data-canvas]){grid-template-columns:1fr 1.3fr}
+  .vfs{padding:6px 0 10px}
+  .fsi{width:60px;height:42px;opacity:.85}
+  .fsi.on{transform:none}
+}
+@media (max-width:640px){
+  .vph .vplay,.vpg .vplay,.vpg .bgv .vplay{width:52px;height:52px;font-size:18px}
+  .vpg .mhd{display:block;flex:none;grid-column:1/-1;font:13px var(--mono);letter-spacing:.04em;color:var(--mute);margin-bottom:-4px}
+  .vpg .strip,.vpg .duo2.n3,.vpg .tall3.vv.n3{scroll-snap-type:x mandatory}
+  .vpg .strip>*,.vpg .duo2.n3>*,.vpg .tall3.vv.n3>*{scroll-snap-align:start}
+  .vpg .hsc{display:block;flex:none;grid-column:1/-1;text-align:center;font:11px var(--mono);letter-spacing:.06em;color:var(--mute);margin-top:-4px}
+  .vpg .row .rt2{gap:8px}
+}
 </style>
 </head>
 <body>
@@ -935,7 +978,7 @@ html.pv .vw{padding-top:14px!important}
 <section class="blk" id="food"><div class="wrap"><div class="bh"><h2>吃了什麼</h2><small>排進行程的店，和當時列的候選</small></div><div id="foods"></div></div></section>
 <section class="blk tx" id="tx"><div class="wrap"><div class="bh"><h2>交通</h2><small>巴士・特急・租車・新幹線</small></div>
 
-    <p class="lead">這趟沒有開長途車：機場巴士、龜之井巴士、JR 九州的<b>特急ゆふいんの森</b>（由布院 → 日田 → 博多，兩段都事先訂）、日田租車一個下午、福岡市區搭地下鐵、小倉來回搭新幹線。Excel 記的交通費合計約 <b>¥21,400</b>。</p>
+    <p class="lead">這趟沒有開長途車：機場巴士、龜之井巴士、JR 九州的<b>特急ゆふいんの森</b>（由布院 → 日田 → 博多，兩段都事先訂）、日田租車一個下午、福岡市區搭地下鐵、小倉來回搭新幹線。</p>
 
     <h3 >交通明細</h3>
     <div class="tbw"><table>
@@ -1663,7 +1706,8 @@ function justLay(pg){const a=pg&&pg.querySelector('.jw');if(!a)return;const it=[
     let area=0;part.forEach(([x,y],j)=>{for(let i=x;i<y;i++)area+=ih[j]*ih[j]*r[i];});
     const score=area*Math.sqrt(Math.min(...ih)/Math.max(...ih)); // 面積越大越好，但各排高度不要差太多
     if(!best||score>best.score)best={score,part,ih};}
-  if(!best)return;
+  if(!best){a.classList.add('ok','fb');return;}
+  a.classList.remove('fb');
   const rows=best.part.map(([x,y],j)=>{const h=best.ih[j]+pY;let w=0;const ws=[];for(let i=x;i<y;i++){const ww=best.ih[j]*r[i]+pX;ws.push(ww);w+=ww;}return {x,h,ws,w:w+gap*(y-x-1)};});
   const T=rows.reduce((x,o)=>x+o.h,0)+gap*(rows.length-1);let top=mob?0:Math.max(0,(H-T)/2);if(mob)a.style.height=Math.ceil(T)+'px';
   rows.forEach(o=>{let left=Math.max(0,(W-o.w)/2);o.ws.forEach((ww,q)=>{const e=it[o.x+q];e.style.left=left.toFixed(1)+'px';e.style.top=top.toFixed(1)+'px';e.style.width=ww.toFixed(1)+'px';e.style.height=o.h.toFixed(1)+'px';left+=ww+gap;});top+=o.h+gap;});
@@ -1676,13 +1720,13 @@ function renderCanvas(sl,pg,no,tot,nextHTML){const p=sl.p,L=sl.photos,V=sl.vids,
   let h='';
   if(lay==='full')h=`<button type="button" class="bg" data-g="0" aria-label="看大圖"><img src="${L[0].src}" alt="">${L[0].priv?'<span class="lock">🔒 私人</span>':''}</button><div class="slip">${head}${title}${text}${nextHTML}</div>${memo}`;
   else if(lay==='scatter'){const T=M.slice(0,5),P=SCAT[T.length];h=`<div class="area">${T.map((m,i)=>tileHTML(sl,m,`left:${P[i][0]}%;top:${P[i][1]}%;width:${P[i][2]}%;height:${P[i][3]}%;transform:rotate(${(P[i][4]+j(i)).toFixed(1)}deg);z-index:${i===2?2:1}`,i===0?'tape':i===2?'tape2':'')).join('')}</div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;}
-  else if(lay==='wide')h=`<div class="topp">${polHTML(L[0],0,rot(0,0,.5),'tape')}</div><div class="row"><div class="tt">${head}${title}${nextHTML}</div>${text}${memo}</div>`;
-  else if(lay==='film')h=`<div class="strip">${M.slice(0,6).map((m,i)=>m.kind==='photo'?`<button type="button" data-g="${L.indexOf(m)}" aria-label="看大圖"><img src="${m.src}" alt="" loading="${i?'lazy':'eager'}">${m.priv?'<span class="lock">🔒</span>':''}</button>`:`<button type="button" class="vid" data-vurl="${esc(m.url)}" data-vt="${esc(m.cap||m.title||'影片')}" aria-label="播放影片"><img src="${ytThumb(m.url)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><i class="pl">▶</i>${m.priv?'<span class="lock">🔒</span>':''}</button>`).join('')}</div><div class="row"><div class="tt">${head}${title}${nextHTML}</div>${text}${memo}</div>`;
+  else if(lay==='wide')h=`<div class="topp">${polHTML(L[0],0,rot(0,0,.5),'tape')}</div><div class="row"><div class="tt">${head}${title}${nextHTML}</div><div class="rt2">${text}${memo}</div></div>`;
+  else if(lay==='film')h=`<div class="strip">${M.slice(0,6).map((m,i)=>m.kind==='photo'?`<button type="button" data-g="${L.indexOf(m)}" aria-label="看大圖"><img src="${m.src}" alt="" loading="${i?'lazy':'eager'}">${m.priv?'<span class="lock">🔒</span>':''}</button>`:`<button type="button" class="vid" data-vurl="${esc(m.url)}" data-vt="${esc(m.cap||m.title||'影片')}" aria-label="播放影片"><img src="${ytThumb(m.url)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><i class="pl">▶</i>${m.priv?'<span class="lock">🔒</span>':''}</button>`).join('')}</div><div class="row"><div class="tt">${head}${title}${nextHTML}</div><div class="rt2">${text}${memo}</div></div>`;
   else if(lay==='bigtext')h=`<div class="tb">${head}<h1 class="big">${esc(p.title||'')}</h1>${text}${nextHTML}</div><div class="side">${L[0]?polHTML(L[0],0,rot(4,0),'tape2'):''}${memo}</div>`;
   else if(lay==='wall'){const T=M.slice(0,9),n=T.length,cols=n<=6?3:n<=8?4:3;h=`<div class="area" style="--cols:${cols}">${T.map((m,i)=>tileHTML(sl,m,rot([-3,2,-1,3,2,-2,1,-4,2][i],i,.5))).join('')}</div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;}
   else if(lay==='diptych'){const side=(m,b,k,c)=>m.kind==='photo'?polHTML(m,L.indexOf(m),rot(b,k),c):vidBig(m,rot(b,k),c);h=`${side(M[0],-3,0,'tape')}<div class="tb mid">${head}${title}${memo}${text}${nextHTML}</div>${side(M[1],3,1,'tape2')}`;}
   else if(lay==='vstack')h=`<div class="topp vt">${vidBig(V[0],rot(0,0,.4),'tape')}</div><div class="row"><div class="tt">${head}${title}${nextHTML}</div>${minis(4)}<div class="rt">${text}${memo}</div></div>`;
-  else if(lay==='vduo')h=`<div class="duo2">${polHTML(L[0],0,rot(-2,0),'tape')}${vidBig(V[0],rot(2,1),'tape2')}</div><div class="row"><div class="tt">${head}${title}${nextHTML}</div>${text}${memo}</div>`;
+  else if(lay==='vduo')h=`<div class="duo2">${polHTML(L[0],0,rot(-2,0),'tape')}${vidBig(V[0],rot(2,1),'tape2')}</div><div class="row"><div class="tt">${head}${title}${nextHTML}</div><div class="rt2">${text}${memo}</div></div>`;
   else if(lay==='vtrio'){const T=V.slice(0,3);h=`<div class="duo2 n${T.length}">${T.map((m,i)=>vidBig(m,rot([-2,1.5,-1][i],i,.6),i===0?'tape':i===2?'tape2':'')).join('')}</div><div class="row"><div class="tt">${head}${title}${nextHTML}</div>${minis(3)}<div class="rt">${text}${memo}</div></div>`;}
   else if(lay==='vpin')h=`<div class="pin">${vidBig(V[0],rot(-1,0,.5),'pbig tape')}${polHTML(L[0],0,rot(5,1),'psm tape2')}</div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;
   else if(lay==='ppin')h=`<div class="pin">${polHTML(L[0],0,rot(-1.5,0,.5),'pbig nat tape')}${tileHTML(sl,V[0],rot(4,1),'psm tape2'+(isShort(V[0].url)?' short':''))}</div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;
@@ -1694,8 +1738,10 @@ function renderCanvas(sl,pg,no,tot,nextHTML){const p=sl.p,L=sl.photos,V=sl.vids,
   else if(lay==='vgrid'){const T=L.slice(0,6);h=`<div class="vg n${T.length}">${vidBig(V[0],rot(-.8,0,.3),'thin tape')}${T.map((m,i)=>polHTML(m,i,rot([1,-1,.8,-.8,1.2,-1][i],i+1,.3),'thin')).join('')}</div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;}
   else if(lay==='sgrid'){const T=L.slice(0,4);h=`<div class="tall3 sg">${vidBig(V[0],rot(-1.5,0,.5),'tape',1)}<div class="g22 n${T.length}">${T.map((m,i)=>polHTML(m,i,rot([1,-1,.8,-.8][i],i+1,.3),'thin')).join('')}</div></div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;}
   else if(lay==='pano'){const T=L.slice(1,3);h=`<div class="pl">${polHTML(L[0],0,rot(-.6,0,.25),'thin nat tape')}<div class="prow">${T.map((m,i)=>polHTML(m,i+1,rot([-1.5,1.2][i],i+2,.4),'thin')).join('')}${memo}</div></div><div class="pr">${vidBig(V[0],rot(.8,1,.3),'thin tape2')}<div class="tb">${head}${title}${text}${nextHTML}</div></div>`;}
+  if({just:1,vgrid:1,sgrid:1,pano:1,wall:1}[lay])h=`<div class="mhd">${esc(sl.t)}${sl.t&&p.title?' · ':''}${esc(p.title||'')}</div>`+h;
   pg.classList.remove('playing');pg.innerHTML=h;pg.scrollTop=0;
-  if(lay==='just'){justLay(pg);pg.querySelectorAll('.jw img').forEach(im=>{if(!im.complete)im.addEventListener('load',()=>justLay(pg));});requestAnimationFrame(()=>justLay(pg));}
+  pg.querySelectorAll('.strip,.duo2.n3,.tall3.vv.n3').forEach(r=>r.insertAdjacentHTML('afterend',`<div class="hsc">← 左右滑 · 共 ${r.children.length} 格 →</div>`));
+  if(lay==='just'){justLay(pg);pg.querySelectorAll('.jw img').forEach(im=>{if(!im.complete)im.addEventListener('load',()=>justLay(pg));});requestAnimationFrame(()=>justLay(pg));setTimeout(()=>{const a=pg.querySelector('.jw');if(a&&!a.classList.contains('ok'))a.classList.add('ok','fb');},1800);}
   pg.querySelectorAll('.pol.nat img').forEach(im=>{const f=()=>{if(im.naturalWidth){const ar=Math.max(.68,Math.min(im.closest('.pl')?3.4:1.6,im.naturalWidth/im.naturalHeight)).toFixed(3);im.parentNode.style.aspectRatio=ar;im.parentNode.style.setProperty('--ar',ar);}};if(im.complete)f();else im.addEventListener('load',f);});} // 主角照片照原本的長寬比
 function openVideo(url,title){lastFocus=document.activeElement;const ph=document.getElementById('mPh');ph.innerHTML='';ph.dataset.n=0;
   document.getElementById('mKind').textContent='影片';document.getElementById('mTitle').textContent=title||'';document.getElementById('mJp').textContent='';document.getElementById('mMemo').hidden=true;document.getElementById('mText').innerHTML='';document.getElementById('mChips').innerHTML='';document.getElementById('mInfo').hidden=true;document.getElementById('mAct').textContent='';
@@ -1720,7 +1766,7 @@ async function loadPagesPublic(){try{const r=await fetch(`https://firestore.goog
   const rows=(j.documents||[]).map(d=>{const o={id:d.name.split('/').pop()};Object.entries(d.fields||{}).forEach(([k,v])=>o[k]=fsVal(v));return o;});if(PRIV_ST!=='in')setPages(rows);}catch(e){}}
 function pagesMock(){return [
  {id:'p1',day:3,order:1,layout:'single',media:['pub:kinrinko:0'],title:'金鱗湖',time:'08:00',kind:'景點',memo:'沒有霧，但很安靜。',text:''},
- {id:'p2',day:3,order:2,layout:'main',media:['pub:aotmuseum:1','pub:aotmuseum:0','pub:oyamadam:0','pub:oyamadam:1','pub:aotnew:0','priv:m7'],title:'進擊的巨人博物館 本館',time:'15:00',kind:'景點',memo:'比想像中大。',text:'先看本館再開去新館，兩館加起來約兩小時。'},
+ {id:'p2',day:3,order:2,layout:'main',media:['pub:aotmuseum:1','pub:aotmuseum:0','vid:v1','pub:oyamadam:0','pub:oyamadam:1','vid:v2','pub:aotnew:0','priv:m7'],title:'進擊的巨人博物館 本館',time:'15:00',kind:'景點',memo:'比想像中大。',text:'先看本館再開去新館，兩館加起來約兩小時。'},
  {id:'p3',day:3,order:3,layout:'pair',media:['pub:kawakami:1','pub:kinrinko:1'],title:'由布院 Kawakami',time:'07:00',kind:'住宿',memo:'空間很大、價格便宜。',text:''},
  {id:'p4',day:3,order:4,layout:'quad',media:['pub:tabimusubi:0','pub:issou:0','pub:ichiran:0','pub:nakasu:0'],title:'吃了什麼',time:'',kind:'美食',memo:'',text:'四張正方形。'},
  {id:'p5',day:3,order:5,layout:'collage',media:['pub:oyamadam:1','pub:oyamadam:0','pub:aotnew:0'],title:'大山水壩',time:'14:30',kind:'景點',memo:'銅像比想像中小。',text:''},
@@ -1748,20 +1794,23 @@ function pagesMock(){return [
  {id:'w2',day:3,order:7.9942,layout:'vgrid',media:['vid:v1','pub:tabimusubi:0','pub:issou:0','pub:ichiran:0','pub:kawakami:1','pub:nakasu:0','pub:kinrinko:1'],title:'水炊き 鳥田',time:'12:30',kind:'美食',memo:'合理正常，沒有驚艷。',text:'一支影片配六張照片。'},
  {id:'w3',day:3,order:7.9943,layout:'sgrid',media:['vid:v2','pub:kawakami:0','pub:kawakami:1','pub:kinrinko:1','pub:kinrinko:0'],title:'由布院 Kawakami',time:'16:00',kind:'住宿',memo:'住處有室外溫泉。',text:'直式影片配四張照片。'},
  {id:'w4',day:3,order:7.9944,layout:'pano',media:['pub:aotnew:0','vid:v1','pub:aotmuseum:1'],caps:['原稿展示'],title:'進擊的巨人 新館',time:'16:30',kind:'景點',memo:'原稿很多。',text:'第一張放全景照片，旁邊是影片。'}];}
+function vidInner(u,priv){return `<img src="${ytThumb(u)}" alt="" onerror="this.style.visibility='hidden'"><button type="button" class="vplay" data-vid="${esc(u)}" aria-label="播放影片">▶</button>${priv?'<span class="lock">🔒 私人影片</span>':''}`;}
 function pageFrame(sl){const L=sl.photos,cap=(L[0]&&L[0].cap)||sl.p.title||'',lay=sl.lay, // 相紙下緣：私人照片自己的備註，否則這一頁的標題（一句心得在右邊的便利貼，不重複）
   lock=i=>L[i]&&L[i].priv?'<span class="lock">🔒 私人</span>':'';
   const gridBtn=(m,i)=>`<button type="button" data-g="${i}" aria-label="看大圖"><img src="${m.src}" alt="" loading="${i?'lazy':'eager'}">${m.priv?'<span class="lock">🔒</span>':''}</button>`;
   if(lay==='pair'||lay==='quad'||lay==='collage'){const n=lay==='pair'?2:lay==='quad'?4:3;return `<div class="frame"><div class="gridp ${lay==='pair'?'g2':lay==='quad'?'g4':'g3'}">${L.slice(0,n).map(gridBtn).join('')}</div><div class="pcap">${esc(cap)}</div></div>`;}
   if(lay==='video'||lay==='vmain'){const v=sl.vids[0];if(!v)return `<div class="frame"><div class="kan"><span>▶</span><small>影片要登入才看得到</small></div></div>`;const u=v.url;return `<div class="frame"><div class="vidbox${isShort(u)?' short':''}"><img src="${ytThumb(u)}" alt="" onerror="this.style.visibility='hidden'"><button type="button" class="vplay" data-vid="${esc(u)}" aria-label="播放影片">▶</button>${v.priv?'<span class="lock">🔒 私人影片</span>':''}</div><div class="pcap">${esc(cap||v.title)}</div></div>`;}
   if(lay==='text'){const d=DAYS[sl.p.day-1];return `<div class="frame"><div class="legmap">${sl.leg?dayMapSvg(d,sl.leg):dayMapSvg(d)}</div>${sl.leg?`<span class="legtag">移動 · ${esc((MODE[sl.leg.mode]||{}).label||'')}</span>`:''}<div class="pcap">${esc(cap||(sl.leg?NAMES[sl.leg.a][0]+' → '+NAMES[sl.leg.b][0]:d.title))}</div></div>`;}
+  if(lay==='main'){const M=sl.media.slice(0,9);if(!M.length)return `<div class="frame"><div class="kan"><span>🔒</span><small>照片要登入才看得到</small></div></div>`;
+    return `<div class="frame"><div class="trk"><div class="track">${M.map((m,i)=>m.kind==='photo'?`<div class="sl">${imgTag(m.src,sl.title,!i)}${m.priv?'<span class="lock">🔒 私人</span>':''}</div>`:`<div class="sl sv"><div class="vidbox${isShort(m.url)?' short':''}" data-v="${esc(m.url)}" data-priv="${m.priv?1:0}">${vidInner(m.url,m.priv)}</div></div>`).join('')}</div></div><div class="pcap">${esc(M[0].cap||sl.p.title||'')}</div>${M.length>1?`<button type="button" class="pcnt" data-grid>1 / ${M.length} · 看全部</button><div class="pgrid" hidden>${M.map((m,i)=>`<button type="button" data-pi="${i}"${m.kind==='video'?' class="tv"':''} aria-label="第 ${i+1} 項"><img src="${m.kind==='photo'?m.src:ytThumb(m.url)}" alt="" loading="lazy">${m.kind==='video'?'<i>▶</i>':''}</button>`).join('')}</div>`:''}</div>${M.length>1?`<button type="button" class="pnav prev" aria-label="上一張">‹</button><button type="button" class="pnav next" aria-label="下一張">›</button>`:''}`;}
   const srcs=(lay==='single'||lay==='photovideo'?L.slice(0,1):L).map(m=>m.src);
   if(!srcs.length)return `<div class="frame"><div class="kan"><span>🔒</span><small>照片要登入才看得到</small></div></div>`;
   return frameHTML(srcs,sl.title,cap,lock);}
 function renderPageSlide(sl,ph,tx,map,no,tot,nextHTML){const d=DAYS[VD-1],p=sl.p,lay=sl.lay;
-  ph.innerHTML=pageFrame(sl);ph.dataset.i=0;ph.dataset.n=(lay==='main'||lay==='single'||lay==='photovideo')?Math.min(sl.photos.length,lay==='main'?9:1):0;
-  ph.dataset.caps=JSON.stringify(sl.photos.map(m=>m.cap||''));ph.dataset.cap=p.title||'';
+  ph.innerHTML=pageFrame(sl);ph.dataset.i=0;ph.dataset.n=lay==='main'?Math.min(sl.media.length,9):(lay==='single'||lay==='photovideo')?Math.min(sl.photos.length,1):0;
+  ph.dataset.caps=JSON.stringify((lay==='main'?sl.media:sl.photos).map(m=>m.cap||''));ph.dataset.cap=p.title||'';
   if(lay==='text'||lay==='video')requestAnimationFrame(()=>{const s=ph.querySelector('svg');if(s)animateMap(s);});
-  const thumbs=lay==='main'&&sl.photos.length>1?`<div class="pthumbs">${sl.photos.map((m,i)=>`<button type="button" data-pi="${i}" class="${i?'':'on'}" aria-label="第 ${i+1} 張"><img src="${m.src}" alt="" loading="lazy"></button>`).join('')}</div>`:'';
+  const thumbs=lay==='main'&&sl.media.length>1?`<div class="pthumbs">${sl.media.slice(0,9).map((m,i)=>`<button type="button" data-pi="${i}" class="${i?'':'on'}${m.kind==='video'?' tv':''}" aria-label="第 ${i+1} 項${m.kind==='video'?'（影片）':''}"><img src="${m.kind==='photo'?m.src:ytThumb(m.url)}" alt="" loading="lazy">${m.kind==='video'?'<i>▶</i>':''}</button>`).join('')}</div>`:'';
   const vids=(lay==='photovideo'?sl.vids.slice(0,3):[]).map(v=>({u:v.url,l:v.title,priv:v.priv}));
   const pmini=lay==='vmain'&&sl.photos.length?`<div class="pmini">${sl.photos.slice(0,6).map((m,i)=>`<button type="button" data-g="${i}" aria-label="看大圖"><img src="${m.src}" alt="" loading="lazy">${m.priv?'<span class="lock">🔒</span>':''}</button>`).join('')}</div>`:'';
   tx.innerHTML=`<div class="vhead"><span class="dt">${esc(sl.t)}${sl.t?' · ':''}第 ${no} 頁 / ${tot}${p.kind?' · '+esc(p.kind):''}</span>${mapBtn}</div><h1>${esc(p.title||LAYOUT_NAME[lay]||'')}</h1>${p.memo?`<p class="memo1">${esc(p.memo)}</p>`:''}${p.text?`<p class="txt" style="white-space:pre-line">${esc(p.text)}</p>`:''}${thumbs}${pmini}${vcardsHTML(vids)}<div class="vbtm">${nextHTML}</div>`;
@@ -1847,7 +1896,7 @@ function renderSlide(){const d=DAYS[VD-1],sl=VS[VI],ph=document.getElementById('
     ph.innerHTML=`<div class="frame"><div class="legmap">${dayMapSvg(d,sl.leg)}</div><span class="legtag">移動 · ${esc(M.label||'')}</span><div class="pcap">${esc(NAMES[sl.from][0])} → ${esc(NAMES[sl.to][0])}</div></div>`;
     requestAnimationFrame(()=>{const s=ph.querySelector('svg');if(s){animateMap(s);}});
     tx.innerHTML=`<div class="vhead"><span class="dt">${esc(g.at||'')}${g.at?' · ':''}移動・${esc(M.label||'')}</span></div><h1>${esc(g.t||M.label||'移動')}</h1><div class="meta">${esc(NAMES[sl.from][0])} → ${esc(NAMES[sl.to][0])}</div>${g.gd?`<p class="txt">${esc(g.gd)}</p>`:''}${minorsHTML(sl.after)}<div class="vbtm">${nextHTML}</div>`;
-  }else if(sl.type==='page'){if(CANVAS[sl.lay]){VIEW.viewer.dataset.canvas=sl.lay;renderCanvas(sl,document.getElementById('vPg'),stopNo(VS,VI),stopCount(VS),nextHTML);}else renderPageSlide(sl,ph,tx,map,stopNo(VS,VI),stopCount(VS),nextHTML);
+  }else if(sl.type==='page'){if(CANVAS[sl.lay]){VIEW.viewer.dataset.canvas=sl.lay;renderCanvas(sl,document.getElementById('vPg'),VI+1,VS.length,nextHTML);}else renderPageSlide(sl,ph,tx,map,VI+1,VS.length,nextHTML);
   }else if(sl.type==='snap'){const no=stopNo(VS,VI),tot=stopCount(VS),L=slidePhotos(sl),note=sl.note||'',t1=note.split(/\n/)[0],rest=note.split(/\n/).slice(1).join('\n');
     if(sl.v){const u=sl.v.url;ph.innerHTML=`<div class="frame"><div class="vidbox${isShort(u)?' short':''}"><img src="${ytThumb(u)}" alt="" onerror="this.style.visibility='hidden'"><button type="button" class="vplay" data-vid="${esc(u)}" aria-label="播放影片">▶</button><span class="lock">🔒 私人影片</span></div><div class="pcap">${esc(t1||'影片')}</div></div>`;ph.dataset.i=0;ph.dataset.n=0;}
     else{ph.innerHTML=frameHTML(L,'隨手拍',t1,()=>'<span class="lock">🔒 私人</span>');ph.dataset.i=0;ph.dataset.n=L.length;ph.dataset.caps='[]';ph.dataset.cap=t1;}
@@ -1862,11 +1911,19 @@ function renderSlide(){const d=DAYS[VD-1],sl=VS[VI],ph=document.getElementById('
     if(sl.loc){map.innerHTML=dayMapSvg(d);markSel(map,sl.loc);map.querySelectorAll('.leg,.legx,.legi').forEach(e=>e.style.opacity=1);map.querySelectorAll('.mk').forEach(e=>e.style.opacity=1);}
   }
   const ni=document.getElementById('vNextInfo');ni.innerHTML=`<small>DAY ${VD} · ${VI+1} / ${VS.length}</small><b>${nextSl?esc(nextSl.type==='end'?'這天結束':slideTitle(nextSl))+' ›':'回到六日目錄'}</b>`;ni.dataset.go=nextSl?'next':'days';
+  fitFrame(ph);
   tx.scrollTop=0;document.querySelector('#vFs .fsi.on')?.scrollIntoView({inline:'center',block:'nearest'});
   history.replaceState(null,'',location.pathname+location.search+'#/day/'+VD+'/'+VI);
 }
 function vgo(d){const i=VI+d;if(i<0||i>=VS.length)return;VI=i;renderSlide();}
-function pslideTo(i){const ph=document.getElementById('vPh'),n=+ph.dataset.n;if(n<2)return;i=((i%n)+n)%n;ph.dataset.i=i;ph.querySelector('.track').style.transform=`translateX(-${i*100}%)`;const pc=ph.querySelector('.pcnt');if(pc)pc.textContent=(i+1)+' / '+n+' · 看全部';document.querySelectorAll('.pthumbs button').forEach(b=>b.classList.toggle('on',+b.dataset.pi===i));try{const caps=JSON.parse(ph.dataset.caps||'[]'),cp=ph.querySelector('.pcap');if(cp)cp.textContent=caps[i]||ph.dataset.cap||'';}catch(e){}}
+function fitFrame(ph){const fr=ph.querySelector('.frame'),sls=fr?fr.querySelectorAll('.track .sl'):[];if(!fr)return;fr.style.width='';fr.style.aspectRatio='';
+  if(sls.length!==1)return;const im=sls[0].querySelector('img');if(!im||sls[0].classList.contains('sv'))return;
+  const f=()=>{if(!im.naturalWidth||!document.body.contains(fr))return;const r=im.naturalWidth/im.naturalHeight;if(r>.9)return;const cs=getComputedStyle(fr),pv=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom),phz=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight),H=fr.clientHeight;if(H<80)return;
+    fr.style.width='auto';fr.style.aspectRatio=(((H-pv)*r+phz)/H).toFixed(3);};
+  if(im.complete)f();else im.addEventListener('load',f);}
+function pslideTo(i){const ph=document.getElementById('vPh'),n=+ph.dataset.n;if(n<2)return;
+  ph.querySelectorAll('.track .vidbox[data-v]').forEach(b=>{if(b.querySelector('iframe'))b.innerHTML=vidInner(b.dataset.v,b.dataset.priv==='1');}); // 換到別張時，正在播的影片收回封面
+  i=((i%n)+n)%n;ph.dataset.i=i;ph.querySelector('.track').style.transform=`translateX(-${i*100}%)`;const pc=ph.querySelector('.pcnt');if(pc)pc.textContent=(i+1)+' / '+n+' · 看全部';document.querySelectorAll('.pthumbs button').forEach(b=>b.classList.toggle('on',+b.dataset.pi===i));try{const caps=JSON.parse(ph.dataset.caps||'[]'),cp=ph.querySelector('.pcap');if(cp)cp.textContent=caps[i]||ph.dataset.cap||'';}catch(e){}}
 function pslide(d){pslideTo((+document.getElementById('vPh').dataset.i)+d);}
 document.getElementById('vPrev').addEventListener('click',()=>vgo(-1));
 document.getElementById('vNext').addEventListener('click',()=>vgo(1));
@@ -1888,7 +1945,7 @@ VIEW.viewer.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(VIEW.viewer.hidden||!modal.hidden||!menu.hidden)return;if(e.key==='Escape'){const t=document.getElementById('vToc'),m=document.getElementById('vMap');if(!t.hidden)t.hidden=true;else if(m.classList.contains('big'))m.classList.remove('big');return;}if(e.key==='ArrowRight'){e.preventDefault();vgo(1);}if(e.key==='ArrowLeft'){e.preventDefault();vgo(-1);}});
 (function(){let x0=null,y0=null;const el=VIEW.viewer;
-  el.addEventListener('touchstart',e=>{if(e.target.closest('#vTx,#vFs,#vToc,.pgrid,.strip'))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+  el.addEventListener('touchstart',e=>{if(e.target.closest('#vTx,#vFs,#vToc,.pgrid,.strip,.duo2.n3,.tall3.vv.n3'))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
   el.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3){const ph=document.getElementById('vPh');if(+ph.dataset.n>1&&e.target.closest('#vPh'))pslide(dx<0?1:-1);else vgo(dx<0?1:-1);}},{passive:true});})();
 
 /* ---------- 首頁 ---------- */
@@ -1924,7 +1981,7 @@ function renderPrint(){document.getElementById('printBody').innerHTML=DAYS.map(d
     return mn(x.before)+`<div class="pstop"><div class="t">${esc(x.s.t)}</div><div><b>${esc(slideTitle(x))}</b>${c&&c.text?`<p>${c.text}</p>`:x.s.d?`<p>${esc(x.s.d)}</p>`:''}${m?`<div class="m1">${esc(m)}</div>`:''}</div>${L.length?`<img src="${L[0]}" alt="" loading="lazy">`:'<span></span>'}</div>`+mn(x.after);}).join('')}</section>`;}).join('');}
 function renderPages(){renderItems();renderPrint();
 document.getElementById('stays').innerHTML=STAYS.map((S,i)=>{const c=CARDS[S.key]||{},L=imgsOf(S.key),R=STAY_RG.find(r=>r.id===S.rg)||{},nights=(R.stays||[]).reduce((a,x)=>a+x[1],0);
-  const sp=L.length?L.map((u,j)=>`<button type="button" class="ph${j===0?' wide':''}" data-card="${S.key}" aria-label="${esc(c.name||S.key)}，看介紹"><img src="${u}" alt="" loading="lazy">${isPriv(S.key,j)?'<span class="lock">🔒</span>':''}</button>`).join(''):`<div class="none">還沒有照片</div>`;
+  const sp=L.length?L.map((u,j)=>`<button type="button" class="ph${j===0?' wide':''}" data-card="${S.key}" aria-label="${esc(c.name||S.key)}，看介紹"><img src="${u}" alt="" loading="lazy">${isPriv(S.key,j)?'<span class="lock">🔒</span>':''}</button>`).join(''):'';
   const secs=(S.secs||[]).map(g=>`<dt>${esc(g[0])}</dt><dd>${esc(g[3])}</dd>`).join('')+(S.must||[]).map(m=>`<dt>要記得</dt><dd>${esc(m)}</dd>`).join('');
   return `<article class="st" id="st-${S.key}"><div class="sx"><div class="lab">STAY 0${i+1}　${esc(R.area||'')}　${nights} 晚</div><h3>${esc(NAMES[S.key][0])}</h3><div class="sub">${esc(S.kind)}・${esc(S.sub||'')}</div><div class="sub">${esc(S.stn)}・${esc(S.chk)}・早餐：${esc(S.bf)}</div>${MEMO.cards[S.key]?`<div class="hw">${esc(MEMO.cards[S.key])}</div>`:''}<div class="tags">${(S.tags||[]).map(t=>`<span>${esc(t)}</span>`).join('')}</div><details class="sd"${MOB?'':' open'}><summary>住宿資料</summary><dl>${secs}</dl></details></div><div class="sp">${sp}</div></article>`;}).join('');
 (function(){const byDay={};RESTO.list.forEach(r=>{(byDay[r.d]=byDay[r.d]||[]).push(r);});
