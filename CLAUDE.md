@@ -52,7 +52,7 @@
 - 交通地圖 `TXREG／TXLEGS／TXSEG／TXDAY`；交通頁 `#tickets` 是手寫 HTML（交通明細表、日田公車替代方案、交通網站、每日交通 `.ldays`）。
 - 地圖地區（固定視角）`MAP_REG`：台北・桃園、大分機場、別府、由布院、日田、福岡、小倉。
 - 底圖：`LAND` 用 `make_geo.py --bbox 128.8,32.3,133.2,34.7 --src japan --tol 0.0006`（dataofjapan）；`LINES` 用 Natural Earth 鐵道（沒有路線名，`RAIL_OK` 一律放行，地鐵畫直線）。
-- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v7`（2026-11-17 還原第四輪時加一）。
+- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v10`（2026-11-17 排版模板時加一）。
 
 ## 重要事實與未查證
 
@@ -170,6 +170,22 @@ CSS 全部追加在 `<style>` 最後一段「2026-11-17 第四輪」（後面的
 ### 2026-11-17 修：相紙裡第二張以後的照片不顯示
 使用者：「圖片切換怪怪的」。查出 `.vph .track` 自己有 `overflow:hidden`，`translateX(-100%)` 把軌道連同裁切框一起移走，第二張以後的照片位置對了卻被裁掉，相紙只剩白色（從相冊書 F 版起就有這個問題，之前只測了計數器沒看畫面）。
 改成外層 `.trk` 負責裁切、`.track` 只負責移動（`frameHTML` 多一層）。用截圖平均亮度驗證第 2、3 張確實畫出來；桌機、手機、縮圖格跳轉都對。`sw.js` `kyu-v9`。
+
+### 2026-11-17 排版模板：每一頁由使用者自己在 trip-tools 排
+使用者：「制定一個模板，讓我自己可以編輯想要放的圖片跟影片還有旁邊的文字以及順序，版型要讓我自己挑」。先給 8 種版型樣張（scratchpad `layouts-8.jpg`），使用者「8 種全留，編輯放在 trip-tools」。
+- **編輯**在 trip-tools 的「📖 排版」分頁（做法記在 trip-tools 的 CLAUDE.md）。資料 Firestore `trips/Oita_Fukoka_2026/pages/{auto}`：`{day, order, layout, media:[編號], title, time, kind, memo, text, leg:{a,b}|null}`，**任何人可讀**、主辦人可寫。
+  媒體編號：`pub:<card>:<i>`（`IMG[card][i]`）、`pubvid:<card>:<i>`（`CARDS[card].video[i]`）、`priv:<photos 文件 id>`、`vid:<photos 文件 id>`。
+- **`media.json`**（repo 根目錄，`node tools/make_media.js` 產生）：給編輯器的可選清單（六天、卡片名、公開照片與影片、每天的移動段 `legs`、每天的站 `stops`）。**改了 `IMG`、`CARDS[].video`、`STOPS` 之後要重跑並 commit**，否則編輯器看不到新照片。
+- **本站**：`PAGES`（全部排頁）、`PRIV_BY_ID`（私人照片依文件 id）。`daySlides(d)` 一開始先看 `pagesOf(d.n)`：**那天有排頁就只用排的**（封面 → 每頁一張 `type:'page'` → 結尾），沒有就照原本自動產生。
+  `pageSlide(p)` 用 `resolveMedia` 把編號換成照片／影片；私人的沒登入就解不出來，**整頁都解不出來就跳過那一頁**（文字頁除外）。
+  讀取：公開訪客 `loadPagesPublic()` 用 Firestore REST（`…/documents/trips/<TRIP>/pages?pageSize=300`，`fsVal` 解欄位）；登入成員 `fb.watchPages` onSnapshot 即時更新。開發環境連不到 → `?pagesmock=1` 用 `pagesMock()`（Day 3 八頁、八種版型各一；配 `?privmock=1` 才有私人照片與影片）。
+- **八種版型**（`pageFrame` 畫相紙、`renderPageSlide` 畫文字欄）：`single` 單張（相紙內等比不裁切）／`main` 主圖＋縮圖列（相紙可左右滑＋文字欄一排縮圖 `.pthumbs`，點了跳到那張）／`pair` 雙拼、`quad` 四宮格、`collage` 拼貼 1＋2（`.gridp.g2／g4／g3`，裁切填滿，點任一張開彈窗 `openGallery` 看完整照片、可左右翻）／
+  `video` 影片主頁（相紙就是影片 `.vidbox`，點了原地播）／`photovideo` 一張照片＋最多三支影片小卡 `.vcard`／`text` 文字頁（相紙是地圖：`leg` 有選就畫那一段並有畫線動畫，沒選畫整天）。
+  相紙下緣手寫字＝私人照片自己的備註、否則這一頁的標題；一句心得是右邊的黃色便利貼；`text` 可換行。表頭「08:00 · 第 2 頁 / 8 · 景點」。
+  有排頁的那天：封面照用第一頁的第一張、結尾拼貼用第一張與最後一張、首頁日期卡的照片數與 🔒 數照排的算；底片條、當日目錄、列印頁都認得 `page`。
+- 桌機照片箭頭 `.pnav` 往相紙裡移（原本和翻頁箭頭 `.varr` 疊在一起）。`sw.js` `kyu-v10`。
+- 驗證：Playwright `?privmock=1&pagesmock=1` 手機／桌機八種版型逐張截圖看過；縮圖列跳張、格子開彈窗、影片小卡與影片主頁播放；`?pagesmock=1`（沒登入）私人頁自動跳過；用 `page.route` 假造 Firestore REST 回應確認公開訪客照排版顯示、沒排的那天照舊；四種模式 × 兩種寬度零錯誤。
+- **使用者要做**：把 trip-tools 的新 `firestore.rules` 貼到 Firebase 主控台發布（多了 `pages`），否則排版存不進去、公開網站也讀不到。
 
 ## 待辦
 
