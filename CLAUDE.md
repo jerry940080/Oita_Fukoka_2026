@@ -218,6 +218,17 @@ iframe 寬度就是預覽的裝置寬度（390 或 1280），所以手機／電�
 - CSS 追加在 `<style>` 最後一段「2026-11-18 影片＋照片的版型」。`pagesMock()` 多 r1–r6（Day 3 共 22 頁）。`sw.js` `kyu-v14`。
 - 驗證：Playwright `?privmock=1&pagesmock=1` 桌機 1280／手機 390 零錯誤、沒有橫向溢出；小影片格開彈窗、牆上照片開相簿 2/5、vstack 原地播、vmain 縮圖開相簿；沒登入時 vmain→main、vduo→single 等退回；截圖在 scratchpad `mx/`。
 
+### 2026-11-19 版型整理：移除 ⑦、⑧、Ⓚ，新增三種「一支影片＋一張照片」
+使用者看過版型總表（Artifact https://claude.ai/artifact/M1FEjvTEA5Ymw4pNcK7UaP，19 種的電腦／手機畫面，可勾保留或移除）後：「刪除 7、8、K，額外設計一支影片跟一張圖片的版面」。
+- **移除** `photovideo` ⑦、`text` ⑧、`vduo` Ⓚ：只從 trip-tools 編輯器的選單拿掉；**本站的繪製程式留著**（已經存在 Firestore 的舊頁面照舊顯示，`text` 也還是 `effLayout` 最後的退路）。`pagesMock()` 不再有這三種。
+- **新增三種**（都是整頁構圖、各 1 支影片＋1 張照片，`LAYREQ=[1,1,2]`，不夠時退回 `single`／`video`）：
+  `vpin` Ⓜ 影片大、照片貼角落（`.pin` 裡 `vidBig` `.pbig`＋右下角小拍立得 `.psm`，右邊文字欄）／
+  `ppin` Ⓝ 照片大、影片貼角落（主角照片 `.pbig.nat` 載入後依原本長寬比設 `aspect-ratio`；影片是小格 `tileHTML`，點了用彈窗播）／
+  `vfull` Ⓞ 影片鋪滿整頁（`.bgv.vidbox` 佔滿、照片是右上的拍立得 `.pinp`、文字是左下紙條 `.slip`；按播放時 `#vPg.playing` 把紙條、拍立得、便利貼收起來；手機是上面影片、下面紙條的 grid）。直式影片（Shorts）三種都有對應尺寸。
+- CSS 追加在 `<style>` 最後一段「2026-11-19」。`pagesMock()` 的 Day 3 現在 22 頁（s1–s3 是新的）。`sw.js` `kyu-v15`。
+- 驗證：Playwright `?privmock=1&pagesmock=1` 1280×760／390×800／1680×950 零錯誤、沒有橫向溢出；橫式與直式影片各拍一輪（scratchpad `r8/D.jpg`、`M.jpg`、`W.jpg`）；ppin 小影片開彈窗、vfull 播放後紙條收起。
+  **踩雷**：手機版 `.vpg` 改回 `display:flex` 時要一併把桌機的 `align-items:center` 改成 `stretch`，否則只有絕對定位子元素的 `.pin` 寬度會縮成 0。
+
 ## 待辦
 
 0. **回憶錄文字**：已填（2026-11-16，含第二輪補充：牛かつ有吃、鳥田心得、Shin-Shin 沒去、唐吉訶德別府店與中洲店）。
