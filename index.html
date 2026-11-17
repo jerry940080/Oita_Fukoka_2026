@@ -446,6 +446,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
 .minors li{display:grid;grid-template-columns:48px 1fr;gap:8px;font:14px/1.5 var(--sans);font-weight:300;color:#55594a}
 .minors li .t{font:12px/1.7 var(--mono);color:var(--mute)}
 .minors li .b small{display:block;font-size:12px;color:var(--mute)}
+.minors li .b small.mm{font:14px/1.5 var(--hand);color:var(--red)}
 .minors li.lg .b{background:var(--cream);border:1px dashed var(--line);padding:4px 8px}
 .vcards{display:flex;flex-direction:column;gap:8px}
 .vcard{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center;border:1px solid var(--ink);background:var(--cream);padding:6px;cursor:pointer;text-align:left;box-shadow:2px 2px 0 var(--ink);min-height:56px;font-family:var(--serif)}
@@ -1347,7 +1348,7 @@ document.getElementById('doPrint').addEventListener('click',()=>window.print());
    不再各佔一張，改成接在上一站尾端（after）或下一站開頭（before）的一行小字（minorsHTML）；有照片、有心得、有卡片的站一律保留。 */
 const kanOf=s=>{const n=(CARDS[stopKey(s)]||{}).name||s.n;return n.replace(/（.*?）|：.*$/g,'').replace(/[^一-鿿ぁ-ヿA-Za-z]/g,'').slice(0,2)||'・';};
 const MINOR_RE=/退房|休息|睡飽|放回|寄放|拿行李|報到|降落|還車/;
-const isMinorStop=s=>{if(s.card)return false;return MINOR_RE.test(s.n)||s.k==='住宿'||(s.k==='交通'&&!s.d);}; // 有卡片的站一律保留；只有 at 的住宿／交通站（退房、休息、放行李、報到、降落、還車）收成一行
+const isMinorStop=s=>{const k=stopKey(s);return !(s.card&&k&&(imgsOf(k).length||vidsOf(k).length));}; // 2026-11-17：沒有照片也沒有影片的站一律不佔一頁，收成上一站尾端的一行（使用者：沒有照片或影片的頁面直接省略）
 const kmOf=(a,b)=>{const A=P[a],B=P[b];if(!A||!B)return 999;const dy=(A[0]-B[0])*111,dx=(A[1]-B[1])*111*Math.cos(A[0]*Math.PI/180);return Math.hypot(dx,dy);};
 const isMinorLeg=l=>['walk','taxi','subway'].includes(l.mode)||(l.mode!=='air'&&kmOf(l.a,l.b)<8);
 function daySlides(d){
@@ -1361,18 +1362,18 @@ function daySlides(d){
     if(L&&L!==cur){let guard=0;while(cur!==L&&guard++<6){const li=legs.findIndex((l,k)=>!used.has(k)&&l.a===cur&&(l.b===L||legs.some((m,j)=>j!==k&&!used.has(j)&&m.a===l.b)));if(li<0)break;used.add(li);pushLeg(legs[li]);cur=legs[li].b;}cur=L;}
     if(isMinorStop(s))addMinor({kind:'stop',s,si,key,loc:L});else push({type:'stop',s,si,key,loc:L});});
   legs.forEach((l,li)=>{if(!used.has(li)&&l.b===lodgingAt(d.n+1)){used.add(li);pushLeg(l);}});
-  if(pend.length){const h=out.slice().reverse().find(x=>x.type==='stop');if(h)h.after=(h.after||[]).concat(pend);else out.push({type:'stop',s:pend[0].s||{t:'',n:'',k:''},key:'',loc:'',before:pend.slice(1)});pend=[];}
+  let endBefore=null;if(pend.length){const h=out.slice().reverse().find(x=>x.type==='stop'||x.type==='leg');if(h)h.after=(h.after||[]).concat(pend);else endBefore=pend;pend=[];}
   const snaps=[];(PRIVD[d.n]||[]).forEach(p=>{const last=snaps[snaps.length-1];if(last&&!last.v&&(last.note||'')===(p.note||'')&&last.t===(p.t||''))last.ps.push(p);else snaps.push({type:'snap',ps:[p],v:null,t:p.t||'',note:p.note||''});});
   (PVIDD[d.n]||[]).forEach(v=>{if(ytId(v.url))snaps.push({type:'snap',ps:[],v,t:v.t||'',note:v.note||''});});
   snaps.forEach(sn=>{let at=out.length;if(sn.t){const i=out.findIndex(x=>x.type==='stop'&&x.s.t>sn.t);if(i>=0)at=i;}out.splice(at,0,sn);});
-  out.push({type:'end'});return out;}
+  out.push({type:'end',before:endBefore});return out;}
 const stopCount=sl=>sl.filter(x=>x.type==='stop'||x.type==='snap').length;
 const stopNo=(sl,i)=>sl.slice(0,i+1).filter(x=>x.type==='stop'||x.type==='snap').length;
 function slidePhotos(sl){return sl.type==='snap'?sl.ps.map(p=>p.data):sl.type==='stop'&&sl.key?imgsOf(sl.key):[];}
 function slideTitle(sl){if(sl.type==='snap')return (sl.note||(sl.v?'影片':'隨手拍')).split(/\n/)[0].slice(0,24);if(sl.type==='stop'){const c=CARDS[sl.key];return c?c.name:sl.s.n;}if(sl.type==='leg')return sl.g.t||(MODE[sl.leg.mode]||{}).label||'移動';return '';}
 function slideTime(sl){return sl.type==='stop'?sl.s.t:sl.type==='leg'?(sl.g.at||''):sl.type==='snap'?sl.t:'';}
 function minorsHTML(list,cls){if(!list||!list.length)return '';return `<ul class="minors ${cls||''}">${list.map(m=>{if(m.kind==='leg'){const M=MODE[m.leg.mode]||{},g=m.g;return `<li class="lg"><span class="t">${esc(g.at||'')}</span><span class="b">${M.ic||'→'} ${esc(g.t||M.label||'移動')}<small>${esc(NAMES[m.from][0])} → ${esc(NAMES[m.to][0])}${g.gd?'　'+esc(g.gd):''}</small></span></li>`;}
-  const s=m.s;return `<li><span class="t">${esc(s.t||'')}</span><span class="b">${s.i||''} ${esc(s.n)}${s.d?`<small>${esc(s.d)}</small>`:''}</span></li>`;}).join('')}</ul>`;}
+  const s=m.s,mm=m.key?MEMO.cards[m.key]:'';return `<li><span class="t">${esc(s.t||'')}</span><span class="b">${s.i||''} ${esc(s.n)}${mm?`<small class="mm">${esc(mm)}</small>`:''}${s.d?`<small>${esc(s.d)}</small>`:''}</span></li>`;}).join('')}</ul>`;}
 const imgTag=(u,alt,eager)=>`<img src="${u}" alt="${esc(alt||'')}" loading="${eager?'eager':'lazy'}" onload="if(this.naturalHeight>this.naturalWidth*1.15)this.classList.add('por')">`;
 function vcardsHTML(vids){return vids.length?`<div class="vcards">${vids.map(v=>`<button type="button" class="vcard" data-vid="${esc(v.u)}"><span class="th"><img src="${ytThumb(v.u)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><i>▶</i></span><span class="vt"><b>${v.priv?'🔒 ':''}${esc(v.l||'影片')}</b><small>${v.priv?'私人影片':'影片'}${isShort(v.u)?'・直式':''}・點了在這裡播</small></span></button>`).join('')}</div><div class="yt" id="vYt" hidden></div>`:'';}
 const mapBtn='<button type="button" class="mapbtn" data-map aria-label="看今天的小地圖">📍 本日位置</button>';
