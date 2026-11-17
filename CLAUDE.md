@@ -208,6 +208,16 @@ trip-tools 的排版表單用 iframe 開本站的 `?embedpreview=1`（`PV`）：
 收到同網域的 `postMessage({type:'kyu-preview', page, priv})` 就把 `PRIV_BY_ID=priv`、`PAGES=[page]`，只畫那一頁（`pageSlide` → `renderSlide`）；還沒選照片時顯示「先選照片或影片」。載入完會向父視窗送 `kyu-preview-ready`。
 iframe 寬度就是預覽的裝置寬度（390 或 1280），所以手機／電腦版面由本站原本的 media query 決定，和正式畫面一致。`renderSlide` 每次會清空 `#vPg`。`sw.js` `kyu-v13`。
 
+### 2026-11-18 影片＋照片的版型（共 19 種）
+使用者：「你好像都沒有提供我影片+圖片的版面，請多設計幾種」。原本只有 `video`（純影片）與 `photovideo`（照片當封面＋影片小卡）。
+- **新增四種**：`vmain` Ⓘ 影片＋照片縮圖（一般兩欄：相紙是影片、文字欄多一排 `.pmini` 照片小縮圖，點了開 `openGallery`；可勾 flip）／
+  `vstack` Ⓙ 影片在上、照片一排（整頁構圖：`.topp.vt` 大影片＋`.minis` 小照片＋`.rt` 文字）／`vduo` Ⓚ 照片與影片並排（`.duo2`）／`vtrio` Ⓛ 2–3 支影片並排＋0–3 張小照片（`.duo2.nN`，手機三支時左右捲）。
+- **整頁構圖的格子也能放影片**：`scatter`／`film`／`wall`／`diptych` 改用 `sl.media` 混排（`tileHTML`：照片 → 拍立得 `data-g`；影片 → `.pol.vid[data-vurl]` 縮圖＋▶，點了用彈窗 `openVideo` 播）。
+  大影片（`vidBig`：vstack／vduo／vtrio／diptych）原地播。
+- `LAYREQ[版型]=[照片最少, 影片最少, 合計最少]`＋`effLayout(p,photos,vids)` 取代原本的 `CANVAS_MIN`：數量不夠（私人的沒登入）時退回 `main`／`single`／`video`。程式一律看 `sl.lay`。
+- CSS 追加在 `<style>` 最後一段「2026-11-18 影片＋照片的版型」。`pagesMock()` 多 r1–r6（Day 3 共 22 頁）。`sw.js` `kyu-v14`。
+- 驗證：Playwright `?privmock=1&pagesmock=1` 桌機 1280／手機 390 零錯誤、沒有橫向溢出；小影片格開彈窗、牆上照片開相簿 2/5、vstack 原地播、vmain 縮圖開相簿；沒登入時 vmain→main、vduo→single 等退回；截圖在 scratchpad `mx/`。
+
 ## 待辦
 
 0. **回憶錄文字**：已填（2026-11-16，含第二輪補充：牛かつ有吃、鳥田心得、Shin-Shin 沒去、唐吉訶德別府店與中洲店）。
