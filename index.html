@@ -426,6 +426,168 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
   .prt .pmemo{background:#f3f3f3}
   a{color:inherit;text-decoration:none}
 }
+
+/* ================= 2026-11-17 第四輪（依 ChatGPT 評估調整）=================
+   字級層級、手機翻頁列、照片箭頭在相紙內、小地圖改成「本日位置」按鈕、看全部縮圖格、影片入口小卡、
+   例行站與短程過場收成一行、首頁首屏順序與每天一句、六天總覽地圖、結尾頁、當日目錄、其他頁手機版。後面的規則蓋前面的。 */
+:root{--rule:#ece5d6}
+.vtx{gap:10px}
+.vtx > *{max-width:460px}
+.vtx .vhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.vtx .vhead .dt{transform:none;border:0;padding:0;background:none;font:13px var(--mono);letter-spacing:.1em;color:var(--mute)}
+.vtx .time{display:none}
+.vtx .num{font:500 64px/1 var(--mono);color:var(--red)}
+.vtx h1{font-size:30px;line-height:1.3;margin-top:0}
+.vtx .txt{font-size:16px;line-height:1.7;color:var(--ink)}
+.vtx .meta{color:#55594a}
+.vtx .mapbtn{display:none;margin-left:auto;border:1px solid var(--line);background:var(--cream);padding:6px 10px;font:12px var(--mono);cursor:pointer;min-height:36px}
+.minors{list-style:none;margin:0;padding:8px 0 0;display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--line)}
+.minors.pre{border-top:0;border-bottom:1px dashed var(--line);padding:0 0 8px}
+.minors li{display:grid;grid-template-columns:48px 1fr;gap:8px;font:14px/1.5 var(--sans);font-weight:300;color:#55594a}
+.minors li .t{font:12px/1.7 var(--mono);color:var(--mute)}
+.minors li .b small{display:block;font-size:12px;color:var(--mute)}
+.minors li.lg .b{background:var(--cream);border:1px dashed var(--line);padding:4px 8px}
+.vcards{display:flex;flex-direction:column;gap:8px}
+.vcard{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center;border:1px solid var(--ink);background:var(--cream);padding:6px;cursor:pointer;text-align:left;box-shadow:2px 2px 0 var(--ink);min-height:56px;font-family:var(--serif)}
+.vcard .th{position:relative;width:80px;height:56px;background:#222;overflow:hidden;display:block}
+.vcard .th img{width:100%;height:100%;object-fit:cover}
+.vcard .th i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-size:18px;text-shadow:0 1px 4px #000}
+.vcard .vt b{display:block;font-weight:600;font-size:15px;line-height:1.3}
+.vcard .vt small{display:block;font:11px var(--mono);color:var(--mute);margin-top:2px}
+.vcard.on{background:var(--ink);color:var(--cream)}.vcard.on .vt small{color:#c9c2ae}
+.vtx .yt.short{max-width:320px;max-height:65dvh}
+.vph .sl img.por{object-fit:contain;background:#fff}
+.vph .pcnt{border:1px solid var(--line);background:var(--cream);padding:3px 8px;font:11px var(--mono);cursor:pointer;color:var(--ink);min-height:28px}
+.vph .pgrid{position:absolute;inset:12px 12px 44px;background:#fff;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px;overflow:auto;z-index:3}
+.vph .pgrid[hidden]{display:none}
+.vph .pgrid button{border:0;padding:0;background:#eee;aspect-ratio:1;cursor:pointer;overflow:hidden}
+.vph .pgrid img{width:100%;height:100%;object-fit:cover}
+.vph .pnav{left:22px;width:40px;height:40px;background:rgba(251,246,233,.92)}.vph .pnav.next{left:auto;right:50px}
+.vph .duo{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vph .duo.n1{grid-template-columns:1fr}
+.vph .duo img{width:100%;height:100%;object-fit:cover}
+.fsi.leg{width:34px;font-size:15px;background:var(--cream);border:1px dashed var(--line)}
+.fsi.on{outline-width:2px}
+.vtoc{position:fixed;inset:0;z-index:48;background:rgba(241,233,216,.97);padding:calc(70px + env(safe-area-inset-top)) 20px 24px;overflow:auto}
+.vtoc[hidden]{display:none}
+.vtoc .th{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed var(--line);padding-bottom:8px;margin-bottom:8px}
+.vtoc .th b{font-size:18px}
+.vtoc ol{list-style:none;margin:0;padding:0}
+.vtoc li button{width:100%;display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:baseline;text-align:left;border:0;background:none;padding:10px 0;border-bottom:1px dotted var(--line);font:16px var(--serif);color:var(--ink);min-height:44px;cursor:pointer}
+.vtoc li .t{font:12px var(--mono);color:var(--mute)}
+.vtoc li.leg button{font-size:13px;color:var(--mute)}
+.vtoc li.on button{color:var(--red);font-weight:700}
+.varr small{display:none}
+/* 首頁 */
+.hero{grid-template-areas:"hx hp" "hn hp" "hg hp";grid-template-rows:auto auto 1fr;align-items:start}
+.hero .hx{grid-area:hx}.hero .hp{grid-area:hp}.hero .hnote{grid-area:hn}.hero .hgo{grid-area:hg}
+.hero .hnote{margin-top:16px;font:20px/1.6 var(--hand);background:var(--sticky);padding:14px 18px;justify-self:start;transform:rotate(1.5deg);box-shadow:2px 4px 10px rgba(53,44,34,.2);max-width:380px;white-space:pre-line}
+.hero .hgo{margin-top:24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.hero .hgo .alt{font:14px var(--mono);color:var(--ink);text-decoration:underline;text-underline-offset:4px;min-height:44px;display:inline-flex;align-items:center}
+.hc .one{font-family:var(--sans);font-weight:300;font-size:14px;line-height:1.6;color:var(--ink2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hc .txtc{width:100%;height:190px;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:18px 20px;background:var(--cream);background-image:linear-gradient(var(--rule) 1px,transparent 1px);background-size:100% 24px;border:1px solid var(--line)}
+.hc .txtc small{font:11px var(--mono);letter-spacing:.12em;color:var(--mute)}
+.hc .txtc b{font-size:20px;font-weight:900}
+.hc .txtc span{font:15px/1.6 var(--hand);color:var(--ink2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hc.nop .t b{display:none}
+.omap{margin-top:28px;border:1px dashed var(--line);background:var(--cream)}
+.omap summary{cursor:pointer;padding:14px 18px;font:15px var(--serif);font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:44px}
+.omap summary::after{content:"＋";font:18px var(--mono);color:var(--red)}
+.omap[open] summary::after{content:"－"}
+.omap summary small{font:12px var(--mono);color:var(--mute);margin-left:10px;font-weight:400}
+.omap #omap{padding:0 18px 18px}
+.omap #omap svg{width:100%;height:auto;display:block;background:#d7e3ea;border:1px solid var(--line)}
+.omap .mk{cursor:pointer}
+.omap .olg{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:10px}
+.omap .olg a{font:13px var(--serif);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:32px}
+.omap .olg a i{font:12px var(--mono);font-style:normal;color:var(--cream);background:var(--red);width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%}
+.hapx{margin-top:40px}
+.hapx .hl{font:12px var(--mono);letter-spacing:.2em;color:var(--mute);margin-bottom:10px}
+.hlinks{margin-top:0;grid-template-columns:repeat(4,minmax(0,1fr))}
+.hlinks a small{display:block;font:11px var(--mono);color:var(--mute);margin-top:2px}
+/* 其他頁 */
+.sd summary{cursor:pointer;font:12px var(--mono);color:var(--mute);padding:8px 0;list-style:none;min-height:36px;display:flex;align-items:center}
+.sd summary::before{content:"＋ "}.sd[open] summary::before{content:"－ "}
+.st .hw{font:17px/1.6 var(--hand);color:var(--red)}
+.fd li .no.hw{font:15px/1.5 var(--hand);color:var(--red);font-weight:400}
+.fd li .sd small{font:12px/1.7 var(--mono);color:var(--mute);display:block}
+.next .back{margin-top:24px}
+@media (max-width:1000px){
+  .hero{grid-template-areas:"hx" "hp" "hn" "hg";grid-template-columns:1fr;grid-template-rows:auto}
+  .hlinks{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .vtx{padding:12px 16px calc(76px + env(safe-area-inset-bottom));gap:8px}
+  .vtx > *{max-width:none}
+  .vtx h1{font-size:24px}
+  .vtx .num{font-size:48px}
+  .vtx .txt{font-size:16px;line-height:1.7}
+  .vtx .mapbtn{display:inline-flex;align-items:center;gap:4px}
+  .vmap{display:none}
+  .vmap.big{display:block;position:fixed;left:16px;right:16px;top:50%;transform:translateY(-50%) rotate(0);width:auto;z-index:46;cursor:zoom-out}
+  .vmap.big::after{content:"點一下關閉";position:absolute;right:8px;bottom:6px;font:10px var(--mono);color:var(--mute)}
+  .vph{padding:14px 16px 6px;height:44%}
+  .vph .frame{padding:8px 8px 36px;transform:rotate(-.75deg)}
+  .vph .pcap{left:10px;right:118px;bottom:9px;font-size:14px}
+  .vph .pcnt{right:10px;bottom:8px;font-size:10px;padding:2px 6px;min-height:24px}
+  .vph .pnav{width:44px;height:44px;left:24px;font-size:18px;border-color:var(--line);box-shadow:none}.vph .pnav.next{right:24px}
+  .vph .pgrid{inset:8px 8px 36px}
+  .varr{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;height:56px;width:56px;font-size:20px;line-height:1}
+  .varr small{display:block;font:10px var(--mono);color:var(--mute);letter-spacing:.06em}
+  .varr:disabled small{opacity:.4}
+  .vbot{grid-template-columns:56px 1fr 56px;padding:4px 8px calc(8px + env(safe-area-inset-bottom));min-height:calc(56px + env(safe-area-inset-bottom))}
+  .vbot .vni{margin:4px 0;padding:5px 10px;min-height:44px;max-width:100%}
+  .vbot .vni small{font-size:9px}
+  .vbot .vni b{font-size:13px;max-width:200px}
+  .vbars{cursor:pointer;padding:8px 16px 6px}
+  .vtoc{padding-top:calc(60px + env(safe-area-inset-top))}
+  .hero{padding-top:calc(76px + env(safe-area-inset-top));gap:16px}
+  .hero .hx{gap:6px}
+  .hero .eyebrow{display:none}
+  .hero h1{font-size:38px;margin:0}
+  .hero .sub{font-size:16px}
+  .hero .meta{margin-top:8px;font-size:12px;border-top:0;padding-top:0}
+  .hero .hp{height:260px;margin:4px 0 0}
+  .hero .hp .f1{left:0;top:0;width:62%;padding:6px 6px 24px}
+  .hero .hp .f1 img{height:190px}
+  .hero .hp .f2{right:0;bottom:0;width:40%;padding:5px 5px 20px}
+  .hero .hp .f2 img{height:120px}
+  .hero .hp figcaption{font-size:12px;margin-top:6px}
+  .hero .hp .stamp{display:none}
+  .hero .hnote{margin-top:4px;font-size:16px;padding:10px 14px;transform:rotate(-1deg);max-width:none}
+  .hero .hgo{margin-top:8px;gap:14px}
+  .hc .txtc{height:150px;padding:14px 16px}
+  .hc .txtc b{font-size:18px}
+  .omap{margin-top:20px}
+  .omap summary{flex-wrap:wrap;gap:4px}.omap summary small{margin-left:0;flex-basis:calc(100% - 30px)}
+  .omap #omap{padding:0 10px 14px}
+  .hlinks{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* 住宿：照片先、資料折疊 */
+  .st{display:flex;flex-direction:column;gap:10px}
+  .st .sp{order:-1}
+  /* 交通表：每段兩行 */
+  .tx table{min-width:0;font-size:14px;display:block}
+  .tx table tr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;border-bottom:1px dotted var(--line)}
+  .tx table tr:first-child{display:none}
+  .tx td{padding:0;border:0}
+  .tx td:nth-child(1){grid-column:1/-1;font-weight:600}
+  .tx td:nth-child(2){font-family:var(--sans);font-weight:300;font-size:13px;color:var(--ink2)}
+  .tx td:nth-child(3){text-align:right;font:13px var(--mono);white-space:nowrap}
+  .tx td:nth-child(4){grid-column:1/-1;font:11px var(--mono);color:var(--mute)}
+  .tx .tbw{overflow:visible}
+  /* 列印預覽 */
+  .prt .pday h2{font-size:22px}
+  .prt .pday h2 span{display:block;margin:0 0 4px}
+  .prt .pstop{grid-template-columns:48px 1fr;gap:6px 10px}
+  .prt .pstop img{grid-column:2;width:100%;max-width:260px;height:auto;aspect-ratio:3/2}
+  .prt .pleg{padding-left:58px}
+}
+@media print{
+  @page{size:A4;margin:15mm}
+  body{font-size:11pt}
+  .prt .pday h2{font-size:18pt}
+  .prt .pstop{break-inside:avoid}
+}
 </style>
 </head>
 <body>
@@ -457,18 +619,19 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
     <span class="eyebrow">THE PERSONAL TRAVEL JOURNAL / VOL. 01</span>
     <h1>那些在<br>九州的日子<span>。</span></h1>
     <p class="sub">大分・由布院・福岡　Days in Kyushu</p>
-    <div class="note">六天、四座城。別府泡溫泉，由布院看雨中的湖，日田找巨人，福岡吃了三天。</div>
     <div class="meta">25 FEB — 02 MAR 2026<br>BEPPU · YUFUIN · HITA · FUKUOKA · KOKURA</div>
-    <a class="btn go" href="#/day/1">翻開旅程 ↘</a>
   </div>
   <div class="hp">
     <figure class="f1 tape"><img src="img/kinrinko-0-b3a7a962.webp" alt="金鱗湖的鳥居" fetchpriority="high"><figcaption>金鱗湖，雨。沒有霧但很安靜</figcaption></figure>
     <figure class="f2 tape2"><img src="img/shotengai-0-16d19f5e.webp" alt="別府 100 週年的人孔蓋"><figcaption>別府 100 週年的人孔蓋</figcaption></figure>
     <span class="stamp">旅の記録<br>KYUSHU<br>2026.02</span>
   </div>
+  <div class="hnote">六天、四座城。別府泡溫泉，由布院看雨中的湖，日田找巨人，福岡吃了三天。</div>
+  <div class="hgo"><a class="btn go" href="#/day/1">從第 1 天開始 ↘</a><a class="alt" href="#/days">選一天翻 ↓</a></div>
 </section>
-<section class="hdays"><div class="wrap"><div class="hh"><h2>一天，一個故事</h2><span>點一天，一站一站翻 →</span></div><div class="hg" id="hcards"></div>
-  <nav class="hlinks" aria-label="其他"><a href="#/stay">住宿</a><a href="#/food">吃了什麼</a><a href="#/tx">交通</a><a href="#/items">旅途收藏</a><a href="#/next">下次會不一樣的地方</a></nav>
+<section class="hdays" id="hdays"><div class="wrap"><div class="hh"><h2>一天，一個故事</h2><span>點一天，一站一站翻 →</span></div><div class="hg" id="hcards"></div>
+  <details class="omap" id="omapD"><summary>看這六天怎麼走<small>別府 → 由布院 → 日田 → 博多 → 小倉</small></summary><div id="omap"></div></details>
+  <nav class="hapx" aria-label="旅途附錄"><div class="hl">旅途附錄 / APPENDIX</div><div class="hlinks"><a href="#/stay">住宿<small>三間住處</small></a><a href="#/food">吃了什麼<small>有去的店與候選</small></a><a href="#/tx">交通<small>巴士・特急・租車</small></a><a href="#/album">私人相簿<small>登入後看</small></a><a href="#/items">旅途收藏<small>車票、收據</small></a><a href="#/next">下次會不一樣的地方</a><a href="#/print">列印 / PDF<small>整本冊子</small></a></div></nav>
   <div class="strip">FIELD NOTES <span>✳</span> SLOW DAYS <span>✳</span> LITTLE THINGS <span>✳</span> MEMORIES</div></div></section>
 <footer><div class="wrap">
   <span>2026/2/25–3/2 的旅遊紀錄，內容依當時的行程 Excel 整理；營業時間、評分、票價都是出發前查的，現在可能已經不同。</span>
@@ -477,11 +640,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
 </main>
 
 <main id="viewer" class="vw" hidden>
-  <div class="vbars" id="vBars" aria-hidden="true"></div>
+  <div class="vbars" id="vBars" role="button" aria-label="這一天的目錄" title="點一下看這一天的目錄"></div>
   <figure class="vph" id="vPh"></figure>
   <section class="vtx" id="vTx"></section>
   <div class="vmap" id="vMap" title="點一下放大"></div>
-  <div class="vbot" id="vBot"><button type="button" class="varr prev" id="vPrev" aria-label="上一張">‹</button><button type="button" class="vni" id="vNextInfo" data-go="next"></button><button type="button" class="varr next" id="vNext" aria-label="下一張">›</button></div>
+  <div class="vbot" id="vBot"><button type="button" class="varr prev" id="vPrev" aria-label="上一頁"><span>‹</span><small>上一頁</small></button><button type="button" class="vni" id="vNextInfo" data-go="next"></button><button type="button" class="varr next" id="vNext" aria-label="下一頁"><span>›</span><small>下一頁</small></button></div>
+  <div class="vtoc" id="vToc" hidden></div>
   <footer class="vfs"><div class="fs" id="vFs"></div><div class="vpr"><span><i id="vProg"></i></span><small>← → 或左右滑</small></div></footer>
 </main>
 
@@ -525,7 +689,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
 <section class="blk album" id="album"><div class="wrap"><div class="bh"><h2>私人相簿</h2><small>登入的成員才看得到</small></div><div class="pg" id="albumG"></div></div></section>
 <section class="blk items" id="items"><div class="wrap"><div class="bh"><h2>帶回來的小東西</h2><small>EPHEMERA · 車票、收據、明信片，掃描後貼上來</small></div><div class="items" id="itemsG"></div></div></section>
 <section class="blk print" id="print"><div class="wrap"><div class="bh"><h2>整本冊子</h2><small>PRINT · 六天攤開，可以直接列印或存成 PDF</small></div><button type="button" class="btn pbtn" id="doPrint">列印 / 存成 PDF</button><div class="prt" id="printBody"></div></div></section>
-<section class="blk next" id="next"><div class="wrap"><div class="bh"><h2>下次會不一樣的地方</h2><small>回來以後的想法</small></div><div id="nexts"></div></div></section>
+<section class="blk next" id="next"><div class="wrap"><div class="bh"><h2>下次會不一樣的地方</h2><small>回來以後的想法</small></div><div id="nexts"></div><p class="back"><a class="btn" href="#/days">回到六日目錄</a></p></div></section>
 <footer><div class="wrap"><span>2026/2/25–3/2 的旅遊紀錄，內容依當時的行程 Excel 整理；營業時間、評分、票價都是出發前查的，現在可能已經不同。</span><span>路線圖為示意，座標依地址估算（約 100–300 m）。</span></div></footer>
 </main>
 
@@ -1165,7 +1329,7 @@ const VIEW={home:document.getElementById('home'),viewer:document.getElementById(
 const dayNavEl=document.getElementById('dayNav');
 function route(){const h=location.hash.replace(/^#\/?/,'');const m=/^day\/(\d)(?:\/(\d+))?$/.exec(h);if(m)return {p:'day',n:+m[1],i:m[2]?+m[2]:0};
   const o=/^d(\d)$/.exec(h);if(o)return {p:'day',n:+o[1],i:0};
-  if(['stay','food','tx','album','items','print','next'].includes(h))return {p:'page',id:h};return {p:'home'};}
+  if(['stay','food','tx','album','items','print','next'].includes(h))return {p:'page',id:h};return {p:'home',days:h==='days'};}
 const go=h=>{location.hash=h;};
 
 // 選單
@@ -1179,31 +1343,47 @@ document.getElementById('menuPrint').addEventListener('click',()=>{menuOpen(fals
 document.getElementById('doPrint').addEventListener('click',()=>window.print());
 
 /* ---------- 每一天的張 ---------- */
+/* 2026-11-17 第四輪（依 ChatGPT 評估）：例行站（退房、休息、放行李、報到、降落…）與短程過場（步行、計程車、地鐵、8 km 內）
+   不再各佔一張，改成接在上一站尾端（after）或下一站開頭（before）的一行小字（minorsHTML）；有照片、有心得、有卡片的站一律保留。 */
 const kanOf=s=>{const n=(CARDS[stopKey(s)]||{}).name||s.n;return n.replace(/（.*?）|：.*$/g,'').replace(/[^一-鿿ぁ-ヿA-Za-z]/g,'').slice(0,2)||'・';};
+const MINOR_RE=/退房|休息|睡飽|放回|寄放|拿行李|報到|降落|還車/;
+const isMinorStop=s=>{if(s.card)return false;return MINOR_RE.test(s.n)||s.k==='住宿'||(s.k==='交通'&&!s.d);}; // 有卡片的站一律保留；只有 at 的住宿／交通站（退房、休息、放行李、報到、降落、還車）收成一行
+const kmOf=(a,b)=>{const A=P[a],B=P[b];if(!A||!B)return 999;const dy=(A[0]-B[0])*111,dx=(A[1]-B[1])*111*Math.cos(A[0]*Math.PI/180);return Math.hypot(dx,dy);};
+const isMinorLeg=l=>['walk','taxi','subway'].includes(l.mode)||(l.mode!=='air'&&kmOf(l.a,l.b)<8);
 function daySlides(d){
-  const S=d.stops||[],legs=autoLegs(d).filter(l=>!l.opt),used=new Set(),out=[];let cur=lodgingAt(d.n);
+  const S=d.stops||[],legs=autoLegs(d).filter(l=>!l.opt),used=new Set(),out=[];let cur=lodgingAt(d.n),pend=[];
   out.push({type:'cover'});
-  S.forEach((s,si)=>{if(!isMainStop(s))return;const L=locOf(s);
-    if(L&&L!==cur){let guard=0;while(cur!==L&&guard++<6){const li=legs.findIndex((l,k)=>!used.has(k)&&l.a===cur&&(l.b===L||legs.some((m,j)=>j!==k&&!used.has(j)&&m.a===l.b)));if(li<0)break;used.add(li);const l=legs[li];out.push({type:'leg',leg:l,g:l.g||{},from:l.a,to:l.b});cur=l.b;}cur=L;}
-    out.push({type:'stop',s,si,key:stopKey(s),loc:L});});
-  legs.forEach((l,li)=>{if(!used.has(li)&&l.b===lodgingAt(d.n+1)){used.add(li);out.push({type:'leg',leg:l,g:l.g||{},from:l.a,to:l.b});}});
+  const lastHost=()=>{const x=out[out.length-1];return x&&(x.type==='stop'||x.type==='leg')?x:null;}; // 接在上一站或上一段過場的尾端；一天剛開始的就放到第一站開頭
+  const push=x=>{if(x.type==='stop'&&pend.length){x.before=pend;pend=[];}out.push(x);};
+  const addMinor=m=>{const h=lastHost();if(h)(h.after=h.after||[]).push(m);else pend.push(m);};
+  const pushLeg=l=>{const L={type:'leg',leg:l,g:l.g||{},from:l.a,to:l.b};if(isMinorLeg(l))addMinor(Object.assign({kind:'leg'},L));else push(L);};
+  S.forEach((s,si)=>{if(!isMainStop(s))return;const L=locOf(s),key=stopKey(s);
+    if(L&&L!==cur){let guard=0;while(cur!==L&&guard++<6){const li=legs.findIndex((l,k)=>!used.has(k)&&l.a===cur&&(l.b===L||legs.some((m,j)=>j!==k&&!used.has(j)&&m.a===l.b)));if(li<0)break;used.add(li);pushLeg(legs[li]);cur=legs[li].b;}cur=L;}
+    if(isMinorStop(s))addMinor({kind:'stop',s,si,key,loc:L});else push({type:'stop',s,si,key,loc:L});});
+  legs.forEach((l,li)=>{if(!used.has(li)&&l.b===lodgingAt(d.n+1)){used.add(li);pushLeg(l);}});
+  if(pend.length){const h=out.slice().reverse().find(x=>x.type==='stop');if(h)h.after=(h.after||[]).concat(pend);else out.push({type:'stop',s:pend[0].s||{t:'',n:'',k:''},key:'',loc:'',before:pend.slice(1)});pend=[];}
   const snaps=[];(PRIVD[d.n]||[]).forEach(p=>{const last=snaps[snaps.length-1];if(last&&!last.v&&(last.note||'')===(p.note||'')&&last.t===(p.t||''))last.ps.push(p);else snaps.push({type:'snap',ps:[p],v:null,t:p.t||'',note:p.note||''});});
   (PVIDD[d.n]||[]).forEach(v=>{if(ytId(v.url))snaps.push({type:'snap',ps:[],v,t:v.t||'',note:v.note||''});});
   snaps.forEach(sn=>{let at=out.length;if(sn.t){const i=out.findIndex(x=>x.type==='stop'&&x.s.t>sn.t);if(i>=0)at=i;}out.splice(at,0,sn);});
   out.push({type:'end'});return out;}
 const stopCount=sl=>sl.filter(x=>x.type==='stop'||x.type==='snap').length;
 const stopNo=(sl,i)=>sl.slice(0,i+1).filter(x=>x.type==='stop'||x.type==='snap').length;
-const legPhoto=l=>'';
 function slidePhotos(sl){return sl.type==='snap'?sl.ps.map(p=>p.data):sl.type==='stop'&&sl.key?imgsOf(sl.key):[];}
 function slideTitle(sl){if(sl.type==='snap')return (sl.note||(sl.v?'影片':'隨手拍')).split(/\n/)[0].slice(0,24);if(sl.type==='stop'){const c=CARDS[sl.key];return c?c.name:sl.s.n;}if(sl.type==='leg')return sl.g.t||(MODE[sl.leg.mode]||{}).label||'移動';return '';}
 function slideTime(sl){return sl.type==='stop'?sl.s.t:sl.type==='leg'?(sl.g.at||''):sl.type==='snap'?sl.t:'';}
+function minorsHTML(list,cls){if(!list||!list.length)return '';return `<ul class="minors ${cls||''}">${list.map(m=>{if(m.kind==='leg'){const M=MODE[m.leg.mode]||{},g=m.g;return `<li class="lg"><span class="t">${esc(g.at||'')}</span><span class="b">${M.ic||'→'} ${esc(g.t||M.label||'移動')}<small>${esc(NAMES[m.from][0])} → ${esc(NAMES[m.to][0])}${g.gd?'　'+esc(g.gd):''}</small></span></li>`;}
+  const s=m.s;return `<li><span class="t">${esc(s.t||'')}</span><span class="b">${s.i||''} ${esc(s.n)}${s.d?`<small>${esc(s.d)}</small>`:''}</span></li>`;}).join('')}</ul>`;}
+const imgTag=(u,alt,eager)=>`<img src="${u}" alt="${esc(alt||'')}" loading="${eager?'eager':'lazy'}" onload="if(this.naturalHeight>this.naturalWidth*1.15)this.classList.add('por')">`;
+function vcardsHTML(vids){return vids.length?`<div class="vcards">${vids.map(v=>`<button type="button" class="vcard" data-vid="${esc(v.u)}"><span class="th"><img src="${ytThumb(v.u)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><i>▶</i></span><span class="vt"><b>${v.priv?'🔒 ':''}${esc(v.l||'影片')}</b><small>${v.priv?'私人影片':'影片'}${isShort(v.u)?'・直式':''}・點了在這裡播</small></span></button>`).join('')}</div><div class="yt" id="vYt" hidden></div>`:'';}
+const mapBtn='<button type="button" class="mapbtn" data-map aria-label="看今天的小地圖">📍 本日位置</button>';
+function frameHTML(L,alt,cap,extra){return `<div class="frame">${L.length?`<div class="track">${L.map((u,i)=>`<div class="sl">${imgTag(u,alt,!i)}${extra&&extra(i)||''}</div>`).join('')}</div>`:''}<div class="pcap">${esc(cap)}</div>${L.length>1?`<button type="button" class="pcnt" data-grid>1 / ${L.length} · 看全部</button><div class="pgrid" hidden>${L.map((u,i)=>`<button type="button" data-pi="${i}" aria-label="第 ${i+1} 張"><img src="${u}" alt="" loading="lazy"></button>`).join('')}</div>`:''}</div>${L.length>1?`<button type="button" class="pnav prev" aria-label="上一張">‹</button><button type="button" class="pnav next" aria-label="下一張">›</button>`:''}`;}
 
 /* ---------- 地圖 ---------- */
 const MAPC={};
 function dayMapSvg(d,legOnly){const key=d.n+(legOnly?':'+legOnly.a+'>'+legOnly.b:':all')+(MOB?'m':'d');if(MAPC[key])return MAPC[key];
   const cfg=dayMapCfg(d);const c=Object.assign({},cfg,legOnly?{legs:[legOnly],auto:1,pts:[legOnly.a,legOnly.b],labels:{[legOnly.a]:'b',[legOnly.b]:'t'}}:{});
   if(legOnly){const b=bboxOf([legOnly.a,legOnly.b],.04);c.bbox=b;}
-  return MAPC[key]=buildMap(c,{aria:legOnly?'路線：'+NAMES[legOnly.a][0]+' 到 '+NAMES[legOnly.b][0]:'第'+d.n+'天路線圖',big:true,W:legOnly?(MOB?390:760):(MOB?300:420),H:legOnly?(MOB?520:560):(MOB?200:280)});}
+  return MAPC[key]=buildMap(c,{aria:legOnly?'路線：'+NAMES[legOnly.a][0]+' 到 '+NAMES[legOnly.b][0]:'第'+d.n+'天路線圖',big:true,W:legOnly?(MOB?390:760):(MOB?340:420),H:legOnly?(MOB?430:560):(MOB?240:280)});}
 function markSel(box,loc){if(!loc)return;box.querySelectorAll('.mk').forEach(m=>{const on=m.dataset.key===loc;m.classList.toggle('sel',on);const c=m.querySelector('circle,rect');if(c&&on){c.setAttribute('stroke','#c4532a');c.setAttribute('stroke-width','4');}});}
 
 /* ---------- 檢視器 ---------- */
@@ -1214,9 +1394,11 @@ function openDay(n,i){const d=DAYS[n-1];if(!d)return go('#/');
 function fsItem(sl,k){const d=DAYS[VD-1];
   if(sl.type==='cover')return `<button type="button" class="fsi kan" data-i="${k}" title="封面"><span>${d.n}</span></button>`;
   if(sl.type==='end')return `<button type="button" class="fsi kan" data-i="${k}" title="結束"><span>›</span></button>`;
-  if(sl.type==='leg')return `<button type="button" class="fsi leg" data-i="${k}" title="${esc(slideTitle(sl))}"><span>${(sl.g.i||'→')}</span></button>`;
+  if(sl.type==='leg')return `<button type="button" class="fsi leg" data-i="${k}" title="${esc(slideTitle(sl))}"><span>${((MODE[sl.leg.mode]||{}).ic||'→')}</span></button>`;
   const L=slidePhotos(sl);if(sl.type==='snap'&&sl.v)return `<button type="button" class="fsi vid" data-i="${k}" title="${esc(slideTitle(sl))}"><img src="${ytThumb(sl.v.url)}" alt="" onerror="this.style.visibility='hidden'"><span>▶</span></button>`;
   return `<button type="button" class="fsi" data-i="${k}" title="${esc(slideTitle(sl))}">${L.length?`<img src="${L[0]}" alt="">`:`<span>${esc(kanOf(sl.s))}</span>`}</button>`;}
+function dayToc(){return `<div class="th"><b>DAY ${VD}　${esc(DAYS[VD-1].title)}</b><button type="button" class="mx" data-toc-x aria-label="關閉">×</button></div><ol>${VS.map((sl,k)=>{if(sl.type==='cover')return `<li><button type="button" data-i="${k}"><span class="t">封面</span><span>${esc(DAYS[VD-1].title)}</span></button></li>`;if(sl.type==='end')return `<li><button type="button" data-i="${k}"><span class="t">結尾</span><span>這天結束</span></button></li>`;
+  return `<li class="${sl.type}${k===VI?' on':''}"><button type="button" data-i="${k}"><span class="t">${esc(slideTime(sl))}</span><span>${sl.type==='leg'?((MODE[sl.leg.mode]||{}).ic||'→')+' ':''}${esc(slideTitle(sl))}</span></button></li>`;}).join('')}</ol>`;}
 function renderSlide(){const d=DAYS[VD-1],sl=VS[VI],ph=document.getElementById('vPh'),tx=document.getElementById('vTx'),map=document.getElementById('vMap');
   topEl.classList.add('dark');document.body.classList.add('lock');
   document.querySelectorAll('#dayNav a').forEach(a=>a.classList.toggle('on',+a.dataset.n===VD));
@@ -1224,63 +1406,80 @@ function renderSlide(){const d=DAYS[VD-1],sl=VS[VI],ph=document.getElementById('
   document.querySelectorAll('#vFs .fsi').forEach((b,k)=>b.classList.toggle('on',k===VI));
   document.getElementById('vProg').style.width=(VI/(VS.length-1)*100)+'%';
   const first=VI===0,last=VI===VS.length-1;document.getElementById('vPrev').disabled=first;document.getElementById('vNext').disabled=last;
-  VIEW.viewer.dataset.type=sl.type;map.innerHTML='';map.classList.remove('big');
+  VIEW.viewer.dataset.type=sl.type;map.innerHTML='';map.classList.remove('big');document.getElementById('vToc').hidden=true;
   const nextSl=VS[VI+1],nextTxt=nextSl?(nextSl.type==='end'?'這天結束':`${slideTime(nextSl)}　${slideTitle(nextSl)}`):'';
   const nextHTML=nextSl?`<button type="button" class="vnext" data-go="next"><small>下一${nextSl.type==='leg'?'段':'站'}</small><b>${esc(nextTxt)} ›</b></button>`:'';
   const photos=dayPhotos(d),cover=photos[0]?imgsOf(photos[0][0])[0]:'';
   if(sl.type==='cover'){
     ph.innerHTML=`<div class="frame">${cover?`<img src="${cover}" alt="" class="main">`:`<div class="kan"><span>${DAY_KAN[d.n]||''}</span></div>`}<div class="pcap">DAY ${d.n}　${esc(d.title)}</div></div>`;
-    tx.innerHTML=`<div class="vhead"><span class="num">${d.n}</span><span class="dt">2026.${d.date.split('/').map(x=>x.padStart(2,'0')).join('.')}　星期${d.wd}</span></div><h1>${esc(d.title)}</h1><p class="sub">${esc(d.sub)}</p><div class="meta">住　${esc(d.stay)}　・　${stopCount(VS)} 站・${photos.reduce((a,[k])=>a+imgsOf(k).length,0)+(PRIVD[d.n]||[]).length} 張照片${nVidDay(d)?`・${nVidDay(d)} 支影片`:''}</div>${MEMO.days[d.n]?`<p class="memo">${esc(MEMO.days[d.n])}</p>`:''}<div class="vbtm">${nextHTML}</div>`;
+    tx.innerHTML=`<div class="vhead"><span class="num">${d.n}</span><span class="dt">2026.${d.date.split('/').map(x=>x.padStart(2,'0')).join('.')}　星期${d.wd}</span>${mapBtn}</div><h1>${esc(d.title)}</h1><p class="sub">${esc(d.sub)}</p><div class="meta">住　${esc(d.stay)}　・　${stopCount(VS)} 站・${photos.reduce((a,[k])=>a+imgsOf(k).length,0)+(PRIVD[d.n]||[]).length} 張照片${nVidDay(d)?`・${nVidDay(d)} 支影片`:''}</div>${MEMO.days[d.n]?`<p class="memo">${esc(MEMO.days[d.n])}</p>`:''}<div class="vbtm">${nextHTML}</div>`;
     map.innerHTML=dayMapSvg(d);requestAnimationFrame(()=>{const s=map.querySelector('svg');if(s)animateMap(s);});
-  }else if(sl.type==='end'){const nd=DAYS[VD];
-    ph.innerHTML=`<div class="frame">${cover?`<img src="${cover}" alt="" class="main dim">`:`<div class="kan"><span>${DAY_KAN[d.n]||''}</span></div>`}<div class="pcap">這天結束</div></div>`;
-    tx.innerHTML=`<div class="vhead"><span class="dt">DAY ${d.n}　這天結束</span></div><h1>${esc(d.title)}</h1>${MEMO.days[d.n]?`<p class="memo">${esc(MEMO.days[d.n])}</p>`:''}<div class="vbtm">${nd?`<a class="vnext" href="#/day/${nd.n}"><small>下一天　${nd.date}</small><b>${esc(nd.title)} ›</b></a>`:`<a class="vnext" href="#/next"><small>整趟結束</small><b>下次會不一樣的地方 ›</b></a>`}<a class="vlnk" href="#/">回首頁</a></div>`;
+  }else if(sl.type==='end'){const nd=DAYS[VD],pics=photos.slice(0,2).map(([k])=>imgsOf(k)[0]);
+    ph.innerHTML=`<div class="frame">${pics.length?`<div class="duo n${pics.length}">${pics.map(u=>`<img src="${u}" alt="">`).join('')}</div>`:`<div class="kan"><span>${DAY_KAN[d.n]||''}</span></div>`}<div class="pcap">DAY ${d.n}　這天結束</div></div>`;
+    tx.innerHTML=`<div class="vhead"><span class="dt">DAY ${d.n}　這天結束</span>${mapBtn}</div><h1>${esc(d.title)}</h1>${MEMO.days[d.n]?`<p class="memo">${esc(MEMO.days[d.n])}</p>`:''}${minorsHTML(sl.before)}<div class="vbtm">${nd?`<a class="vnext" href="#/day/${nd.n}"><small>翻到第 ${nd.n} 天　${nd.date}</small><b>${esc(nd.title)} ›</b></a>`:`<a class="vnext" href="#/next"><small>整趟結束</small><b>下次會不一樣的地方 ›</b></a>`}<a class="vlnk" href="#/days">回到六日目錄</a></div>`;
     map.innerHTML=dayMapSvg(d);
   }else if(sl.type==='leg'){const M=MODE[sl.leg.mode]||{},g=sl.g;
     ph.innerHTML=`<div class="frame"><div class="legmap">${dayMapSvg(d,sl.leg)}</div><span class="legtag">移動 · ${esc(M.label||'')}</span><div class="pcap">${esc(NAMES[sl.from][0])} → ${esc(NAMES[sl.to][0])}</div></div>`;
     requestAnimationFrame(()=>{const s=ph.querySelector('svg');if(s){animateMap(s);}});
-    tx.innerHTML=`<div class="vhead"><span class="time">${esc(g.at||'')}</span><span class="dt">移動・${esc(M.label||'')}</span></div><h1>${esc(g.t||M.label||'移動')}</h1><div class="meta">${esc(NAMES[sl.from][0])} → ${esc(NAMES[sl.to][0])}</div>${g.gd?`<p class="txt">${esc(g.gd)}</p>`:''}<div class="vbtm">${nextHTML}</div>`;
+    tx.innerHTML=`<div class="vhead"><span class="dt">${esc(g.at||'')}${g.at?' · ':''}移動・${esc(M.label||'')}</span></div><h1>${esc(g.t||M.label||'移動')}</h1><div class="meta">${esc(NAMES[sl.from][0])} → ${esc(NAMES[sl.to][0])}</div>${g.gd?`<p class="txt">${esc(g.gd)}</p>`:''}${minorsHTML(sl.after)}<div class="vbtm">${nextHTML}</div>`;
   }else if(sl.type==='snap'){const no=stopNo(VS,VI),tot=stopCount(VS),L=slidePhotos(sl),note=sl.note||'',t1=note.split(/\n/)[0],rest=note.split(/\n/).slice(1).join('\n');
     if(sl.v){const u=sl.v.url;ph.innerHTML=`<div class="frame"><div class="vidbox${isShort(u)?' short':''}"><img src="${ytThumb(u)}" alt="" onerror="this.style.visibility='hidden'"><button type="button" class="vplay" data-vid="${esc(u)}" aria-label="播放影片">▶</button><span class="lock">🔒 私人影片</span></div><div class="pcap">${esc(t1||'影片')}</div></div>`;ph.dataset.i=0;ph.dataset.n=0;}
-    else{ph.innerHTML=`<div class="frame"><div class="track">${L.map((u,i)=>`<div class="sl"><img src="${u}" alt="隨手拍" loading="${i?'lazy':'eager'}"><span class="lock">🔒 私人</span></div>`).join('')}</div><div class="pcap">${esc(t1)}</div>${L.length>1?`<span class="pcnt">1 / ${L.length}</span>`:''}</div>${L.length>1?`<button type="button" class="pnav prev" aria-label="上一張">‹</button><button type="button" class="pnav next" aria-label="下一張">›</button>`:''}`;ph.dataset.i=0;ph.dataset.n=L.length;ph.dataset.caps='[]';ph.dataset.cap=t1;}
-    tx.innerHTML=`<div class="vhead"><span class="time">${esc(sl.t||'')}</span><span class="dt">第 ${no} 站 / ${tot}・${sl.v?'影片':'隨手拍'}</span></div><h1>${esc(t1||(sl.v?'影片':'隨手拍'))}</h1><div class="meta">${sl.v?'私人影片':`私人照片${L.length>1?'・'+L.length+' 張':''}`}・沒有對到哪一站</div>${rest?`<p class="txt">${esc(rest)}</p>`:''}${sl.v?`<a class="vlnk" href="${esc(sl.v.url)}" target="_blank" rel="noopener noreferrer">在 YouTube 開啟 ↗</a>`:''}<div class="vbtm">${nextHTML}</div>`;
+    else{ph.innerHTML=frameHTML(L,'隨手拍',t1,()=>'<span class="lock">🔒 私人</span>');ph.dataset.i=0;ph.dataset.n=L.length;ph.dataset.caps='[]';ph.dataset.cap=t1;}
+    tx.innerHTML=`<div class="vhead"><span class="dt">${esc(sl.t||'')}${sl.t?' · ':''}第 ${no} 站 / ${tot}・${sl.v?'影片':'隨手拍'}</span>${mapBtn}</div><h1>${esc(t1||(sl.v?'影片':'隨手拍'))}</h1><div class="meta">${sl.v?'私人影片':`私人照片${L.length>1?'・'+L.length+' 張':''}`}・沒有對到哪一站</div>${rest?`<p class="txt">${esc(rest)}</p>`:''}${sl.v?`<a class="vlnk" href="${esc(sl.v.url)}" target="_blank" rel="noopener noreferrer">在 YouTube 開啟 ↗</a>`:''}<div class="vbtm">${nextHTML}</div>`;
     map.innerHTML=dayMapSvg(d);
   }else{const s=sl.s,c=CARDS[sl.key]||null,L=slidePhotos(sl),no=stopNo(VS,VI),tot=stopCount(VS),memo=sl.key?MEMO.cards[sl.key]:'';
     const cap=memo||(c&&c.short)||s.d||'',caps=L.map((u,i)=>sl.key?capOf(sl.key,i):'');ph.dataset.caps=JSON.stringify(caps);ph.dataset.cap=cap;
-    ph.innerHTML=`<div class="frame">${L.length?`<div class="track">${L.map((u,i)=>`<div class="sl"><img src="${u}" alt="${esc(slideTitle(sl))}" loading="${i?'lazy':'eager'}">${sl.key&&isPriv(sl.key,i)?'<span class="lock">🔒 私人</span>':''}</div>`).join('')}</div>`
-      :`<div class="kan"><span>${esc(kanOf(s))}</span><small>${s.i||''}　還沒有照片</small></div>`}<div class="pcap">${esc(caps[0]||cap)}</div>${L.length>1?`<span class="pcnt">1 / ${L.length}</span>`:''}</div>${L.length>1?`<button type="button" class="pnav prev" aria-label="上一張">‹</button><button type="button" class="pnav next" aria-label="下一張">›</button>`:''}`;
+    ph.innerHTML=L.length?frameHTML(L,slideTitle(sl),caps[0]||cap,i=>sl.key&&isPriv(sl.key,i)?'<span class="lock">🔒 私人</span>':''):`<div class="frame"><div class="kan"><span>${esc(kanOf(s))}</span><small>${s.i||''}　還沒有照片</small></div><div class="pcap">${esc(cap)}</div></div>`;
     ph.dataset.i=0;ph.dataset.n=L.length;
     const vids=sl.key?vidsOf(sl.key):[];
-    tx.innerHTML=`<div class="vhead"><span class="time">${esc(s.t)}</span><span class="dt">第 ${no} 站 / ${tot}</span></div><h1>${esc(slideTitle(sl))}</h1>${c?`<div class="meta">${esc(c.kind||'')}${c.jp&&c.jp!==c.name?'・'+esc(c.jp):''}</div>`:''}${c&&c.text?`<p class="txt">${c.text}</p>`:s.d?`<p class="txt">${esc(s.d)}</p>`:''}${memo?`<p class="memo1">${esc(memo)}</p>`:''}${c&&c.chips?`<div class="chips">${c.chips.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}${vids.length?`<div class="vbtns">${vids.map(v=>`<button type="button" class="vbtn" data-vid="${esc(v.u)}">${v.priv?'🔒 ':''}▶ ${esc(v.l||'影片')}</button>`).join('')}</div><div class="yt" id="vYt" hidden></div>`:''}${sl.key&&gUrl(sl.key)?`<a class="vlnk" href="${gUrl(sl.key)}" target="_blank" rel="noopener noreferrer">Google 地圖 ↗</a>`:''}<div class="vbtm">${nextHTML}</div>`;
+    tx.innerHTML=`<div class="vhead"><span class="dt">${esc(s.t)}${s.t?' · ':''}第 ${no} 站 / ${tot}</span>${mapBtn}</div>${minorsHTML(sl.before,'pre')}<h1>${esc(slideTitle(sl))}</h1>${c?`<div class="meta">${esc(c.kind||'')}${c.jp&&c.jp!==c.name?'・'+esc(c.jp):''}</div>`:''}${c&&c.text?`<p class="txt">${c.text}</p>`:s.d?`<p class="txt">${esc(s.d)}</p>`:''}${memo?`<p class="memo1">${esc(memo)}</p>`:''}${c&&c.chips?`<div class="chips">${c.chips.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}${vcardsHTML(vids)}${sl.key&&gUrl(sl.key)?`<a class="vlnk" href="${gUrl(sl.key)}" target="_blank" rel="noopener noreferrer">Google 地圖 ↗</a>`:''}${minorsHTML(sl.after)}<div class="vbtm">${nextHTML}</div>`;
     if(sl.loc){map.innerHTML=dayMapSvg(d);markSel(map,sl.loc);map.querySelectorAll('.leg,.legx,.legi').forEach(e=>e.style.opacity=1);map.querySelectorAll('.mk').forEach(e=>e.style.opacity=1);}
   }
-  const ni=document.getElementById('vNextInfo');ni.hidden=!nextSl;ni.innerHTML=nextSl?`<small>NEXT${slideTime(nextSl)?' · '+esc(slideTime(nextSl)):''}</small><b>${esc(nextSl.type==='end'?'這天結束':slideTitle(nextSl))} ›</b>`:'';
+  const ni=document.getElementById('vNextInfo');ni.innerHTML=`<small>DAY ${VD} · ${VI+1} / ${VS.length}</small><b>${nextSl?esc(nextSl.type==='end'?'這天結束':slideTitle(nextSl))+' ›':'回到六日目錄'}</b>`;ni.dataset.go=nextSl?'next':'days';
   tx.scrollTop=0;document.querySelector('#vFs .fsi.on')?.scrollIntoView({inline:'center',block:'nearest'});
   history.replaceState(null,'',location.pathname+location.search+'#/day/'+VD+'/'+VI);
 }
 function vgo(d){const i=VI+d;if(i<0||i>=VS.length)return;VI=i;renderSlide();}
-function pslide(d){const ph=document.getElementById('vPh'),n=+ph.dataset.n;if(n<2)return;const i=((+ph.dataset.i)+d+n)%n;ph.dataset.i=i;ph.querySelector('.track').style.transform=`translateX(-${i*100}%)`;ph.querySelector('.pcnt').textContent=(i+1)+' / '+n;try{const caps=JSON.parse(ph.dataset.caps||'[]'),pc=ph.querySelector('.pcap');if(pc)pc.textContent=caps[i]||ph.dataset.cap||'';}catch(e){}}
+function pslideTo(i){const ph=document.getElementById('vPh'),n=+ph.dataset.n;if(n<2)return;i=((i%n)+n)%n;ph.dataset.i=i;ph.querySelector('.track').style.transform=`translateX(-${i*100}%)`;const pc=ph.querySelector('.pcnt');if(pc)pc.textContent=(i+1)+' / '+n+' · 看全部';try{const caps=JSON.parse(ph.dataset.caps||'[]'),cp=ph.querySelector('.pcap');if(cp)cp.textContent=caps[i]||ph.dataset.cap||'';}catch(e){}}
+function pslide(d){pslideTo((+document.getElementById('vPh').dataset.i)+d);}
 document.getElementById('vPrev').addEventListener('click',()=>vgo(-1));
 document.getElementById('vNext').addEventListener('click',()=>vgo(1));
 VIEW.viewer.addEventListener('click',e=>{
-  const b=e.target.closest('[data-go=next]');if(b){vgo(1);return;}
+  const b=e.target.closest('[data-go]');if(b){if(b.dataset.go==='days')go('#/days');else vgo(1);return;}
   const f=e.target.closest('#vFs .fsi');if(f){VI=+f.dataset.i;renderSlide();return;}
   const pn=e.target.closest('.pnav');if(pn){pslide(pn.classList.contains('next')?1:-1);return;}
-  const vb=e.target.closest('.vbtn[data-vid]');if(vb){const y=document.getElementById('vYt'),u=vb.dataset.vid,id=ytId(u),st=ytStart(u);y.className='yt'+(isShort(u)?' short':'');y.innerHTML=ytFrame(id,st,1);y.hidden=false;vb.parentNode.querySelectorAll('.vbtn').forEach(b=>b.classList.toggle('on',b===vb));return;}
+  const pg=e.target.closest('[data-grid]');if(pg){const g=document.querySelector('#vPh .pgrid');if(g)g.hidden=!g.hidden;return;}
+  const pi=e.target.closest('[data-pi]');if(pi){pslideTo(+pi.dataset.pi);document.querySelector('#vPh .pgrid').hidden=true;return;}
+  const vb=e.target.closest('.vcard[data-vid]');if(vb){const y=document.getElementById('vYt'),u=vb.dataset.vid,id=ytId(u),st=ytStart(u);if(vb.classList.contains('on')){y.hidden=true;y.innerHTML='';vb.classList.remove('on');return;}y.className='yt'+(isShort(u)?' short':'');y.innerHTML=ytFrame(id,st,1);y.hidden=false;vb.parentNode.querySelectorAll('.vcard').forEach(b=>b.classList.toggle('on',b===vb));y.scrollIntoView({block:'nearest',behavior:'smooth'});return;}
   const vp=e.target.closest('.vplay[data-vid]');if(vp){const box=vp.closest('.vidbox'),u=vp.dataset.vid;box.innerHTML=ytFrame(ytId(u),ytStart(u),1);return;}
+  const mb=e.target.closest('[data-map]');if(mb){const m=document.getElementById('vMap');if(!m.innerHTML){m.innerHTML=dayMapSvg(DAYS[VD-1]);}m.classList.add('big');return;}
   if(e.target.closest('#vMap')){document.getElementById('vMap').classList.toggle('big');return;}
+  if(e.target.closest('#vBars')){const t=document.getElementById('vToc');t.innerHTML=dayToc();t.hidden=false;return;}
+  const ti=e.target.closest('#vToc [data-i]');if(ti){VI=+ti.dataset.i;renderSlide();return;}
+  if(e.target.closest('[data-toc-x]')||e.target.closest('#vToc')===document.getElementById('vToc')&&e.target.id==='vToc'){document.getElementById('vToc').hidden=true;return;}
 });
-document.addEventListener('keydown',e=>{if(VIEW.viewer.hidden||!modal.hidden||!menu.hidden)return;if(e.key==='ArrowRight'){e.preventDefault();vgo(1);}if(e.key==='ArrowLeft'){e.preventDefault();vgo(-1);}});
+document.addEventListener('keydown',e=>{if(VIEW.viewer.hidden||!modal.hidden||!menu.hidden)return;if(e.key==='Escape'){const t=document.getElementById('vToc'),m=document.getElementById('vMap');if(!t.hidden)t.hidden=true;else if(m.classList.contains('big'))m.classList.remove('big');return;}if(e.key==='ArrowRight'){e.preventDefault();vgo(1);}if(e.key==='ArrowLeft'){e.preventDefault();vgo(-1);}});
 (function(){let x0=null,y0=null;const el=VIEW.viewer;
-  el.addEventListener('touchstart',e=>{if(e.target.closest('#vTx,#vFs'))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+  el.addEventListener('touchstart',e=>{if(e.target.closest('#vTx,#vFs,#vToc,.pgrid'))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
   el.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3){const ph=document.getElementById('vPh');if(+ph.dataset.n>1&&e.target.closest('#vPh'))pslide(dx<0?1:-1);else vgo(dx<0?1:-1);}},{passive:true});})();
 
 /* ---------- 首頁 ---------- */
+/* 2026-11-17 第四輪：日期卡多「每天一句」（MEMO.days 第一句）；沒照片的那天是紙底文字卡；六天總覽地圖摺疊在日期卡下面 */
+const oneLine=d=>{const m=(MEMO.days[d.n]||'').split(/[。\n]/)[0].trim();return m?m+'。':d.sub;};
 function renderHome(){
-  document.getElementById('hcards').innerHTML=DAYS.map(d=>{const ps=dayPhotos(d),n=ps.reduce((a,[k])=>a+imgsOf(k).length,0),cv=ps[0]?imgsOf(ps[0][0])[0]:'',st=(d.stops||[]).filter(isMainStop).length,pv=nPrivDay(d);
-    return `<a class="hc" href="#/day/${d.n}">${cv?`<img src="${cv}" alt="" loading="lazy">`:`<span class="kan">${DAY_KAN[d.n]||''}</span>`}<span class="n">${d.n}</span><span class="t"><b>${esc(d.title)}</b><small>${d.date} ${d.wd}・${esc(d.sub)}</small></span><span class="c">${st} 站・${n?n+' 張照片':'還沒有照片'}${pv?`・🔒 ${pv}`:''} ›</span></a>`;}).join('');}
+  document.getElementById('hcards').innerHTML=DAYS.map(d=>{const ps=dayPhotos(d),n=ps.reduce((a,[k])=>a+imgsOf(k).length,0),cv=ps[0]?imgsOf(ps[0][0])[0]:'',st=stopCount(daySlides(d)),pv=nPrivDay(d);
+    return `<a class="hc${cv?'':' nop'}" href="#/day/${d.n}">${cv?`<img src="${cv}" alt="" loading="lazy">`:`<span class="txtc"><small>${d.date}　星期${d.wd}</small><b>${esc(d.title)}</b><span>${esc(oneLine(d))}</span></span>`}<span class="n">${d.n}</span><span class="t"><b>${esc(d.title)}</b><small>${d.date} ${d.wd}・${esc(d.sub)}</small>${cv?`<span class="one">${esc(oneLine(d))}</span>`:''}</span><span class="c">${st} 站・${n?n+' 張照片':'還沒有照片'}${pv?`・🔒 ${pv}`:''} ›</span></a>`;}).join('');}
 const nPrivDay=d=>{const seen=new Set();let n=(PRIVD[d.n]||[]).length+(PVIDD[d.n]||[]).length;(d.stops||[]).forEach(s=>{const k=stopKey(s);if(k&&!seen.has(k)){seen.add(k);n+=nPriv(k)+(PVID[k]||[]).length;}});return n;};
 const nVidDay=d=>{const seen=new Set();let n=(PVIDD[d.n]||[]).length;(d.stops||[]).forEach(s=>{const k=stopKey(s);if(k&&!seen.has(k)){seen.add(k);n+=vidsOf(k).length;}});return n;};
+/* 六天總覽地圖：主要停留點＋跨城的移動（短程過場不畫），點地名跳到那一天 */
+const KEY_DAY={};DAYS.forEach(d=>(d.stops||[]).forEach(s=>{const k=locOf(s);if(k&&!KEY_DAY[k])KEY_DAY[k]=d.n;}));
+let OMAP_DONE=false;
+function overviewMap(){if(OMAP_DONE)return;OMAP_DONE=true;const skip=['taipei','tpe'],pts=[],legs=[];
+  DAYS.forEach(d=>autoLegs(d).filter(l=>!l.opt&&!isMinorLeg(l)&&!skip.includes(l.a)&&!skip.includes(l.b)).forEach(l=>{legs.push(l);[l.a,l.b].forEach(k=>{if(!pts.includes(k))pts.push(k);});}));
+  const labels={};pts.forEach(k=>labels[k]='b');labels.hakata='t';labels.oit='r';
+  document.getElementById('omap').innerHTML=buildMap({pts,legs,labels,minSpan:.4,auto:1},{aria:'六天路線總覽',big:true,W:MOB?358:860,H:MOB?250:340})+`<div class="olg">${DAYS.map(d=>`<a href="#/day/${d.n}"><i>${d.n}</i>${esc(d.title)}</a>`).join('')}</div>`;}
+document.getElementById('omapD').addEventListener('toggle',e=>{if(e.target.open)overviewMap();});
+document.getElementById('omap').addEventListener('click',e=>{const mk=e.target.closest('.mk');if(mk&&KEY_DAY[mk.dataset.key]){e.preventDefault();e.stopPropagation();go('#/day/'+KEY_DAY[mk.dataset.key]);}},true);
 
 /* ---------- 其他頁（住宿、吃了什麼、交通、相簿、下次） ---------- */
 /* 旅途收藏：車票、收據、明信片。掃描檔放 img/items/，用 tools/addphotos.py 以 key 'item-<id>' 加進 IMG 也可以，或直接寫路徑 */
@@ -1292,17 +1491,17 @@ const ITEMS=[ // {id, title, date, note, img}；img 空字串＝還沒掃描
 function renderItems(){document.getElementById('itemsG').innerHTML=ITEMS.length?ITEMS.map((it,i)=>`<button type="button" class="item" data-item="${i}">${it.img?`<img src="${it.img}" alt="${esc(it.title)}" loading="lazy">`:'<div class="none">掃描待放</div>'}<h3>${esc(it.title)}</h3><small>${esc(it.date)}</small>${it.note?`<p>${esc(it.note)}</p>`:''}</button>`).join(''):'<p class="empty">還沒有收藏。把車票、收據、明信片掃描後丟給我。</p>';}
 function renderPrint(){document.getElementById('printBody').innerHTML=DAYS.map(d=>{const sl=daySlides(d);
   return `<section class="pday"><h2><span>DAY ${d.n} · 2026.${d.date.split('/').map(x=>x.padStart(2,'0')).join('.')}（${d.wd}）</span>${esc(d.title)}</h2>${MEMO.days[d.n]?`<p class="pmemo">${esc(MEMO.days[d.n])}</p>`:''}
-  ${sl.map(x=>{if(x.type==='snap')return `<div class="pstop"><div class="t">${esc(x.t||'')}</div><div><b>${x.v?'▶ 影片':'隨手拍'}</b>${x.note?`<div class="m1">${esc(x.note)}</div>`:''}</div>${x.v?`<img src="${ytThumb(x.v.url)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">`:`<img src="${x.ps[0].data}" alt="" loading="lazy">`}</div>`;if(x.type==='leg')return `<div class="pleg">→ ${esc(x.g.at||'')}　${esc(x.g.t||'')}${x.g.gd?'　'+esc(x.g.gd):''}</div>`;if(x.type!=='stop')return '';const c=CARDS[x.key],L=slidePhotos(x),m=x.key?MEMO.cards[x.key]:'';
-    return `<div class="pstop"><div class="t">${esc(x.s.t)}</div><div><b>${esc(slideTitle(x))}</b>${c&&c.text?`<p>${c.text}</p>`:x.s.d?`<p>${esc(x.s.d)}</p>`:''}${m?`<div class="m1">${esc(m)}</div>`:''}</div>${L.length?`<img src="${L[0]}" alt="" loading="lazy">`:'<span></span>'}</div>`;}).join('')}</section>`;}).join('');}
+  ${sl.map(x=>{if(x.type==='snap')return `<div class="pstop"><div class="t">${esc(x.t||'')}</div><div><b>${x.v?'▶ 影片':'隨手拍'}</b>${x.note?`<div class="m1">${esc(x.note)}</div>`:''}</div>${x.v?`<img src="${ytThumb(x.v.url)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">`:`<img src="${x.ps[0].data}" alt="" loading="lazy">`}</div>`;const mn=l=>(l||[]).map(q=>`<div class="pleg">${q.kind==='leg'?'→ '+esc(q.g.at||'')+'　'+esc(q.g.t||''):esc(q.s.t)+'　'+esc(q.s.n)}</div>`).join('');if(x.type==='leg')return `<div class="pleg">→ ${esc(x.g.at||'')}　${esc(x.g.t||'')}${x.g.gd?'　'+esc(x.g.gd):''}</div>`+mn(x.after);if(x.type!=='stop')return '';const c=CARDS[x.key],L=slidePhotos(x),m=x.key?MEMO.cards[x.key]:'';
+    return mn(x.before)+`<div class="pstop"><div class="t">${esc(x.s.t)}</div><div><b>${esc(slideTitle(x))}</b>${c&&c.text?`<p>${c.text}</p>`:x.s.d?`<p>${esc(x.s.d)}</p>`:''}${m?`<div class="m1">${esc(m)}</div>`:''}</div>${L.length?`<img src="${L[0]}" alt="" loading="lazy">`:'<span></span>'}</div>`+mn(x.after);}).join('')}</section>`;}).join('');}
 function renderPages(){renderItems();renderPrint();
 document.getElementById('stays').innerHTML=STAYS.map((S,i)=>{const c=CARDS[S.key]||{},L=imgsOf(S.key),R=STAY_RG.find(r=>r.id===S.rg)||{},nights=(R.stays||[]).reduce((a,x)=>a+x[1],0);
   const sp=L.length?L.map((u,j)=>`<button type="button" class="ph${j===0?' wide':''}" data-card="${S.key}" aria-label="${esc(c.name||S.key)}，看介紹"><img src="${u}" alt="" loading="lazy">${isPriv(S.key,j)?'<span class="lock">🔒</span>':''}</button>`).join(''):`<div class="none">還沒有照片</div>`;
   const secs=(S.secs||[]).map(g=>`<dt>${esc(g[0])}</dt><dd>${esc(g[3])}</dd>`).join('')+(S.must||[]).map(m=>`<dt>要記得</dt><dd>${esc(m)}</dd>`).join('');
-  return `<article class="st" id="st-${S.key}"><div class="sx"><div class="lab">STAY 0${i+1}　${esc(R.area||'')}　${nights} 晚</div><h3>${esc(NAMES[S.key][0])}</h3><div class="sub">${esc(S.kind)}・${esc(S.sub||'')}</div><div class="sub">${esc(S.stn)}・${esc(S.chk)}・早餐：${esc(S.bf)}</div><div class="tags">${(S.tags||[]).map(t=>`<span>${esc(t)}</span>`).join('')}</div><dl>${secs}</dl></div><div class="sp">${sp}</div></article>`;}).join('');
+  return `<article class="st" id="st-${S.key}"><div class="sx"><div class="lab">STAY 0${i+1}　${esc(R.area||'')}　${nights} 晚</div><h3>${esc(NAMES[S.key][0])}</h3><div class="sub">${esc(S.kind)}・${esc(S.sub||'')}</div><div class="sub">${esc(S.stn)}・${esc(S.chk)}・早餐：${esc(S.bf)}</div>${MEMO.cards[S.key]?`<div class="hw">${esc(MEMO.cards[S.key])}</div>`:''}<div class="tags">${(S.tags||[]).map(t=>`<span>${esc(t)}</span>`).join('')}</div><details class="sd"${MOB?'':' open'}><summary>住宿資料</summary><dl>${secs}</dl></details></div><div class="sp">${sp}</div></article>`;}).join('');
 (function(){const byDay={};RESTO.list.forEach(r=>{(byDay[r.d]=byDay[r.d]||[]).push(r);});
-  const row=r=>{const k=r.card&&CARDS[r.card]?r.card:'';return `<li class="${r.st==='c'?'c':''}${k?' has':''}"${k?` data-card="${k}" tabindex="0" role="button"`:''}><span class="m">${esc(r.m)}</span><span><span class="nm">${esc(r.n)}<small>${esc(r.c)}</small></span><span class="no">${esc(r.note)}</span></span><span class="ck">${r.st==='in'?'有去':'候選'}</span></li>`;};
+  const row=r=>{const k=r.card&&CARDS[r.card]?r.card:'';const memo=k&&MEMO.cards[k]||'';return `<li class="${r.st==='c'?'c':''}${k?' has':''}"${k?` data-card="${k}" tabindex="0" role="button"`:''}><span class="m">${esc(r.m)}</span><span><span class="nm">${esc(r.n)}</span>${memo?`<span class="no hw">${esc(memo)}</span>`:r.st!=='in'&&r.note?`<span class="no">${esc(r.note.split('・')[0])}</span>`:''}<details class="sd" onclick="event.stopPropagation()"><summary>店家資料</summary><small>${esc(r.c)}${r.note?'・'+esc(r.note):''}</small></details></span><span class="ck">${r.st==='in'?'有去':'候選'}</span></li>`;};
   document.getElementById('foods').innerHTML=DAYS.filter(d=>byDay[d.n]).map(d=>{const L=byDay[d.n],ins=L.filter(r=>r.st==='in'),cs=L.filter(r=>r.st!=='in');
-    return `<div class="fd"><div class="fx"><div class="n">${d.n}</div><div class="t">${d.date}　${esc(d.title)}</div></div><ul>${ins.map(row).join('')}${cs.length?`<li style="display:block;border:0;padding:0"><details><summary>當時的候選 ${cs.length} 家</summary><ul style="list-style:none;margin:0;padding:0">${cs.map(row).join('')}</ul></details></li>`:''}</ul></div>`;}).join('');})();
+    return `<div class="fd"><div class="fx"><div class="n">${d.n}</div><div class="t">${d.date}　${esc(d.title)}</div></div><ul>${ins.map(row).join('')}${cs.length?`<li style="display:block;border:0;padding:0"><details><summary>當時存的候選（${cs.length}）</summary><ul style="list-style:none;margin:0;padding:0">${cs.map(row).join('')}</ul></details></li>`:''}</ul></div>`;}).join('');})();
 document.getElementById('nexts').innerHTML=MEMO.next.length?`<ul>${MEMO.next.map((x,i)=>`<li><i>${i+1}</i><span>${esc(x)}</span></li>`).join('')}</ul>`:`<p class="empty">還沒寫。想到什麼就補進 index.html 的 MEMO.next。</p>`;
 const alb=PRIV['']||[],albv=(PVID['']||[]).filter(v=>ytId(v.url));document.getElementById('album').classList.toggle('none',!alb.length&&!albv.length);
 document.getElementById('albumG').innerHTML=(alb.length||albv.length)?alb.map((p,i)=>`<button type="button" class="ph" data-album="${i}" aria-label="私人照片 ${i+1}"><img src="${p.data}" alt="" loading="lazy"><span class="lock">🔒</span>${p.note?`<span class="pcap">${esc(p.note)}</span>`:''}</button>`).join('')+albv.map(v=>`<a class="ph vid" href="${esc(v.url)}" target="_blank" rel="noopener noreferrer" aria-label="私人影片"><img src="${ytThumb(v.url)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span class="lock">🔒 影片</span><span class="play">▶</span>${v.note?`<span class="pcap">${esc(v.note)}</span>`:''}</a>`).join(''):'<p class="empty">登入後，沒有指定卡片的私人照片會集中在這裡。</p>';
@@ -1316,7 +1515,7 @@ function show(){const r=route();
   document.body.classList.toggle('lock',r.p==='day');topEl.classList.toggle('dark',r.p==='day');topEl.classList.toggle('solid',r.p==='page');
   dayNavEl.hidden=r.p!=='day';
   if(r.p==='day'){const n=r.n;const same=VD===n;openDay(n,r.i);if(!same)VIEW.viewer.scrollTop=0;}
-  else{document.querySelectorAll('#pages > section').forEach(s=>s.classList.toggle('on',r.p==='page'&&s.id===r.id));if(r.p==='page')scrollTo(0,0);if(r.p==='home')scrollTo(0,0);}
+  else{document.querySelectorAll('#pages > section').forEach(s=>s.classList.toggle('on',r.p==='page'&&s.id===r.id));if(r.p==='page')scrollTo(0,0);if(r.p==='home'){if(r.days){const el=document.getElementById('hdays');scrollTo(0,el.offsetTop-70);}else scrollTo(0,0);}}
 }
 dayNavEl.innerHTML=DAYS.map(d=>`<a href="#/day/${d.n}" data-n="${d.n}" title="${esc(d.title)}">${d.n}</a>`).join('');
 addEventListener('hashchange',()=>{const r=route();if(r.p==='day'&&VD===r.n&&!VIEW.viewer.hidden&&r.i===VI)return;show();});
@@ -1371,7 +1570,7 @@ document.addEventListener('touchend',e=>{if(tx0===null)return;const dx=e.changed
 const TRIP='Oita_Fukoka_2026',FB_V='10.12.2',FB_CFG={apiKey:'AIzaSyBL1D01Tdjqd1_gjJtXFaJdEo0GsLgz-7M',authDomain:'trip-tools-21847.firebaseapp.com',projectId:'trip-tools-21847',storageBucket:'trip-tools-21847.firebasestorage.app',messagingSenderId:'877309827746',appId:'1:877309827746:web:6995a142e468b3a53a55fb'};
 const privBtn=document.getElementById('privBtn'),pmenu=document.getElementById('pmenu');
 let FB=null,ME=null,PRIV_ST='off';   // off／loading／out（沒登入）／in（成員）／deny（不是成員）／err
-function toast(t){const el=document.getElementById('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2600);}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,1500);}
 function setPriv(rows){const g={},gd={},v={},vd={};rows.slice().sort((a,b)=>(a.order||0)-(b.order||0)||(a.at||0)-(b.at||0)).forEach(r=>{const V=r.kind==='video';if(!r.card&&r.day)((V?vd:gd)[r.day]=(V?vd:gd)[r.day]||[]).push(r);else ((V?v:g)[r.card||'']=(V?v:g)[r.card||'']||[]).push(r);});PRIV=g;PRIVD=gd;PVID=v;PVIDD=vd;renderAll();const nv=rows.filter(r=>r.kind==='video').length,n=rows.length-nv;if(rows.length)toast(`已載入 ${n} 張私人照片${nv?`、${nv} 支影片`:''}`);}
 function privUI(){const b=privBtn;b.classList.toggle('on',PRIV_ST==='in');
   b.innerHTML=PRIV_ST==='in'?`<span class="ava">${esc((ME&&ME.name||'我').slice(0,1))}</span><span>私人</span>`:PRIV_ST==='loading'?'<span>連線中…</span>':PRIV_ST==='deny'?'<span>🔒 不是成員</span>':`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>私人</span>`;}
