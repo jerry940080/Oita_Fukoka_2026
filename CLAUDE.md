@@ -52,7 +52,7 @@
 - 交通地圖 `TXREG／TXLEGS／TXSEG／TXDAY`；交通頁 `#tickets` 是手寫 HTML（交通明細表、日田公車替代方案、交通網站、每日交通 `.ldays`）。
 - 地圖地區（固定視角）`MAP_REG`：台北・桃園、大分機場、別府、由布院、日田、福岡、小倉。
 - 底圖：`LAND` 用 `make_geo.py --bbox 128.8,32.3,133.2,34.7 --src japan --tol 0.0006`（dataofjapan）；`LINES` 用 Natural Earth 鐵道（沒有路線名，`RAIL_OK` 一律放行，地鐵畫直線）。
-- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v10`（2026-11-17 排版模板時加一）。
+- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v11`（2026-11-18 版型加到 15 種時加一）。
 
 ## 重要事實與未查證
 
@@ -186,6 +186,18 @@ CSS 全部追加在 `<style>` 最後一段「2026-11-17 第四輪」（後面的
 - 桌機照片箭頭 `.pnav` 往相紙裡移（原本和翻頁箭頭 `.varr` 疊在一起）。`sw.js` `kyu-v10`。
 - 驗證：Playwright `?privmock=1&pagesmock=1` 手機／桌機八種版型逐張截圖看過；縮圖列跳張、格子開彈窗、影片小卡與影片主頁播放；`?pagesmock=1`（沒登入）私人頁自動跳過；用 `page.route` 假造 Firestore REST 回應確認公開訪客照排版顯示、沒排的那天照舊；四種模式 × 兩種寬度零錯誤。
 - **使用者要做**：把 trip-tools 的新 `firestore.rules` 貼到 Firebase 主控台發布（多了 `pages`），否則排版存不進去、公開網站也讀不到。
+
+### 2026-11-18 版型加到 15 種：七種整頁構圖、左右對調、每張的手寫字
+使用者看了電腦版八種後說「這版型太過固定，應該要多一點變化」（每頁都是左相紙右文字）。給了第二輪樣張 Ⓐ–Ⓗ（scratchpad `layouts-v2-a/b.jpg`），使用者「全部都要，原本的八種也全留」。
+- **整頁構圖七種**（`CANVAS`）：`full` Ⓑ 滿版大圖（照片鋪滿、文字是左下的紙條、心得便利貼在右上）／`scatter` Ⓒ 散落拼貼（3–5 張，位置表 `SCAT[n]`＝每張的 left/top/width/height％與角度）／`wide` Ⓓ 上圖下文（1 張全寬）／`film` Ⓔ 底片條（4–6 張，手機可左右捲）／
+  `bigtext` Ⓕ 大字頁（0–1 張）／`wall` Ⓖ 拍立得牆（6–9 張，電腦 3 或 4 欄、手機 3 欄）／`diptych` Ⓗ 雙聯夾文字（2 張）。
+  這些不走 `#vPh／#vTx`，畫在新的 `#vPg`（`renderCanvas`）；`#viewer` 加 `data-canvas="<版型>"` 時 CSS 把相紙、文字欄、小地圖藏起來、`#vPg` 佔滿兩欄（手機是進度條和底欄之間可捲動的一塊）。照片是 `.pol` 拍立得按鈕，點了開 `openGallery`。
+  張數不夠（私人照片沒登入）時 `pageSlide` 把 `sl.lay` 退回 `main`／`single`（`CANVAS_MIN`）；程式裡一律看 `sl.lay`，不要直接看 `p.layout`。
+- **Ⓐ 照片在右**做成原本八種都能勾的 `flip`：`#viewer.flip`（只在 >640px 生效）相紙與文字欄對調、小地圖移到左下。
+- **每張照片的手寫字** `caps`（和 `media` 同順序）：`pageSlide` 填進 `m.cap`（沒填就用私人照片的備註）；一般版型相紙下緣翻到哪張顯示哪張的字，拍立得各自顯示。
+- **自動變化**：`seedOf(頁 id)` 決定相紙角度（`--tilt`，六種）、膠帶樣式（`#vPh[data-tape=0|1|2]`：兩條／中間一條／紅色一條）、整頁構圖裡每張拍立得的微調角度，所以同一種版型連用也不會一模一樣。
+- CSS 追加在 `<style>` 最後一段「2026-11-18」。`pagesMock()` 的 Day 3 現在 16 頁（原八種＋flip＋七種）。`sw.js` `kyu-v11`。
+- 驗證：Playwright 四種模式 × 兩種寬度把 Day 3 每一頁翻過一遍零錯誤、沒有橫向溢出；新版型電腦與手機截圖逐張看過（scratchpad `cv/`）；拍立得牆點第 4 張開彈窗 4/8；從整頁構圖翻回一般頁 `data-canvas` 有清掉。
 
 ## 待辦
 
