@@ -229,6 +229,17 @@ iframe 寬度就是預覽的裝置寬度（390 或 1280），所以手機／電�
 - 驗證：Playwright `?privmock=1&pagesmock=1` 1280×760／390×800／1680×950 零錯誤、沒有橫向溢出；橫式與直式影片各拍一輪（scratchpad `r8/D.jpg`、`M.jpg`、`W.jpg`）；ppin 小影片開彈窗、vfull 播放後紙條收起。
   **踩雷**：手機版 `.vpg` 改回 `display:flex` 時要一併把桌機的 `align-items:center` 改成 `stretch`，否則只有絕對定位子元素的 `.pin` 寬度會縮成 0。
 
+### 2026-11-19 直式影片（Shorts）專用版型
+使用者：「你特製一些版面給直立式影片(shorts)的嗎」。原本只是既有版型遇到 `/shorts/` 網址時把框改成直的，沒有專門的構圖；而且使用者貼的若是 `youtu.be/…` 短網址，`isShort()` 認不出來。
+- **新增三種**（整頁構圖；**不看網址，一律用直的框**：`vidBig(m,style,cls,tall)` 第四個參數）：
+  `sfull` Ⓟ 直式影片置中（`.sph` 9:16 白框置中、後面 `.sbg` 是同一張縮圖放大模糊；文字是左下紙條、可加 1 張照片 `.pinp`；`LAYREQ [0,1,1]`。手機是影片佔滿、紙條壓在下方，播放時 `#vPg.playing` 收起紙條）／
+  `sduo` Ⓠ 直式影片＋1–2 張直幅照片（`.tall3` 裡 `vidBig`＋`.pcol`；兩張時一高一低；手機是左影片、右邊照片上下疊）／
+  `srow` Ⓡ 2–3 支直式影片並排（`.tall3.vv`；手機三支時左右捲）。
+- 電腦版 `.tall3` 用 `container-type:size`，每格高度 `min(Ncqh, Mcqw)`：同時受畫面高度與寬度限制，不會擠到右邊的文字欄（第一版用固定百分比高度，兩張照片時第三格蓋到文字）。
+- `.vpg .vidbox.short img` 從 `contain` 改成 `cover`：YouTube 的 `hqdefault` 是 4:3、直式影片在正中間、兩側黑邊，裁掉兩側剛好是影片本身。`.sbg` 用 `background-size:250% auto` 只放大中間那一條，避免背景一片黑。
+- CSS 追加在 `<style>` 最後一段「2026-11-19 直式影片」。`pagesMock()` 多 u1–u3（Day 3 共 25 頁）。`sw.js` `kyu-v16`。
+- 驗證：Playwright `?privmock=1&pagesmock=1` 在 1280×760／390×800／1680×950／1024×700 零錯誤、沒有橫向溢出、沒有格子超出畫布；縮圖用仿 Shorts 的 4:3 黑邊圖（scratchpad `r9/thumb-short.jpg`）；sfull 與 srow 原地播放；截圖 scratchpad `r9/D.jpg`、`M.jpg`、`WS.jpg`。
+
 ## 待辦
 
 0. **回憶錄文字**：已填（2026-11-16，含第二輪補充：牛かつ有吃、鳥田心得、Shin-Shin 沒去、唐吉訶德別府店與中洲店）。

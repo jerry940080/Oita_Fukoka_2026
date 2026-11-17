@@ -688,7 +688,7 @@ html.pv .vw{padding-top:14px!important}
 /* ================= 2026-11-18 影片＋照片的版型：vmain／vstack／vduo／vtrio，整頁構圖的小格也能放影片 ================= */
 .vpg .vidbox{position:relative;background:#000;overflow:hidden;width:100%;height:100%}
 .vpg .vidbox img{width:100%;height:100%;object-fit:cover;opacity:.85;display:block}
-.vpg .vidbox.short img{object-fit:contain}
+.vpg .vidbox.short img{object-fit:cover}
 .vpg .vidbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .vpg .vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border:2px solid var(--cream);background:rgba(154,73,56,.92);color:var(--cream);font-size:24px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);padding-left:5px}
 .pol.vbig{cursor:default}
@@ -769,6 +769,50 @@ html.pv .vw{padding-top:14px!important}
   .vpg .pinp{grid-area:p;position:relative;right:auto;top:auto;width:auto;height:auto;aspect-ratio:4/5;margin:-40px 14px 0 0;padding:6px 6px 24px}
   .vw[data-canvas=vfull] .vpg>.memo1{grid-area:m;position:static;align-self:center;justify-self:start;margin:12px 10px 0 16px}
   .vw[data-canvas=vfull] .slip{grid-area:s;position:static;width:auto;margin:14px 14px 0;transform:none}
+}
+
+/* ================= 2026-11-19 直式影片（Shorts）專用：sfull／sduo／srow ================= */
+.vw[data-canvas=sfull] .vpg{padding:0}
+.vpg .sbg{position:absolute;inset:-40px;background-size:250% auto;background-position:center;filter:blur(28px) brightness(.55);pointer-events:none;background-color:#2a2620}
+.vpg .sph{position:absolute;top:16px;bottom:16px;left:50%;width:auto;height:auto;aspect-ratio:9/16;transform:translateX(-50%) rotate(-1deg);border:8px solid #fff;box-shadow:6px 10px 26px rgba(0,0,0,.45);z-index:1}
+.vpg .sph .lock{position:absolute;left:8px;top:8px;z-index:1}
+.vw[data-canvas=sfull] .slip{z-index:2;width:min(340px,27%)}
+.vw[data-canvas=sfull] .vpg>.memo1{position:absolute;right:76px;bottom:44px;z-index:2;max-width:24%}
+.vw[data-canvas=sduo] .vpg,.vw[data-canvas=srow] .vpg{display:grid;grid-template-columns:minmax(0,2.3fr) minmax(0,1fr);gap:44px;align-items:center}
+.vw[data-canvas=sduo] .tb,.vw[data-canvas=srow] .tb{align-self:start;padding-top:22px}
+.vpg .tall3{height:100%;min-height:0;min-width:0;display:flex;gap:26px;align-items:center;justify-content:center}
+.vpg .tall3 .pol{position:relative;flex:none}
+.vpg .tall3 .pcol{display:flex;gap:26px;height:100%;align-items:center;min-width:0}
+@media (min-width:641px){
+  .vpg .tall3{container-type:size}
+  .vpg .tall3 .pol.vbig{width:auto;aspect-ratio:9/16.5;height:min(96cqh,58cqw)}
+  .vpg .tall3.n3 .pol.vbig{height:min(96cqh,50cqw)}
+  .vpg .tall3.vv.n2 .pol.vbig{height:min(96cqh,66cqw)}
+  .vpg .tall3.vv.n3 .pol.vbig{height:min(96cqh,49cqw)}
+  .vpg .tall3 .pcol .pol{width:auto;aspect-ratio:3/4.1;height:min(88cqh,58cqw)}
+  .vpg .tall3.n3 .pcol .pol{aspect-ratio:3/4.3;height:min(78cqh,40cqw)}
+  .vpg .tall3.n3 .pcol .pol:first-child{align-self:flex-start;margin-top:2cqh}
+  .vpg .tall3.n3 .pcol .pol:last-child{align-self:flex-end;margin-bottom:2cqh}
+  .vw[data-canvas=sfull] .vpg.playing .slip{display:flex}
+  .vw[data-canvas=sfull] .vpg.playing .pinp{display:block}
+  .vw[data-canvas=sfull] .vpg.playing>.memo1{display:inline-block}
+}
+@media (max-width:640px){
+  .vw[data-canvas=sfull] .vpg{display:block;padding:0;overflow:hidden}
+  .vpg .sph{top:0;bottom:0;left:50%;width:auto;height:100%;max-width:100%;aspect-ratio:9/16;transform:translateX(-50%);border:0;box-shadow:none}
+  .vpg .sph::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.45),transparent 45%);pointer-events:none}
+  .vpg .sph .lock{left:12px;top:12px}
+  .vw[data-canvas=sfull] .slip{width:auto}
+  .vw[data-canvas=sfull] .pinp{position:absolute;right:12px;top:12px;width:28%;height:auto;aspect-ratio:4/5;margin:0}
+  .vw[data-canvas=sfull] .vpg>.memo1{position:absolute;left:12px;right:auto;top:46px;bottom:auto;max-width:60%;margin:0}
+  .vw[data-canvas=sduo] .vpg,.vw[data-canvas=srow] .vpg{display:flex;align-items:stretch}
+  .vw[data-canvas=sduo] .tb,.vw[data-canvas=srow] .tb{align-self:stretch;padding-top:0;gap:8px}
+  .vpg .tall3{flex:none;height:52vh;gap:10px;align-items:stretch;justify-content:flex-start}
+  .vpg .tall3 .pol.vbig{flex:1.15 1 0;height:auto;aspect-ratio:auto;max-width:none}
+  .vpg .tall3 .pcol{flex:1 1 0;flex-direction:column;gap:10px;height:auto;align-items:stretch}
+  .vpg .tall3 .pcol .pol,.vpg .tall3.n3 .pcol .pol{flex:1 1 0;height:auto;aspect-ratio:auto;align-self:stretch;margin:0}
+  .vpg .tall3.vv.n3{overflow-x:auto;scrollbar-width:none}
+  .vpg .tall3.vv.n3 .pol.vbig{flex:none;width:46%}
 }
 </style>
 </head>
@@ -1538,19 +1582,19 @@ const isMinorLeg=l=>['walk','taxi','subway'].includes(l.mode)||(l.mode!=='air'&&
    有排頁的那天：封面 → 每頁一張（8 種版型）→ 結尾；沒排的那天照原本自動產生。
    公開訪客用 Firestore REST 讀（規則 pages 任何人可讀）；登入成員用 onSnapshot。私人照片沒載入（沒登入）時那一頁的私人媒體不顯示，整頁都是私人的就跳過。 */
 let PAGES=[],PRIV_BY_ID={};
-const LAYOUT_NAME={single:'單張滿版',main:'主圖＋縮圖列',pair:'雙拼',quad:'四宮格',collage:'拼貼',video:'影片主頁',photovideo:'照片＋影片',text:'文字頁',full:'滿版大圖',scatter:'散落拼貼',wide:'上圖下文',film:'底片條',bigtext:'大字頁',wall:'拍立得牆',diptych:'雙聯夾文字',vmain:'影片＋照片縮圖',vstack:'影片在上、照片一排',vduo:'照片與影片並排',vtrio:'影片並排',vpin:'影片大、照片貼角落',ppin:'照片大、影片貼角落',vfull:'影片鋪滿整頁'};
+const LAYOUT_NAME={single:'單張滿版',main:'主圖＋縮圖列',pair:'雙拼',quad:'四宮格',collage:'拼貼',video:'影片主頁',photovideo:'照片＋影片',text:'文字頁',full:'滿版大圖',scatter:'散落拼貼',wide:'上圖下文',film:'底片條',bigtext:'大字頁',wall:'拍立得牆',diptych:'雙聯夾文字',vmain:'影片＋照片縮圖',vstack:'影片在上、照片一排',vduo:'照片與影片並排',vtrio:'影片並排',vpin:'影片大、照片貼角落',ppin:'照片大、影片貼角落',vfull:'影片鋪滿整頁',sfull:'直式影片置中',sduo:'直式影片＋直幅照片',srow:'直式影片並排'};
 /* ---------- 整頁構圖的版型（2026-11-18）：full 滿版大圖／scatter 散落拼貼／wide 上圖下文／film 底片條／bigtext 大字頁／wall 拍立得牆／diptych 雙聯夾文字 ----------
    這些不走「左相紙、右文字」，整個檢視器畫在 #vPg（.vw[data-canvas=版型] 時顯示，#vPh／#vTx／#vMap 藏起來）。照片都可以點開彈窗看完整的。
    相紙角度、膠帶每頁依 seedOf(頁 id) 略有不同；原本八種可以勾 flip（照片在右）。每張照片可以有自己的手寫字（pages.caps，和 media 同順序）。 */
-const CANVAS={full:1,scatter:1,wide:1,film:1,bigtext:1,wall:1,diptych:1,vstack:1,vduo:1,vtrio:1,vpin:1,ppin:1,vfull:1};
+const CANVAS={full:1,scatter:1,wide:1,film:1,bigtext:1,wall:1,diptych:1,vstack:1,vduo:1,vtrio:1,vpin:1,ppin:1,vfull:1,sfull:1,sduo:1,srow:1};
 /* 每種版型至少要幾張照片、幾支影片、總共幾項；不夠（私人的沒登入）就退回一般版型。2026-11-18 起 scatter／film／wall／diptych 也能放影片，另有四種影片＋照片的版型（vmain／vstack／vduo／vtrio） */
-const LAYREQ={full:[1,0,1],scatter:[0,0,3],wide:[1,0,1],film:[0,0,4],bigtext:[0,0,0],wall:[0,0,6],diptych:[0,0,2],vmain:[1,1,2],vstack:[2,1,3],vduo:[1,1,2],vtrio:[0,2,2],vpin:[1,1,2],ppin:[1,1,2],vfull:[1,1,2]};
+const LAYREQ={full:[1,0,1],scatter:[0,0,3],wide:[1,0,1],film:[0,0,4],bigtext:[0,0,0],wall:[0,0,6],diptych:[0,0,2],vmain:[1,1,2],vstack:[2,1,3],vduo:[1,1,2],vtrio:[0,2,2],vpin:[1,1,2],ppin:[1,1,2],vfull:[1,1,2],sfull:[0,1,1],sduo:[1,1,2],srow:[0,2,2]};
 function effLayout(p,photos,vids){const lay=p.layout,r=LAYREQ[lay];if(!r)return lay;if(photos.length>=r[0]&&vids.length>=r[1]&&photos.length+vids.length>=r[2])return lay;return photos.length>1?'main':photos.length?'single':vids.length?'video':lay==='bigtext'?'bigtext':'text';}
 function seedOf(str){let h=7;for(const c of String(str))h=(h*31+c.charCodeAt(0))>>>0;return h;}
 const SCAT={3:[[0,6,44,78,-5],[40,2,52,50,3],[46,46,44,50,-2]],4:[[0,6,40,76,-5],[36,2,42,48,3],[32,46,38,48,-2],[68,40,30,52,6]],5:[[0,4,34,62,-5],[30,0,36,44,3],[28,42,34,52,-2],[60,36,32,54,5],[66,0,32,38,-4]]};
 function polHTML(m,i,style,cls){return `<button type="button" class="pol${cls?' '+cls:''}" data-g="${i}" style="${style||''}" aria-label="看大圖"><img src="${m.src}" alt="" loading="${i?'lazy':'eager'}">${m.priv?'<span class="lock">🔒</span>':''}${m.cap?`<span class="c">${esc(m.cap)}</span>`:''}</button>`;}
 /* 大的影片相紙：點 ▶ 在原地播 */
-function vidBig(m,style,cls){const u=m.url,sh=isShort(u);return `<div class="pol vbig${sh?' short':''}${cls?' '+cls:''}" style="${style||''}"><div class="vidbox${sh?' short':''}"><img src="${ytThumb(u)}" alt="" onerror="this.style.visibility='hidden'"><button type="button" class="vplay" data-vid="${esc(u)}" aria-label="播放影片">▶</button>${m.priv?'<span class="lock">🔒</span>':''}</div><span class="c">${esc(m.cap||m.title||'影片')}</span></div>`;}
+function vidBig(m,style,cls,tall){const u=m.url,sh=tall||isShort(u);return `<div class="pol vbig${sh?' short':''}${cls?' '+cls:''}" style="${style||''}"><div class="vidbox${sh?' short':''}"><img src="${ytThumb(u)}" alt="" onerror="this.style.visibility='hidden'"><button type="button" class="vplay" data-vid="${esc(u)}" aria-label="播放影片">▶</button>${m.priv?'<span class="lock">🔒</span>':''}</div><span class="c">${esc(m.cap||m.title||'影片')}</span></div>`;}
 /* 混排用的小格：照片點了開相簿、影片點了開播放視窗 */
 function tileHTML(sl,m,style,cls){if(m.kind==='photo')return polHTML(m,sl.photos.indexOf(m),style,cls);
   return `<button type="button" class="pol vid${cls?' '+cls:''}" data-vurl="${esc(m.url)}" data-vt="${esc(m.cap||m.title||'影片')}" style="${style||''}" aria-label="播放影片"><img src="${ytThumb(m.url)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><i class="pl">▶</i>${m.priv?'<span class="lock">🔒</span>':''}<span class="c">${esc(m.cap||m.title||'影片')}</span></button>`;}
@@ -1572,6 +1616,9 @@ function renderCanvas(sl,pg,no,tot,nextHTML){const p=sl.p,L=sl.photos,V=sl.vids,
   else if(lay==='vpin')h=`<div class="pin">${vidBig(V[0],rot(-1,0,.5),'pbig tape')}${polHTML(L[0],0,rot(5,1),'psm tape2')}</div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;
   else if(lay==='ppin')h=`<div class="pin">${polHTML(L[0],0,rot(-1.5,0,.5),'pbig nat tape')}${tileHTML(sl,V[0],rot(4,1),'psm tape2'+(isShort(V[0].url)?' short':''))}</div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;
   else if(lay==='vfull'){const u=V[0].url,sh=isShort(u);h=`<div class="bgv vidbox${sh?' short':''}"><img src="${ytThumb(u)}" alt="" onerror="this.style.visibility='hidden'"><button type="button" class="vplay" data-vid="${esc(u)}" aria-label="播放影片">▶</button>${V[0].priv?'<span class="lock">🔒 私人影片</span>':''}</div>${polHTML(L[0],0,rot(4,0),'pinp tape2')}<div class="slip">${head}${title}${text}${nextHTML}</div>${memo}`;}
+  else if(lay==='sfull'){const u=V[0].url,th=ytThumb(u);h=`<div class="sbg" style="background-image:url('${th}')"></div><div class="sph vidbox short"><img src="${th}" alt="" onerror="this.style.visibility='hidden'"><button type="button" class="vplay" data-vid="${esc(u)}" aria-label="播放影片">▶</button>${V[0].priv?'<span class="lock">🔒 私人影片</span>':''}</div>${L[0]?polHTML(L[0],0,rot(4,0),'pinp tape2'):''}<div class="slip">${head}${title}${text}${nextHTML}</div>${memo}`;}
+  else if(lay==='sduo'){const T=L.slice(0,2);h=`<div class="tall3 n${T.length+1}">${vidBig(V[0],rot(-1.5,0,.5),'tape',1)}<div class="pcol">${T.map((m,i)=>polHTML(m,i,rot([2.5,-2][i],i+1,.6),i?'':'tape2')).join('')}</div></div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;}
+  else if(lay==='srow'){const T=V.slice(0,3);h=`<div class="tall3 vv n${T.length}">${T.map((m,i)=>vidBig(m,rot([-2,1.5,-1][i],i,.6),i===0?'tape':i===2?'tape2':'',1)).join('')}</div><div class="tb">${head}${title}${memo}${text}${nextHTML}</div>`;}
   pg.classList.remove('playing');pg.innerHTML=h;pg.scrollTop=0;
   pg.querySelectorAll('.pol.nat img').forEach(im=>{const f=()=>{if(im.naturalWidth)im.parentNode.style.aspectRatio=Math.max(.68,Math.min(1.6,im.naturalWidth/im.naturalHeight)).toFixed(3);};if(im.complete)f();else im.addEventListener('load',f);});} // 主角照片照原本的長寬比
 function openVideo(url,title){lastFocus=document.activeElement;const ph=document.getElementById('mPh');ph.innerHTML='';ph.dataset.n=0;
@@ -1617,7 +1664,10 @@ function pagesMock(){return [
  {id:'r6',day:3,order:7.96,layout:'scatter',media:['pub:oyamadam:1','vid:v4','pub:aotnew:0','pub:aotmuseum:1'],caps:['駕駛座','水壩的影片'],title:'散落拼貼混影片',time:'14:30',kind:'日田',memo:'',text:''},
  {id:'s1',day:3,order:7.97,layout:'vpin',media:['vid:v1','pub:kinrinko:1'],caps:['湖面的影片','湖邊的老房子'],title:'影片大、照片貼角落',time:'08:10',kind:'景點',memo:'沒有霧，但很安靜。',text:'影片是主角，一張照片斜斜貼在右下角。'},
  {id:'s2',day:3,order:7.98,layout:'ppin',media:['pub:kinrinko:0','vid:v1'],caps:['湖上的鳥居','湖面的影片'],title:'照片大、影片貼角落',time:'08:20',kind:'景點',memo:'這張想放大看。',text:'照片是主角，影片是角落的小窗，點了跳出來播。'},
- {id:'s3',day:3,order:7.99,layout:'vfull',media:['vid:v1','pub:kinrinko:1'],caps:['','湖邊'],title:'影片鋪滿整頁',time:'08:30',kind:'由布院',memo:'聲音也想留下來。',text:'影片佔滿整個畫面，照片是角落的拍立得。'}];}
+ {id:'s3',day:3,order:7.99,layout:'vfull',media:['vid:v1','pub:kinrinko:1'],caps:['','湖邊'],title:'影片鋪滿整頁',time:'08:30',kind:'由布院',memo:'聲音也想留下來。',text:'影片佔滿整個畫面，照片是角落的拍立得。'},
+ {id:'u1',day:3,order:7.991,layout:'sfull',media:['vid:v2','pub:kinrinko:1'],caps:['','湖邊'],title:'直式影片置中',time:'08:40',kind:'景點',memo:'手機直拍的那一段。',text:'直式影片放在正中間，兩旁是同一畫面的模糊背景。'},
+ {id:'u2',day:3,order:7.992,layout:'sduo',media:['vid:v2','pub:kinrinko:0','pub:kawakami:1'],caps:['湖上鳥居','鳥居','壽喜燒'],title:'直式影片＋直幅照片',time:'08:50',kind:'景點',memo:'都是直的。',text:'直式影片和一到兩張直幅照片排成一排。'},
+ {id:'u3',day:3,order:7.993,layout:'srow',media:['vid:v2','vid:v1','vid:v4'],caps:['湖上鳥居','湖面','水壩'],title:'直式影片並排',time:'09:00',kind:'影片',memo:'',text:'兩到三支直式影片像手機螢幕一樣排開。'}];}
 function pageFrame(sl){const L=sl.photos,cap=(L[0]&&L[0].cap)||sl.p.title||'',lay=sl.lay, // 相紙下緣：私人照片自己的備註，否則這一頁的標題（一句心得在右邊的便利貼，不重複）
   lock=i=>L[i]&&L[i].priv?'<span class="lock">🔒 私人</span>':'';
   const gridBtn=(m,i)=>`<button type="button" data-g="${i}" aria-label="看大圖"><img src="${m.src}" alt="" loading="${i?'lazy':'eager'}">${m.priv?'<span class="lock">🔒</span>':''}</button>`;
@@ -1749,7 +1799,7 @@ VIEW.viewer.addEventListener('click',e=>{
   const vt=e.target.closest('#vPg [data-vurl]');if(vt){openVideo(vt.dataset.vurl,vt.dataset.vt);return;}
   const gb=e.target.closest('.gridp [data-g], #vPg [data-g], .pmini [data-g]');if(gb){const sl=VS[VI];if(sl&&sl.type==='page')openGallery(sl.photos,+gb.dataset.g,sl.title);return;}
   const vb=e.target.closest('.vcard[data-vid]');if(vb){const y=document.getElementById('vYt'),u=vb.dataset.vid,id=ytId(u),st=ytStart(u);if(vb.classList.contains('on')){y.hidden=true;y.innerHTML='';vb.classList.remove('on');return;}y.className='yt'+(isShort(u)?' short':'');y.innerHTML=ytFrame(id,st,1);y.hidden=false;vb.parentNode.querySelectorAll('.vcard').forEach(b=>b.classList.toggle('on',b===vb));y.scrollIntoView({block:'nearest',behavior:'smooth'});return;}
-  const vp=e.target.closest('.vplay[data-vid]');if(vp){const box=vp.closest('.vidbox'),u=vp.dataset.vid;if(box.classList.contains('bgv'))box.parentNode.classList.add('playing');box.innerHTML=ytFrame(ytId(u),ytStart(u),1);return;}
+  const vp=e.target.closest('.vplay[data-vid]');if(vp){const box=vp.closest('.vidbox'),u=vp.dataset.vid;if(box.classList.contains('bgv')||box.classList.contains('sph'))box.parentNode.classList.add('playing');box.innerHTML=ytFrame(ytId(u),ytStart(u),1);return;}
   const mb=e.target.closest('[data-map]');if(mb){const m=document.getElementById('vMap');if(!m.innerHTML){m.innerHTML=dayMapSvg(DAYS[VD-1]);}m.classList.add('big');return;}
   if(e.target.closest('#vMap')){document.getElementById('vMap').classList.toggle('big');return;}
   if(e.target.closest('#vBars')){const t=document.getElementById('vToc');t.innerHTML=dayToc();t.hidden=false;return;}
