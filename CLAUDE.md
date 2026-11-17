@@ -119,7 +119,14 @@
   規則擋下（不是成員）→ 按鈕顯示「🔒 不是成員」並提示要邀請連結；按鈕點開小選單（`#pmenu`）：到 trip-tools 管理、登出。
 - **備註、哪一天、時間（2026-11-16 第二版）**：trip-tools 上傳時可填 `note`／`day`／`t`。`setPriv` 把 `card` 空但 `day` 有的放 `PRIVD[day]`；`daySlides` 把它們做成 `snap` 張（有 `t` 就插在第一個時間比它晚的站前面，沒有就放最後），標題＝備註第一行、`.pcap`＝備註。
   站的照片翻到私人那張時，`.pcap` 換成那張的備註（`capOf(k,i)`，存在 `#vPh` 的 `data-caps`）；相簿頁的照片也顯示備註；列印頁有隨手拍。`?privmock=1` 多了 m5–m7 三張示範（有備註、有時間、有換行）。
-- `sw.js` `kyu-v3`：gstatic 的 `/firebasejs/` 也 cacheFirst，登入過的人離線也能載 SDK（Firestore 自己有 IndexedDB 離線快取）。
+- **私人影片（2026-11-17）**：trip-tools 照片分頁貼的 YouTube 不公開連結（`photos` 集合裡 `kind:'video'`、`url`，其餘欄位同照片）。`setPriv` 分到 `PVID[card]`／`PVIDD[day]`。
+  `vidsOf(k)`＝公開 `CARDS[k].video` ＋ 私人（`priv:1`，標 🔒，`note` 當標籤）；站的張把全部影片列成 `.vbtns` 按鈕，按了在 `#vYt` 嵌入（同一時間只播一支，按鈕 `.on`）。
+  `card` 空、`day` 有的影片＝那天的 `snap` 張（`sl.v`）：白框裡放 YouTube 縮圖（`i.ytimg.com/vi/<id>/hqdefault.jpg`，抓不到就隱藏）＋ ▶ `.vplay`，按了整個框換成 iframe；文字頁有「在 YouTube 開啟」。
+  都沒有的放私人相簿頁（`.ph.vid`，點了另開 YouTube）；彈窗 `openCard` 也列私人影片。Shorts（網址含 `/shorts/`）用 9:16 的 `.yt.short`。底片條、列印頁用縮圖＋▶。
+  首頁日期卡的 🔒 數＝私人照片＋影片；封面張的 meta 多「N 支影片」。`?privmock=1` 多了 v1–v4（兩支對到金鱗湖、一支 Day 3 隨手拍、一支相簿）。
+- **隨手拍合併（2026-11-17）**：`PRIVD` 裡**連續、同備註、同時間**的照片合成一張 `snap`（`sl.ps` 陣列，白框內可左右翻、有 `1 / N`），例如「由布院商店街」兩張只佔一站。`snap` 結構改成 `{ps, v, t, note}`（舊的 `sl.p` 已不存在）。
+- 使用者 2026-11-17 已上傳完畢：45 項（36 張照片、9 支影片；aotmuseum 7 張、torida 6 張＋1 支、oyamadam 4、kinrinko 1＋3 支、kawakami 2＋1 支、Day 2 隨手拍 3 張、Day 1／3 隨手拍影片 3 支）。公開影片使用者還沒給。
+- `sw.js` `kyu-v4`（2026-11-17 私人影片時加一）：gstatic 的 `/firebasejs/` 也 cacheFirst，登入過的人離線也能載 SDK（Firestore 自己有 IndexedDB 離線快取）。
 - 開發環境連不到 gstatic／Firebase：網址加 `?privmock=1` 用四張既有照片假扮私人照片看版面（兩張到 tsuruta、兩張到相簿）。Playwright 公開／mock 桌機／mock 手機零錯誤，截圖看過。
 - **使用者已在 Firebase 上傳 2 張到「新鶴田飯店」**（2026-11-16），真正的登入流程由使用者上線測。Firebase 授權網域與 trip-tools 同一個 `jerry940080.github.io`，不用再加。
 
