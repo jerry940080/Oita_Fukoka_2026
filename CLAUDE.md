@@ -52,7 +52,7 @@
 - 交通地圖 `TXREG／TXLEGS／TXSEG／TXDAY`；交通頁 `#tickets` 是手寫 HTML（交通明細表、日田公車替代方案、交通網站、每日交通 `.ldays`）。
 - 地圖地區（固定視角）`MAP_REG`：台北・桃園、大分機場、別府、由布院、日田、福岡、小倉。
 - 底圖：`LAND` 用 `make_geo.py --bbox 128.8,32.3,133.2,34.7 --src japan --tol 0.0006`（dataofjapan）；`LINES` 用 Natural Earth 鐵道（沒有路線名，`RAIL_OK` 一律放行，地鐵畫直線）。
-- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v11`（2026-11-18 版型加到 15 種時加一）。
+- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v12`（2026-11-18）。
 
 ## 重要事實與未查證
 
@@ -198,6 +198,10 @@ CSS 全部追加在 `<style>` 最後一段「2026-11-17 第四輪」（後面的
 - **自動變化**：`seedOf(頁 id)` 決定相紙角度（`--tilt`，六種）、膠帶樣式（`#vPh[data-tape=0|1|2]`：兩條／中間一條／紅色一條）、整頁構圖裡每張拍立得的微調角度，所以同一種版型連用也不會一模一樣。
 - CSS 追加在 `<style>` 最後一段「2026-11-18」。`pagesMock()` 的 Day 3 現在 16 頁（原八種＋flip＋七種）。`sw.js` `kyu-v11`。
 - 驗證：Playwright 四種模式 × 兩種寬度把 Day 3 每一頁翻過一遍零錯誤、沒有橫向溢出；新版型電腦與手機截圖逐張看過（scratchpad `cv/`）；拍立得牆點第 4 張開彈窗 4/8；從整頁構圖翻回一般頁 `data-canvas` 有清掉。
+
+### 2026-11-18 小修：排頁變少時目前頁碼與進度條
+`renderAll()` 重算 `VS` 後把 `VI` 夾在範圍內、重畫 `#vBars`（原本排頁刪到比目前頁碼少時 `VS[VI]` 是 undefined 會出錯）。`sw.js` `kyu-v12`。
+（同時修了 trip-tools 排版「按下儲存沒有改變」，見 trip-tools 的 CLAUDE.md。）
 
 ## 待辦
 

@@ -1688,7 +1688,7 @@ document.getElementById('nexts').innerHTML=MEMO.next.length?`<ul>${MEMO.next.map
 const alb=PRIV['']||[],albv=(PVID['']||[]).filter(v=>ytId(v.url));document.getElementById('album').classList.toggle('none',!alb.length&&!albv.length);
 document.getElementById('albumG').innerHTML=(alb.length||albv.length)?alb.map((p,i)=>`<button type="button" class="ph" data-album="${i}" aria-label="私人照片 ${i+1}"><img src="${p.data}" alt="" loading="lazy"><span class="lock">🔒</span>${p.note?`<span class="pcap">${esc(p.note)}</span>`:''}</button>`).join('')+albv.map(v=>`<a class="ph vid" href="${esc(v.url)}" target="_blank" rel="noopener noreferrer" aria-label="私人影片"><img src="${ytThumb(v.url)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span class="lock">🔒 影片</span><span class="play">▶</span>${v.note?`<span class="pcap">${esc(v.note)}</span>`:''}</a>`).join(''):'<p class="empty">登入後，沒有指定卡片的私人照片會集中在這裡。</p>';
 }
-function renderAll(){renderHome();renderPages();if(VD){VS=daySlides(DAYS[VD-1]);document.getElementById('vFs').innerHTML=VS.map((sl,k)=>fsItem(sl,k)).join('');if(!VIEW.viewer.hidden)renderSlide();}}
+function renderAll(){renderHome();renderPages();if(VD){VS=daySlides(DAYS[VD-1]);VI=Math.min(VI,VS.length-1);document.getElementById('vBars').innerHTML=VS.map(()=>'<i></i>').join(''); /* 排頁改了以後頁數可能變少：目前頁碼不能超出範圍、進度條格數要跟著變 */document.getElementById('vFs').innerHTML=VS.map((sl,k)=>fsItem(sl,k)).join('');if(!VIEW.viewer.hidden)renderSlide();}}
 
 /* ---------- 顯示哪一頁 ---------- */
 function show(){const r=route();
