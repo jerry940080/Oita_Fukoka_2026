@@ -52,7 +52,7 @@
 - 交通地圖 `TXREG／TXLEGS／TXSEG／TXDAY`；交通頁 `#tickets` 是手寫 HTML（交通明細表、日田公車替代方案、交通網站、每日交通 `.ldays`）。
 - 地圖地區（固定視角）`MAP_REG`：台北・桃園、大分機場、別府、由布院、日田、福岡、小倉。
 - 底圖：`LAND` 用 `make_geo.py --bbox 128.8,32.3,133.2,34.7 --src japan --tol 0.0006`（dataofjapan）；`LINES` 用 Natural Earth 鐵道（沒有路線名，`RAIL_OK` 一律放行，地鐵畫直線）。
-- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v12`（2026-11-18）。
+- localStorage 前綴 `kyu-`（`kyu-priv`＝登入過私人照片）；`sw.js` 快取 `kyu-v13`（2026-11-18）。
 
 ## 重要事實與未查證
 
@@ -202,6 +202,11 @@ CSS 全部追加在 `<style>` 最後一段「2026-11-17 第四輪」（後面的
 ### 2026-11-18 小修：排頁變少時目前頁碼與進度條
 `renderAll()` 重算 `VS` 後把 `VI` 夾在範圍內、重畫 `#vBars`（原本排頁刪到比目前頁碼少時 `VS[VI]` 是 undefined 會出錯）。`sw.js` `kyu-v12`。
 （同時修了 trip-tools 排版「按下儲存沒有改變」，見 trip-tools 的 CLAUDE.md。）
+
+### 2026-11-18 排版預覽模式 `?embedpreview=1`
+trip-tools 的排版表單用 iframe 開本站的 `?embedpreview=1`（`PV`）：`html.pv` 把頂欄、底片條、翻頁列、進度條、下一站按鈕藏起來；不載 Firebase、不讀 pages、不登入。
+收到同網域的 `postMessage({type:'kyu-preview', page, priv})` 就把 `PRIV_BY_ID=priv`、`PAGES=[page]`，只畫那一頁（`pageSlide` → `renderSlide`）；還沒選照片時顯示「先選照片或影片」。載入完會向父視窗送 `kyu-preview-ready`。
+iframe 寬度就是預覽的裝置寬度（390 或 1280），所以手機／電腦版面由本站原本的 media query 決定，和正式畫面一致。`renderSlide` 每次會清空 `#vPg`。`sw.js` `kyu-v13`。
 
 ## 待辦
 

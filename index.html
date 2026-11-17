@@ -467,6 +467,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
 .vph .pnav{left:22px;width:40px;height:40px;background:rgba(251,246,233,.92)}.vph .pnav.next{left:auto;right:50px}
 .vph .gridp{flex:1 1 auto;min-height:0;display:grid;gap:6px}.vph .gridp.g2{grid-template-columns:1fr 1fr}.vph .gridp.g4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}.vph .gridp.g3{grid-template-columns:1.15fr 1fr;grid-template-rows:1fr 1fr}.vph .gridp.g3 button:first-child{grid-row:span 2}
 .vph .gridp button{border:0;padding:0;overflow:hidden;background:#e9e1cf;cursor:pointer;position:relative;min-height:0}.vph .gridp img{width:100%;height:100%;object-fit:cover;display:block}.vph .gridp .lock{top:6px;left:6px;font-size:10px;padding:1px 6px}
+html.pv .top,html.pv .vfs,html.pv .vbot,html.pv .vbars,html.pv .varr,html.pv .vnext,html.pv .toast,html.pv .mapbtn{display:none!important}
+html.pv .vw{padding-top:14px!important}
+@media (min-width:641px){html.pv .vw{padding-bottom:14px}html.pv .vmap{bottom:24px}}
 @media (min-width:641px){.vph .pnav{left:70px}.vph .pnav.next{left:auto;right:98px}} /* 桌機：照片箭頭往相紙裡移，不跟翻頁箭頭疊在一起 */
 .pthumbs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px}.pthumbs::-webkit-scrollbar{display:none}.pthumbs button{flex:none;width:56px;height:42px;border:0;padding:2px;background:#fff;box-shadow:1px 2px 5px rgba(53,44,34,.25);opacity:.6;cursor:pointer}.pthumbs button.on{opacity:1;outline:2px solid var(--red)}.pthumbs img{width:100%;height:100%;object-fit:cover}
 .vph .duo{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -1583,7 +1586,7 @@ function renderSlide(){const d=DAYS[VD-1],sl=VS[VI],ph=document.getElementById('
   document.querySelectorAll('#vFs .fsi').forEach((b,k)=>b.classList.toggle('on',k===VI));
   document.getElementById('vProg').style.width=(VI/(VS.length-1)*100)+'%';
   const first=VI===0,last=VI===VS.length-1;document.getElementById('vPrev').disabled=first;document.getElementById('vNext').disabled=last;
-  VIEW.viewer.dataset.type=sl.type;map.innerHTML='';map.classList.remove('big');delete VIEW.viewer.dataset.canvas;
+  VIEW.viewer.dataset.type=sl.type;map.innerHTML='';map.classList.remove('big');delete VIEW.viewer.dataset.canvas;document.getElementById('vPg').innerHTML='';
   VIEW.viewer.classList.toggle('flip',sl.type==='page'&&!!sl.p.flip&&!CANVAS[sl.lay]);
   {const sd=seedOf(VD+':'+(sl.p?sl.p.id:VI));ph.style.setProperty('--tilt',[-2,1.5,-1,2,-2.5,1][sd%6]+'deg');ph.dataset.tape=sl.type==='page'?(sd>>>3)%3:0;}document.getElementById('vToc').hidden=true;
   const nextSl=VS[VI+1],nextTxt=nextSl?(nextSl.type==='end'?'這天結束':`${slideTime(nextSl)}　${slideTitle(nextSl)}`):'';
@@ -1784,7 +1787,17 @@ privBtn.addEventListener('click',async()=>{
 });
 document.getElementById('pmOut').addEventListener('click',async()=>{pmenu.hidden=true;try{localStorage.removeItem('kyu-priv');}catch(e){}if(FB)await FB.signOut();PRIV_ST='out';PRIV={};PRIVD={};PVID={};PVIDD={};PRIV_BY_ID={};renderAll();privUI();toast('已登出');});
 document.addEventListener('click',e=>{if(!pmenu.hidden&&!e.target.closest('#pmenu,#privBtn'))pmenu.hidden=true;});
-try{if(/[?&]pagesmock=1/.test(location.search)&&!/[?&]privmock=1/.test(location.search))setPages(pagesMock());else loadPagesPublic();if(localStorage.getItem('kyu-priv')==='1'||/[?&]privmock=1/.test(location.search))privStart();}catch(e){}
+/* 排版預覽（2026-11-18）：trip-tools 的排版表單用 iframe 開 ?embedpreview=1，把還沒存檔的那一頁（連同用到的私人照片）用 postMessage 送進來，這裡只畫那一頁。
+   不載 Firebase、不登入；頂欄、底片條、翻頁列都藏起來（html.pv）。 */
+const PV=/[?&]embedpreview=1/.test(location.search);
+if(PV){document.documentElement.classList.add('pv');
+  addEventListener('message',e=>{if(e.origin!==location.origin)return;const d=e.data||{};if(d.type!=='kyu-preview'||!d.page)return;
+    PRIV_BY_ID=d.priv||{};const p=Object.assign({},d.page,{id:d.page.id||'preview'});PAGES=[p];
+    VIEW.home.hidden=true;VIEW.pages.hidden=true;VIEW.viewer.hidden=false;dayNavEl.hidden=true;
+    VD=Math.max(1,Math.min(DAYS.length,+p.day||1));const sl=pageSlide(p);VS=sl?[sl]:[];VI=0;
+    if(sl)renderSlide();else{VIEW.viewer.dataset.canvas='bigtext';VIEW.viewer.classList.remove('flip');document.getElementById('vPg').innerHTML='<div class="tb"><div class="dt">預覽</div><h1 class="big" style="font-size:32px">先選照片或影片</h1><p class="txt">選好之後，這裡會顯示這一頁在回憶錄網站上的樣子。</p></div>';}});
+  try{parent.postMessage({type:'kyu-preview-ready'},location.origin);}catch(e){}}
+if(!PV)try{if(/[?&]pagesmock=1/.test(location.search)&&!/[?&]privmock=1/.test(location.search))setPages(pagesMock());else loadPagesPublic();if(localStorage.getItem('kyu-priv')==='1'||/[?&]privmock=1/.test(location.search))privStart();}catch(e){}
 
 /* 離線版：登記 service worker（sw.js），GitHub Pages 上才會啟用；把本站照片送去預存 */
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{const urls=[...new Set(Object.values(IMG).flat())];if(r.active)r.active.postMessage({type:'warm',urls});}).catch(()=>{});});}
