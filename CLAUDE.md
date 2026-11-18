@@ -270,6 +270,15 @@ iframe 寬度就是預覽的裝置寬度（390 或 1280），所以手機／電�
 - CSS 追加在 `<style>` 最後一段「2026-11-20」。`pagesMock()` 的 p2 混了兩支影片。`sw.js` `kyu-v18`。
 - 驗證：scratchpad `r11/shoot.js`：`?privmock=1&pagesmock=1` 電腦 1280×760／手機 390×800 把 Day 3 的 31 頁翻一遍，零錯誤、沒有橫向溢出、頁碼和底欄一致；② 點影片縮圖 → 主畫面換成影片、播放、換到別張時 iframe 收回、箭頭可循環；截圖 `r11/D.jpg`、`M.jpg`。
 
+### 2026-11-18 影片來源評估：iCloud、Google 雲端硬碟都不採用，維持 YouTube
+使用者嫌一支一支上傳 YouTube 麻煩，問能不能用 iCloud 或 Google 雲端硬碟。
+- **iCloud**：iCloud 連結 30 天失效；共享相簿的公開網站不能嵌入、沒有封面。不採用。
+- **Google 雲端硬碟**：做了測試頁 `drive-test.html`（影片編號放網址 hash，不寫進 repo；測完已刪）。使用者實測（iPhone 私密瀏覽＋電腦）：`/thumbnail?id=` 封面有、`/file/d/<id>/preview` 嵌入可播且不用登入；`uc?export=download` 直接讀檔失敗。
+  缺點：預設低畫質、要自己調（網址沒辦法指定）；手機上播放器控制列過大被切掉（Google 的頁面改不了）。使用者決定**維持 YouTube**。
+- 使用者也確認了隱私模型：連結鎖在 Firestore（成員才讀得到），影片本身是「知道連結就能看」；可以接受。
+- **順帶修的 bug**：`sw.js` 原本把同資料夾下所有網頁的導覽都當成首頁處理（失敗時回首頁快取、成功時還會把首頁快取蓋掉），測試頁因此被換成首頁。改成只有 `./` 與 `index.html` 走 `pageFirstNetwork`，其他網頁直接走網路。`kyu-v19`。
+- trip-tools 那邊同時做了「影片連結一次貼很多支」（見 trip-tools 的 CLAUDE.md）。
+
 ## 待辦
 
 0. **回憶錄文字**：已填（2026-11-16，含第二輪補充：牛かつ有吃、鳥田心得、Shin-Shin 沒去、唐吉訶德別府店與中洲店）。
