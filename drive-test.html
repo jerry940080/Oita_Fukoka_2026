@@ -10,6 +10,7 @@ p{margin:4px 0;color:#5b5346;font-size:14px}
 .box.tall{aspect-ratio:9/16;max-width:300px}
 .box iframe,.box video,.box img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
 .box button{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;border:2px solid #FBF6E9;background:rgba(154,73,56,.94);color:#FBF6E9;font-size:22px;padding-left:5px}
+.box iframe.x2{width:200%;height:200%;transform:scale(.5);transform-origin:0 0}
 .st{font-size:13px;margin-top:4px}.ok{color:#55632F}.bad{color:#9A4938}
 .note{background:#fff8d6;padding:10px 12px;margin-top:14px;font-size:14px}
 </style></head><body><main>
@@ -29,6 +30,8 @@ ids.forEach((id,n)=>{
   <div class="box${tall}" id="a${n}"><img src="${th}" alt="" onload="document.getElementById('as${n}').innerHTML='<span class=ok>封面有載到（'+this.naturalWidth+'×'+this.naturalHeight+'）</span>'" onerror="document.getElementById('as${n}').innerHTML='<span class=bad>封面載不到</span>'"><button type="button" data-pv="${pv}" aria-label="播放">▶</button></div><div class="st" id="as${n}">封面載入中…</div>
   <h3>B　直接放雲端硬碟的播放器</h3>
   <div class="box${tall}"><iframe src="${pv}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></div>
+  <h3>D　雲端硬碟播放器，先放大兩倍再縮回來（讓控制列變小）</h3>
+  <div class="box${tall}"><iframe class="x2" src="${pv}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></div>
   <h3>C　瀏覽器自己的播放器（直接讀檔案）</h3>
   <div class="box${tall}"><video controls playsinline preload="metadata" src="${dl}" poster="${th}" onloadedmetadata="document.getElementById('cs${n}').innerHTML='<span class=ok>讀得到影片（'+this.videoWidth+'×'+this.videoHeight+'，'+Math.round(this.duration)+' 秒）</span>'" onerror="document.getElementById('cs${n}').innerHTML='<span class=bad>讀不到影片檔</span>'"></video></div><div class="st" id="cs${n}">讀取中…</div>`);
 });
