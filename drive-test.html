@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>雲端硬碟影片測試</title>
+<style>
+body{margin:0;background:#F1E9D8;color:#2A2620;font:16px/1.6 system-ui,"PingFang TC","Noto Sans TC",sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:18px;margin:34px 0 4px;color:#9A4938}h3{font-size:15px;margin:18px 0 6px}
+p{margin:4px 0;color:#5b5346;font-size:14px}
+.box{position:relative;background:#000;width:100%;aspect-ratio:16/9;overflow:hidden}
+.box.tall{aspect-ratio:9/16;max-width:300px}
+.box iframe,.box video,.box img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
+.box button{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;border:2px solid #FBF6E9;background:rgba(154,73,56,.94);color:#FBF6E9;font-size:22px;padding-left:5px}
+.st{font-size:13px;margin-top:4px}.ok{color:#55632F}.bad{color:#9A4938}
+.note{background:#fff8d6;padding:10px 12px;margin-top:14px;font-size:14px}
+</style></head><body><main>
+<h1>雲端硬碟影片測試</h1>
+<p>這一頁只是測試用，影片的編號放在網址後面，沒有寫在網站裡。請用 iPhone 和電腦各開一次。</p>
+<div class="note">每支影片有 A、B、C 三種放法。請告訴我：哪幾種看得到封面、哪幾種按了能播（有聲音、可以拖時間軸）。</div>
+<div id="out"></div>
+<script>
+const ids=(location.hash.slice(1)||'').split(',').map(s=>s.trim()).filter(s=>/^[\w-]{20,}$/.test(s));
+const out=document.getElementById('out');
+if(!ids.length)out.innerHTML='<p class="bad">網址後面沒有影片編號。</p>';
+ids.forEach((id,n)=>{
+  const tall=n===1?' tall':'';   // 第二支當直式看版面
+  const th='https://drive.google.com/thumbnail?id='+id+'&sz=w800', pv='https://drive.google.com/file/d/'+id+'/preview', dl='https://drive.google.com/uc?export=download&id='+id;
+  out.insertAdjacentHTML('beforeend',`<h2>影片 ${n+1}</h2>
+  <h3>A　封面圖＋按了才載入播放器（網站上會用這種）</h3>
+  <div class="box${tall}" id="a${n}"><img src="${th}" alt="" onload="document.getElementById('as${n}').innerHTML='<span class=ok>封面有載到（'+this.naturalWidth+'×'+this.naturalHeight+'）</span>'" onerror="document.getElementById('as${n}').innerHTML='<span class=bad>封面載不到</span>'"><button type="button" data-pv="${pv}" aria-label="播放">▶</button></div><div class="st" id="as${n}">封面載入中…</div>
+  <h3>B　直接放雲端硬碟的播放器</h3>
+  <div class="box${tall}"><iframe src="${pv}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></div>
+  <h3>C　瀏覽器自己的播放器（直接讀檔案）</h3>
+  <div class="box${tall}"><video controls playsinline preload="metadata" src="${dl}" poster="${th}" onloadedmetadata="document.getElementById('cs${n}').innerHTML='<span class=ok>讀得到影片（'+this.videoWidth+'×'+this.videoHeight+'，'+Math.round(this.duration)+' 秒）</span>'" onerror="document.getElementById('cs${n}').innerHTML='<span class=bad>讀不到影片檔</span>'"></video></div><div class="st" id="cs${n}">讀取中…</div>`);
+});
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-pv]');if(!b)return;b.parentNode.innerHTML='<iframe src="'+b.dataset.pv+'" allow="autoplay; fullscreen" allowfullscreen></iframe>';});
+</script>
+</main></body></html>
